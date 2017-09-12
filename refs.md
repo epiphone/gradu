@@ -1,0 +1,72 @@
+# References
+
+## Combining structural and semantic source code analysis 
+
+### [Bavota, Gabriele, et al. "Improving software modularization via automated analysis of latent topics and dependencies." (2014)](http://dl.acm.org/citation.cfm?id=2559935)
+
+Oftentimes, during software maintenance the original program modularization decays, thus reducing its
+quality. One of the main reasons for such architectural erosion is suboptimal placement of source-code classes
+in software packages. To alleviate this issue, we propose an automated approach to help developers improve
+the quality of software modularization. Our approach **analyzes underlying latent topics in source code as
+well as structural dependencies to recommend (and explain) refactoring operations** aiming at moving a class
+to a more suitable package. The topics are acquired via Relational Topic Models (RTM), a probabilistic topic
+modeling technique.
+- the proposed approach avoids the creation of a whole new remodularization (and the consequent creation/removal of existing packages), proposing a set of move class operations that can be applied independently from each other
+- the results achieved indicated that more than 70% of the recommendations provided by R3 with high confidence level were considered meaningful by developers
+- remodularization/refactoring technique based only on software quality metrics is not sufficient
+- the final word about any refactoring operation should be left up to developers, discouraging the implementation of fully automated refactoring tools
+
+### [Chhabra, Jitender Kumar. "Improving modular structure of software system using structural and lexical dependency." (2017)](http://www.sciencedirect.com/science/article/pii/S0950584916301951)
+
+An approach that considers various types of structural as well as lexical dependencies along with their relative importance to remodularize the Object-Oriented (OO) systems. The main goal of the paper is to generate remodularization solutions that can reflect the developers' perspective (as visible in the well-modularized software system) of remodularization, which is highly desirable in software evolution.
+
+### [Saeidi, Amir, et al. "On the Effect of Semantically Enriched Context Models on Software Modularization." (2017)](https://arxiv.org/abs/1708.01680)
+
+Many of the existing approaches for program comprehension rely on the linguistic information found in source code, such as identifier names and comments. Semantic clustering is one such technique for modularization of the system that relies on the informal semantics of the program, encoded in the vocabulary used in the source code. **Treating the source code as a collection of tokens loses the semantic information** embedded within the identifiers. We try to **overcome this problem by introducing context models for source code identifiers** to obtain a semantic kernel, which can be used for both deriving the topics that run through the system as well as their clustering. Both of the context models give results that are superior to the plain vector representation of documents. The proposed approach in introducing a context model for source code identifiers paves the way for building tools that support developers in program comprehension tasks such as application and domain concept location, software modularization and topic analysis.
+- syntactic analysis of source code allows us to extract contextual information about identifiers such as dependency relationships between identifiers and their type information
+
+
+## Purely semantic/text-based methods
+
+### [Falleri, J-R., et al. "Automatic extraction of a wordnet-like identifier network from software." (2010)](http://ieeexplore.ieee.org/abstract/document/5521783/)
+
+A large part of the time allocated to software maintenance is dedicated to the program comprehension. Many approaches that uses the program structure or the external documentation have been created to assist program comprehension. However, the identifiers of the program are an important source of information that is still not widely used for this purpose. In this article, we propose an approach, based upon Natural Language Processing techniques, that automatically extracts and organizes concepts from software identifiers in a WordNet-like structure that we call *lexical views*. These lexical views give useful insight on an overall software architecture and can be used to improve results of many software engineering tasks.
+- automatically construct an ontology from the software system, by extracting concepts from identifier names in the source code and organizing the identifiers into a WordNet-like structure; comprises of techniques such as tokenization of names and part-of-speech tagging
+
+
+### [Palomba, Fabio, et al. "A textual-based technique for smell detection." (2016)](http://ieeexplore.ieee.org/abstract/document/7503704/)
+
+In this paper, we present TACO (Textual Analysis for Code Smell Detection), a **technique that exploits textual analysis to detect a family of smells of different nature and different levels of granularity**. We run TACO on 10 open source projects, comparing its performance with existing smell detectors purely based on structural information extracted from code components. The analysis of the results indicates that TACO's precision ranges between 67% and 77%, while its recall ranges between 72% and 84%. Also, TACO **often outperforms alternative structural approaches** confirming, once again, the usefulness of information that can be derived from the textual part of code components.
+- most previous work on code smell detection relies on structural metrics, such as size and complexity metrics
+- in this paper, we introduce a textual-based technique that (i) exploits the textual information contained in source code elements and (ii) relies on textual similarity between code elements characterizing a code component
+- we found some complementarity between textual and structural information, suggesting that their combination could be beneficial to obtain better detection accuracy
+
+
+## Other approaches for code smell detection
+
+### [Mansoor, Usman, et al. "Multi-objective code-smells detection using good and bad design examples." (2017)](https://link.springer.com/content/pdf/10.1007%2Fs11219-016-9309-7.pdf)
+
+Code-smells are identified, in general, by using a set of detection rules. These rules are manually defined to identify the key symptoms that characterize a code-smell using combinations of mainly quantitative (metrics), structural, and/or lexical information. We propose in this work to consider the **problem of code-smell detection as a multi-objective problem where examples of code-smells and well-designed code are used to generate detection rules**. To this end, we use multi-objective genetic programming (MOGP) to find the best combination of metrics that maximizes the detection of code-smell examples and minimizes the detection of well-designed code examples.
+
+### [Palomba, Fabio, et al. "Mining version histories for detecting code smells." IEEE Transactions on Software Engineering 41.5 (2015)](http://ieeexplore.ieee.org/abstract/document/6963448/)
+
+While most of the detection techniques just rely on structural information, many code smells are intrinsically characterized by how code elements change overtime. In this paper, we propose Historical Information for Smell deTection (HIST), an approach **exploiting change history information to detect instances of five different code smells**.
+
+
+## Meta
+
+### [Tufano, Michele, et al. "When and why your code starts to smell bad." (2015)](http://dl.acm.org/citation.cfm?id=2818805)
+
+While the repercussions of smells on code quality have been empirically assessed, there is still only anecdotal evidence on when and why bad smells are introduced. To fill this gap, we conducted a large empirical study over the change history of 200 open source projects and **investigated when bad smells are introduced by developers, and the circumstances and reasons behind their introduction**. Our findings mostly **contradict common wisdom stating that smells are being introduced during evolutionary tasks**. In the light of our results, we also call for the need to develop a new generation of recommendation systems aimed at properly planning smell refactoring activities.
+- most of times code artifacts are affected by  bad smells since their creation: highlights that the  introduction  of  most smells can simply be avoided by performing quality checks at commit  time
+- code  artifacts  becoming  smelly  as consequence of  maintenance  and  evolution activities are characterized by peculiar metrics’ trends, different from those of clean artifacts: encourages the development of recommenders able of alerting software developers when changes  applied to code artifacts result in worrisome metric trends
+
+### [Candela, Ivan, et al. "Using cohesion and coupling for software remodularization: Is it enough?." (2016)](http://dl.acm.org/citation.cfm?id=2928268)
+
+Refactoring and, in particular, remodularization operations can be performed to repair the design of a software system and remove the erosion caused by software evolution. Various approaches have been proposed to support developers during the remodularization of a software system. Most of these approaches are based on the **underlying assumption that developers pursue an optimal balance between cohesion and coupling when modularizing the classes of their systems**. Thus, a remodularization recommender proposes a solution that implicitly provides a (near) optimal balance between such quality attributes. However, there is still **no empirical evidence that such a balance is the desideratum** by developers. This article aims at analyzing both objectively and subjectively the aforementioned phenomenon. Specifically, we present the results of (1) a large study analyzing the modularization quality, in terms of package cohesion and coupling, of 100 open-source systems, and (2) a survey conducted with 29 developers aimed at understanding the driving factors they consider when performing modularization tasks. The results achieved have been used to distill a set of lessons learned that might be considered to design more effective remodularization recommenders.
+- developers are often at a crossroad [Cunningham 1993] regarding (1) implementing it without compromising the original design integrity or (2) implementing it in the most straightforward way by stretching a bit the rules of the existing design if needed (i.e., by introducing technical debt)
+- the continuous changes made during software evolution generally tend to “erode” the original design of the system [Parnas 1994]
+- cohesion and coupling are **probably not enough** to recommend meaningful remodularization solutions from the developers’ point of view, reinforcing the need for multiobjective software remodularization techniques seeking for the optimization of several different factors and allowing the developer to (1) prioritize specific objectives and (2) provide constraints
+that the optimization technique should respect while generating the recommended solution
+- tools supporting a “Big Bang” remodularization have a limited applicability, while interactive recommenders proposing fine-grained refactoring operations seem to be more adequate during software evolution
+- The software engineering research community should increase its effort in producing and advertising high-quality refactoring/remodularization tools: more often than not very good techniques that underwent an exhaustive and successful empirical validation are never implemented and publicly released as part of a concrete, working tool
