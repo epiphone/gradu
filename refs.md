@@ -1,6 +1,6 @@
 # References
 
-## Combining structural and semantic source code analysis 
+## Combining structural and semantic source code analysis
 
 ### [Bavota, Gabriele, et al. "Improving software modularization via automated analysis of latent topics and dependencies." (2014)](http://dl.acm.org/citation.cfm?id=2559935)
 
@@ -26,13 +26,12 @@ Many of the existing approaches for program comprehension rely on the linguistic
 - syntactic analysis of source code allows us to extract contextual information about identifiers such as dependency relationships between identifiers and their type information
 
 
-## Purely semantic/text-based methods
+## semantic/text-based or ontological methods
 
 ### [Falleri, J-R., et al. "Automatic extraction of a wordnet-like identifier network from software." (2010)](http://ieeexplore.ieee.org/abstract/document/5521783/)
 
 A large part of the time allocated to software maintenance is dedicated to the program comprehension. Many approaches that uses the program structure or the external documentation have been created to assist program comprehension. However, the identifiers of the program are an important source of information that is still not widely used for this purpose. In this article, we propose an approach, based upon Natural Language Processing techniques, that automatically extracts and organizes concepts from software identifiers in a WordNet-like structure that we call *lexical views*. These lexical views give useful insight on an overall software architecture and can be used to improve results of many software engineering tasks.
 - automatically construct an ontology from the software system, by extracting concepts from identifier names in the source code and organizing the identifiers into a WordNet-like structure; comprises of techniques such as tokenization of names and part-of-speech tagging
-
 
 ### [Palomba, Fabio, et al. "A textual-based technique for smell detection." (2016)](http://ieeexplore.ieee.org/abstract/document/7503704/)
 
@@ -41,6 +40,8 @@ In this paper, we present TACO (Textual Analysis for Code Smell Detection), a **
 - in this paper, we introduce a textual-based technique that (i) exploits the textual information contained in source code elements and (ii) relies on textual similarity between code elements characterizing a code component
 - we found some complementarity between textual and structural information, suggesting that their combination could be beneficial to obtain better detection accuracy
 
+### [Chong, Chun Yong, and Sai Peck Lee. "Automatic Clustering Constraints Derivation from Object-Oriented Software Using Weighted Complex Network with Graph Theory Analysis." (2017)](http://www.sciencedirect.com/science/article/pii/S0164121217301772)
+Classic unsupervised software clustering techniques have proven to be useful to aid in recovering a high-level abstraction of the software design of poorly documented or designed software systems. However, there is a lack of work that integrates constrained clustering for the same purpose to help improve the modularity of software systems. Nevertheless, due to time and budget constraints, it is laborious and unrealistic for domain experts who have prior knowledge about the software to review each and every software artifact and provide supervision on an on-demand basis. We aim to fill this research gap by proposing an automated approach to derive clustering constraints from the implicit structure of software system based on graph theory analysis of the analysed software.
 
 ## Other approaches for code smell detection
 
