@@ -20,18 +20,17 @@ modeling technique.
 
 An approach that considers various types of structural as well as lexical dependencies along with their relative importance to remodularize the Object-Oriented (OO) systems. The main goal of the paper is to generate remodularization solutions that can reflect the developers' perspective (as visible in the well-modularized software system) of remodularization, which is highly desirable in software evolution.
 
+### [Rathee, Amit, and Jitender Kumar Chhabra. "Software Remodularization by Estimating Structural and Conceptual Relations Among Classes and Using Hierarchical Clustering." (2017)](https://link.springer.com/chapter/10.1007/978-981-10-5780-9_9)
+
+A technique of software remodularization by estimating conceptual similarity among software elements (Classes). The proposed technique makes use of **both structural and semantic coupling measurements** together to get much more accurate coupling measures. In particular, the proposed approach makes use of lexical information extracted from six main parts of the source code of a class, namely comments, class names, attribute names, method signatures, parameter names and method source code statements zone. Simultaneously, it also makes use of counting of other class’s member functions used by a given class as a structural coupling measure among classes. Structural coupling among software elements (classes) are measured using **information-flow based coupling metric** (ICP) and conceptual coupling is measured by **tokenizing source code and calculating Cosine Similarity**. Clustering is performed by performing **Hierarchical Agglomerate Clustering** (HAC).
+
 ### [Saeidi, Amir, et al. "On the Effect of Semantically Enriched Context Models on Software Modularization." (2017)](https://arxiv.org/abs/1708.01680)
 
 Many of the existing approaches for program comprehension rely on the linguistic information found in source code, such as identifier names and comments. Semantic clustering is one such technique for modularization of the system that relies on the informal semantics of the program, encoded in the vocabulary used in the source code. **Treating the source code as a collection of tokens loses the semantic information** embedded within the identifiers. We try to **overcome this problem by introducing context models for source code identifiers** to obtain a semantic kernel, which can be used for both deriving the topics that run through the system as well as their clustering. Both of the context models give results that are superior to the plain vector representation of documents. The proposed approach in introducing a context model for source code identifiers paves the way for building tools that support developers in program comprehension tasks such as application and domain concept location, software modularization and topic analysis.
 - syntactic analysis of source code allows us to extract contextual information about identifiers such as dependency relationships between identifiers and their type information
 
 
-## semantic/text-based or ontological methods
-
-### [Falleri, J-R., et al. "Automatic extraction of a wordnet-like identifier network from software." (2010)](http://ieeexplore.ieee.org/abstract/document/5521783/)
-
-A large part of the time allocated to software maintenance is dedicated to the program comprehension. Many approaches that uses the program structure or the external documentation have been created to assist program comprehension. However, the identifiers of the program are an important source of information that is still not widely used for this purpose. In this article, we propose an approach, based upon Natural Language Processing techniques, that automatically extracts and organizes concepts from software identifiers in a WordNet-like structure that we call *lexical views*. These lexical views give useful insight on an overall software architecture and can be used to improve results of many software engineering tasks.
-- automatically construct an ontology from the software system, by extracting concepts from identifier names in the source code and organizing the identifiers into a WordNet-like structure; comprises of techniques such as tokenization of names and part-of-speech tagging
+## Semantic/text-based methods
 
 ### [Palomba, Fabio, et al. "A textual-based technique for smell detection." (2016)](http://ieeexplore.ieee.org/abstract/document/7503704/)
 
@@ -43,15 +42,38 @@ In this paper, we present TACO (Textual Analysis for Code Smell Detection), a **
 ### [Chong, Chun Yong, and Sai Peck Lee. "Automatic Clustering Constraints Derivation from Object-Oriented Software Using Weighted Complex Network with Graph Theory Analysis." (2017)](http://www.sciencedirect.com/science/article/pii/S0164121217301772)
 Classic unsupervised software clustering techniques have proven to be useful to aid in recovering a high-level abstraction of the software design of poorly documented or designed software systems. However, there is a lack of work that integrates constrained clustering for the same purpose to help improve the modularity of software systems. Nevertheless, due to time and budget constraints, it is laborious and unrealistic for domain experts who have prior knowledge about the software to review each and every software artifact and provide supervision on an on-demand basis. We aim to fill this research gap by proposing an automated approach to derive clustering constraints from the implicit structure of software system based on graph theory analysis of the analysed software.
 
-## Other approaches for code smell detection
+
+## Optimization-based methods
 
 ### [Mansoor, Usman, et al. "Multi-objective code-smells detection using good and bad design examples." (2017)](https://link.springer.com/content/pdf/10.1007%2Fs11219-016-9309-7.pdf)
 
 Code-smells are identified, in general, by using a set of detection rules. These rules are manually defined to identify the key symptoms that characterize a code-smell using combinations of mainly quantitative (metrics), structural, and/or lexical information. We propose in this work to consider the **problem of code-smell detection as a multi-objective problem where examples of code-smells and well-designed code are used to generate detection rules**. To this end, we use multi-objective genetic programming (MOGP) to find the best combination of metrics that maximizes the detection of code-smell examples and minimizes the detection of well-designed code examples.
 
+### [Paixao, Matheus, et al. "An Empirical Study of Cohesion and Coupling: Balancing Optimisation and Disruption." (2017)](http://ieeexplore.ieee.org/abstract/document/7892940/)
+
+A multiobjective evolutionary approach that **minimises disruption while maximising cohesion/coupling improvement**. This allows developers to balance reticence to disrupt existing modular structure, against their competing need to improve cohesion and coupling. The multiobjective approach is able to find modular structures that improve the cohesion of developers’ implementations by 22.52%, while causing an acceptably low level of disruption (within that already tolerated by developers).
+
+## Mining version histories
+
 ### [Palomba, Fabio, et al. "Mining version histories for detecting code smells." IEEE Transactions on Software Engineering 41.5 (2015)](http://ieeexplore.ieee.org/abstract/document/6963448/)
 
 While most of the detection techniques just rely on structural information, many code smells are intrinsically characterized by how code elements change overtime. In this paper, we propose Historical Information for Smell deTection (HIST), an approach **exploiting change history information to detect instances of five different code smells**.
+
+
+## Program comprehension
+
+### [Mahmoud, Anas, and Gary Bradshaw. "Semantic topic models for source code analysis." (2017)](https://link.springer.com/article/10.1007/s10664-016-9473-1)
+
+The textual content of source code, embedded in its identifiers, comments, and string literals, tends to be sparse in nature. This prevents classical topic modeling techniques, typically used to model natural language texts, to generate proper models when applied to source code. We propose a **novel approach for topic modeling designed for source code**. The proposed approach exploits the basic assumptions of the cluster hypothesis and information theory to discover semantically coherent topics in software systems. The results show that our approach produces stable, more interpretable, and more expressive topics than classical topic modeling techniques without the necessity for extensive parameter calibration.
+
+### [Falleri, J-R., et al. "Automatic extraction of a wordnet-like identifier network from software." (2010)](http://ieeexplore.ieee.org/abstract/document/5521783/)
+
+A large part of the time allocated to software maintenance is dedicated to the program comprehension. Many approaches that uses the program structure or the external documentation have been created to assist program comprehension. However, the identifiers of the program are an important source of information that is still not widely used for this purpose. In this article, we propose an approach, based upon Natural Language Processing techniques, that automatically extracts and organizes concepts from software identifiers in a WordNet-like structure that we call *lexical views*. These lexical views give useful insight on an overall software architecture and can be used to improve results of many software engineering tasks.
+- automatically construct an ontology from the software system, by extracting concepts from identifier names in the source code and organizing the identifiers into a WordNet-like structure; comprises of techniques such as tokenization of names and part-of-speech tagging
+
+### [Sun, Xiaobing, et al. "Using Hierarchical Latent Dirichlet Allocation to Construct Feature Tree for Program Comprehension." (2017)](https://www.hindawi.com/journals/sp/2017/4382348/abs/)
+
+ An approach to generate a **feature tree based on hierarchical Latent Dirichlet Allocation** (hLDA), which includes two hierarchies, the feature hierarchy and file structure hierarchy. The feature hierarchy shows the features from abstract level to detailed level, while the file structure hierarchy shows the classes from whole to part. Empirical results show that the feature tree can produce a view for the features and files, and the clustering of classes in the package in our approach is better (in terms of recall) than the other clustering approach, that is, hierarchical clustering.
 
 
 ## Meta
