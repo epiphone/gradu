@@ -60,7 +60,10 @@ A multiobjective evolutionary approach that **minimises disruption while maximis
 While most of the detection techniques just rely on structural information, many code smells are intrinsically characterized by how code elements change overtime. In this paper, we propose Historical Information for Smell deTection (HIST), an approach **exploiting change history information to detect instances of five different code smells**.
 
 
-## Program comprehension
+## Program comprehension & visualization
+
+### [Sangal, Neeraj, et al. "Using dependency models to manage complex software architecture." ACM Sigplan Notices. Vol. 40. No. 10. ACM, 2005.](https://dl.acm.org/citation.cfm?id=1094824)
+An approach to managing the architecture of large software systems is presented. Dependencies are extracted from the code by a conventional static analysis, and shown in a tabular form known as the **Dependency Structure Matrix** (DSM). A variety of algorithms are available to help organize the matrix in a form that reflects the architecture and highlights patterns and problematic dependencies.
 
 ### [Mahmoud, Anas, and Gary Bradshaw. "Semantic topic models for source code analysis." (2017)](https://link.springer.com/article/10.1007/s10664-016-9473-1)
 
@@ -71,12 +74,15 @@ The textual content of source code, embedded in its identifiers, comments, and s
 A large part of the time allocated to software maintenance is dedicated to the program comprehension. Many approaches that uses the program structure or the external documentation have been created to assist program comprehension. However, the identifiers of the program are an important source of information that is still not widely used for this purpose. In this article, we propose an approach, based upon Natural Language Processing techniques, that automatically extracts and organizes concepts from software identifiers in a WordNet-like structure that we call *lexical views*. These lexical views give useful insight on an overall software architecture and can be used to improve results of many software engineering tasks.
 - automatically construct an ontology from the software system, by extracting concepts from identifier names in the source code and organizing the identifiers into a WordNet-like structure; comprises of techniques such as tokenization of names and part-of-speech tagging
 
+### [Beck, Fabian, Jan Melcher, and Daniel Weiskopf. "Identifying modularization patterns by visual comparison of multiple hierarchies." (2016)](http://ieeexplore.ieee.org/abstract/document/7503712/)
+An interactive visualization approach that compares the current modularization of a system to several software clustering results. We discuss typical modularization patterns that indicate criteria used for structuring the software or suggest opportunities for partial remodularization of the system.
+
 ### [Sun, Xiaobing, et al. "Using Hierarchical Latent Dirichlet Allocation to Construct Feature Tree for Program Comprehension." (2017)](https://www.hindawi.com/journals/sp/2017/4382348/abs/)
 
  An approach to generate a **feature tree based on hierarchical Latent Dirichlet Allocation** (hLDA), which includes two hierarchies, the feature hierarchy and file structure hierarchy. The feature hierarchy shows the features from abstract level to detailed level, while the file structure hierarchy shows the classes from whole to part. Empirical results show that the feature tree can produce a view for the features and files, and the clustering of classes in the package in our approach is better (in terms of recall) than the other clustering approach, that is, hierarchical clustering.
 
 
-## Meta
+## Meta & background
 
 ### [Tufano, Michele, et al. "When and why your code starts to smell bad." (2015)](http://dl.acm.org/citation.cfm?id=2818805)
 
@@ -93,3 +99,13 @@ Refactoring and, in particular, remodularization operations can be performed to 
 that the optimization technique should respect while generating the recommended solution
 - tools supporting a “Big Bang” remodularization have a limited applicability, while interactive recommenders proposing fine-grained refactoring operations seem to be more adequate during software evolution
 - The software engineering research community should increase its effort in producing and advertising high-quality refactoring/remodularization tools: more often than not very good techniques that underwent an exhaustive and successful empirical validation are never implemented and publicly released as part of a concrete, working tool
+
+### [Parnas, David Lorge. "On the criteria to be used in decomposing systems into modules." (1972)](https://blog.acolyer.org/2016/09/05/on-the-criteria-to-be-used-in-decomposing-systems-into-modules/)
+- the effectiveness of a “modularization” is dependent upon the criteria used in dividing the system into modules.
+- it is almost always incorrect to begin the decomposition of a system into modules on the basis of a flowchart. We propose instead that one begins with a list of difficult design decisions or design decisions which are likely to change. Each module is then designed to hide such a decision from the others.
+
+### [Parnas, David Lorge. "Designing software for ease of extension and contraction." (1979)](https://blog.acolyer.org/2016/10/31/designing-software-for-ease-of-extension-and-contraction/)
+Designing software to be extensible and easily contracted is discussed as a special case of **design for change**. The most critical step is the design of a software structure called the **"uses" relation**.
+- we say of two programs A and B that A uses B if correct execution of B may be necessary for A to complete the task described in its specification
+- if you allow unconstrained uses relations, then parts of the system become highly interdependent: the uses relation should therefore be restricted so that it is loop (cycle) free
+- based on the uses relation, we can identify a hierarchy of levels within the system: if such a hierarchical ordering exists, then each level offers a testable and usable subset of the system… The design of the “uses” hierarchy should be one of the major milestones in a design effort
