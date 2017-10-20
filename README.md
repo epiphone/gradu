@@ -47,3 +47,16 @@ ja/tai klusterointia tai muita koneoppimismenetelmiä.
   - ei tarkoitus pelkästään visualisoida (kai?), mutta jonkinlainen visualisaatio voi olla tarpeen (tai ainakin hyödyksi) ratkaisuja ehdottaessa
 - Liian iso pala purtavaksi?
 - ...
+
+
+## Muut ideat 
+
+### Case study-tyyppinen tutkielma web-sovelluksen muuntamisesta serverless-arkkitehtuuriin
+
+- https://tacit.space/ on melko suuri web-sovellus jossa kaikki tyypilliset ominaisuudet/vaatimukset
+  - REST API, single page app-käyttöliittymä, monimutkainen roolipohjainen autorisaatio, reaaliaikaisia ominaisuuksia (websocket), email- ja SMS-notifikaatiot, luottokorttimaksut, erilliset admin-työkalut, riippuvuuksia ulkopuolisiin palveluihin yms.
+- motivaationa skaalautuvuus ja rahalliset säästöt 
+- miten sovellusta tulee muuttaa? tapahtumapohjaisuus, uudelleenmodularisointi, ...?
+- kuinka paljon voidaan säästää?
+- cold starts, vendor lock-in?
+- 
