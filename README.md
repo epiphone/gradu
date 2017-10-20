@@ -59,4 +59,8 @@ ja/tai klusterointia tai muita koneoppimismenetelmiä.
 - miten sovellusta tulee muuttaa? tapahtumapohjaisuus, uudelleenmodularisointi, ...?
 - kuinka paljon voidaan säästää?
 - cold starts, vendor lock-in?
-- 
+
+#### Aineistoa
+
+- Adzic, Gojko, and Robert Chatley. ["Serverless computing: economic and architectural impact."](http://www.doc.ic.ac.uk/~rbc/papers/fse-serverless-17.pdf) Proceedings of the 2017 11th Joint Meeting on Foundations of Software Engineering. ACM, 2017.
+- Eivy, Adam. ["Be Wary of the Economics of" Serverless" Cloud Computing."](http://ieeexplore.ieee.org/abstract/document/7912239/) IEEE Cloud Computing 4.2 (2017): 6-12.
