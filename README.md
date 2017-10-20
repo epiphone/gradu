@@ -55,10 +55,22 @@ ja/tai klusterointia tai muita koneoppimismenetelmiä.
 
 - https://tacit.space/ on melko suuri web-sovellus jossa kaikki tyypilliset ominaisuudet/vaatimukset
   - REST API, single page app-käyttöliittymä, monimutkainen roolipohjainen autorisaatio, reaaliaikaisia ominaisuuksia (websocket), email- ja SMS-notifikaatiot, luottokorttimaksut, erilliset admin-työkalut, riippuvuuksia ulkopuolisiin palveluihin yms.
+  - yksi suuri palvelu ja vajaa 10 pienempää; ei täysin monoliittinen
+  - synkroninen, ei tapahtumapohjainen
 - motivaationa skaalautuvuus ja rahalliset säästöt 
 - miten sovellusta tulee muuttaa? tapahtumapohjaisuus, uudelleenmodularisointi, ...?
+  - arkkitehtuurin kannalta
+  - matalammalla tasolla
 - kuinka paljon voidaan säästää?
+- kuinka muuttaa kehitystyötä koodaajan näkökulmasta? devops -> no-op?
+- pätevätkö samat ongelmat kuin mikropalveluissa?
 - cold starts, vendor lock-in?
+- developer experience, dev tools, local development
+
+#### Ongelmia
+
+- Ei juurikaan tutkimusaineistoa; vähemmän formaaleja artikkeleita kylläkin paljon
+- 
 
 #### Aineistoa
 
