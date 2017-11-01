@@ -45,7 +45,7 @@ Nämä hyödyt huomioiden on aiheellista selvittää millainen työ on siirtää
 
 https://tacit.space/ on moderni web-sovellus muistiinpanojen tekemiseen. Sovellus on melko laaja (noin 30k riviä Javascript- ja Typescript-koodia) ja sitä löytyy useita web-sovelluksille tyypillisiä ominaisuuksia: REST API, single page app-tyylinen web-käyttöliittymä, monimutkainen roolipohjainen autorisaatio, reaaliaikaisia ominaisuuksia (websocket), email- ja SMS-notifikaatiot, luottokorttimaksut, erilliset admin-työkalut, riippuvuuksia ulkopuolisiin palveluihin jne. Sovellus on jaoteltu frontend- ja backend-komponentteihin, joista jälkimmäinen on edelleen jaoteltu kouralliseen eri palveluita.
 
-Tacit.spacen tapauksessa FaaS-alustalle siirtämisen perusteena ovat skaalautuvuus, rahalliset säästöt sekä kehitystyön fokus infrasta ominaisuuksiin.
+Tacit.spacen tapauksessa FaaS-alustalle siirtämisen perusteena ovat skaalautuvuus, rahalliset säästöt sekä kehitystyön fokus infrasta ominaisuuksiin. Koko sovelluksen migraatio alusta loppuun ei välttämättä ole mahdollista gradun aikataulussa, joten pitänee jotenkin valita tutkimuskysymysten kannalta kaikista oleellisimmat kohdat. 
 
 ## Ongelmia ja avoimia kysymyksiä
 
