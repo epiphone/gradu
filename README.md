@@ -2,13 +2,25 @@
 
 ## Motivaatio
 
-Serverless- tai Function as a Service-alusta on pilvilaskenta-alusta lyhytkestoisille ja tilattomille sovelluksille jotka skaalautuvat automaattisesti ja joita laskutetaan varsinaisen käytön mukaan millisekuntien tarkkuudella. Toisin kuin SaaS- ja PaaS-alustat joissa sovellus on aina päällä, FaaS-sovellus käynnistetään ja puretaan joka tapahtuman yhteydessä täysin on-demand, minkä seurauksena myös skaalautuminen ja laskutus toimii on-demand-periaatteella. 
+Serverless- tai Function as a Service-alusta on pilvilaskenta-alusta lyhytkestoisille ja tilattomille sovelluksille jotka skaalautuvat automaattisesti ja joita laskutetaan varsinaisen käytön mukaan millisekuntien tarkkuudella. Toisin kuin SaaS- ja PaaS-alustat joissa sovellus on aina päällä, FaaS-sovellus käynnistetään ja puretaan joka tapahtuman yhteydessä täysin ns. on-demand, minkä seurauksena myös skaalautuminen ja laskutus toimii on-demand-periaatteella. 
 
 ![https://specify.io/concepts/serverless-baas-faas](https://specify.io/assets/serverless-automation-7265d1b1cc7ae92e9559995db6dd680fce120ab97f65a5c70edbd7fa71e41acd.png)
+[lähde](https://specify.io/concepts/serverless-baas-faas)
 
-FaaS-alustan kaksi päällimmäisintä hyötyä ovat kehitystyön nopeuttaminen (fokus toiminnallisuuksiin infrasta huolehtimisen sijaan) sekä potentiaaliset säästöt hostaus-kuluissa. ([kuvan lähde](https://specify.io/concepts/serverless-baas-faas))
+FaaS-alustan kaksi päällimmäisintä hyötyä ovat kehitystyön tuottavuus (fokus toiminnallisuuksiin infrasta huolehtimisen sijaan) sekä potentiaaliset säästöt hostaus-kuluissa.
 
-## Näkökulmia tutkimukseen
+> I don't have to manage a virtual machine, operating system, patch management, scaling service, load balancing, availability, fault tolerance, provisioning, anti-virus, anti-malware, vulnerability scanning, continuous monitoring, access control, rightsizing, server tuning, intrusion detection, hardware affinity, OS dependencies [...] and I only pay for what I use ([Groat & Lu, 2017](https://www.slideshare.net/AmazonWebServices/serverless-design-patterns-for-rethinking-traditional-enterprise-application-approaches-aws-public-sector-summit-2017))
+
+Nämä hyödyt huomioiden on aiheellista selvittää millainen työ on siirtää olemassaoleva sovellus FaaS-alustalle ja mitä hyötyä siitä on. Potentiaalisia **tutkimuskysymyksiä** (tai tutkielmassa ainakin sivuttavia aiheita) ovat ainakin
+- miksi web-sovellus kannattaa siirtää FaaS-alustalle?
+- miten web-sovellus siirretään FaaS-alustalle?
+  - miten ja kuinka paljon sovellusta tulee muuttaa?
+  - kuinka työlästä muuttaminen on?
+- lopputuloksen arviointi, ts. miten web-sovelluksen siirtäminen FaaS-alustalle vaikuttaa sen laatuun?
+  - ylläpitokustannukset
+  - suorituskyky, ylläpidettävyys ym. laadulliset ominaisuudet
+
+## Näkökulmia tutkielmaan
 
 - miten sovellusta tulee muuttaa? **tapahtumapohjaisuus**, uudelleenmodularisointi, ulkoiset palvelut...?
   - arkkitehtuurin kannalta
@@ -27,24 +39,21 @@ FaaS-alustan kaksi päällimmäisintä hyötyä ovat kehitystyön nopeuttaminen 
 - lopputuloksena enemmän vai vähemmän koodia?
   - >  A lot of the infra code is gone
 - tietoturva?
+- lähtökohtien huomioiminen: esim. PaaS-alustalle kehitetyn mikroarkkitehtuuri- ja container-tekniikoita hyödyntävän järjestelmän vs. omalla raudalla hostatun vanhan PHP-sovelluksen siirtäminen FaaS:iin (tacit.space on jotain siltä väliltä) - ensimmäinen luultavasti helpompi mutta jälkimmäisellä enemmän hyödyttävää. Kokonaisen sukupolven (PaaS) "skippaaminen"?
 
+## Siirrettävä sovellus
 
-## Muunnettava web-sovellus
+https://tacit.space/ on moderni web-sovellus muistiinpanojen tekemiseen. Sovellus on melko laaja (noin 30k riviä Javascript- ja Typescript-koodia) ja sitä löytyy useita web-sovelluksille tyypillisiä ominaisuuksia: REST API, single page app-tyylinen web-käyttöliittymä, monimutkainen roolipohjainen autorisaatio, reaaliaikaisia ominaisuuksia (websocket), email- ja SMS-notifikaatiot, luottokorttimaksut, erilliset admin-työkalut, riippuvuuksia ulkopuolisiin palveluihin jne. Sovellus on jaoteltu frontend- ja backend-komponentteihin, joista jälkimmäinen on edelleen jaoteltu kouralliseen eri palveluita.
 
-- https://tacit.space/ on melko suuri web-sovellus jossa kaikki tyypilliset ominaisuudet/vaatimukset
-  - REST API, single page app-käyttöliittymä, monimutkainen roolipohjainen autorisaatio, reaaliaikaisia ominaisuuksia (websocket), email- ja SMS-notifikaatiot, luottokorttimaksut, erilliset admin-työkalut, riippuvuuksia ulkopuolisiin palveluihin yms.
-  - yksi suuri palvelu ja vajaa 10 pienempää; ei täysin monoliittinen
-  - synkroninen, ei tapahtumapohjainen
-- motivaationa skaalautuvuus, rahalliset säästöt, kehitystyön fokus infrasta ominaisuuksiin
-- tällä hetkellä vain muutamia kymmeniä aktiivisia käyttäjiä
-  - kulujen ja skaalautuvuuden vertailu hankalaa ilman varsinaista kuormitusta
-  - voidaanko simuloida testeillä tai arvioida muuten?
+Tacit.spacen tapauksessa FaaS-alustalle siirtämisen perusteena ovat skaalautuvuus, rahalliset säästöt sekä kehitystyön fokus infrasta ominaisuuksiin.
 
 ## Ongelmia ja avoimia kysymyksiä
 
 - Tarkempi tutkimuskysymys vielä hakusessa
 - Melko vähän tutkimusaineistoa. Vähemmän formaaleja artikkeleita, blogitekstejä, konferenssiesityksiä kylläkin paljon; kelpaavatko gradun lähteiksi?
-- Onko tämän tyyppisessä gradussa tarkoitus tehdä suosituksia raportoinnin lisäksi?
+- Onko tämän tyyppisessä gradussa tarkoitus tehdä suosituksia raportoinnin lisäksi? Edellä listatut alustavat tutkimuskysymykset ovat melko subjektiivisia. Joitakin absoluuttisia mittareita toki on (hostaus-kustannukset, koodin määrä), mutta nämäkin ovat jokseenkin sovelluskohtaisia.
+- Seminaarissa oli puhetta insinöörityömäisistä graduista. Onko tämä aihe liikaa sen sorttinen?
+- Muunnettavalla sovelluksella on tällä hetkellä vain muutamia kymmeniä aktiivisia käyttäjiä. Kulujen ja skaalautuvuuden vertailu ilman varsinaista kuormitusta voi olla hankalaa. Avuksi simuloidut testit tai muut arviot?
 
 ## Aineistoa
 
@@ -74,7 +83,7 @@ FaaS-alustan kaksi päällimmäisintä hyötyä ovat kehitystyön nopeuttaminen 
       - no need for gatekeepers (server between user and db for example), use request-level auth. Three tier adds latency and costs
       - push to client, keep state in users' browsers
   - EMIT 2017 http://www.emitconference.com/
-  - http://serverlessconf.io/
+  - Serverlessconf (https://serverless.com/blog/serverless-conf-2017-nyc-recap/)
 
 
 # Aihe B: Javascript-lähdekoodin avustettu modularisointi
