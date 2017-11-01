@@ -1,6 +1,12 @@
-# Gradu 
+# Aihe A: web-sovelluksen migraatio FaaS-alustaan
 
-Case study-tyyppinen tutkielma web-sovelluksen muuntamisesta serverless-arkkitehtuuriin.
+## Motivaatio
+
+Serverless- tai Function as a Service-alusta on pilvilaskenta-alusta lyhytkestoisille ja tilattomille sovelluksille jotka skaalautuvat automaattisesti ja joita laskutetaan varsinaisen käytön mukaan millisekuntien tarkkuudella. Toisin kuin SaaS- ja PaaS-alustat joissa sovellus on aina päällä, FaaS-sovellus käynnistetään ja puretaan joka tapahtuman yhteydessä täysin on-demand, minkä seurauksena myös skaalautuminen ja laskutus toimii on-demand-periaatteella. 
+
+![degrees of automation](https://specify.io/assets/paas-automation-4853683cfba0575047ff557b353f7da47df36d980fd060fb43f7276862e3ffc6.png)
+
+FaaS-alustan kaksi päällimmäisintä hyötyä ovat kehitystyön nopeuttaminen (fokus toiminnallisuuksiin infrasta huolehtimisen sijaan) sekä potentiaaliset säästöt hostaus-kuluissa.
 
 ## Näkökulmia tutkimukseen
 
@@ -34,16 +40,17 @@ Case study-tyyppinen tutkielma web-sovelluksen muuntamisesta serverless-arkkiteh
   - kulujen ja skaalautuvuuden vertailu hankalaa ilman varsinaista kuormitusta
   - voidaanko simuloida testeillä tai arvioida muuten?
 
-## Ongelmia
+## Ongelmia ja avoimia kysymyksiä
 
 - Tarkempi tutkimuskysymys vielä hakusessa
-- Hyvin vähän tutkimusaineistoa. Vähemmän formaaleja artikkeleita, blogitekstejä, konferenssiesityksiä kylläkin paljon; kelpaavatko gradun lähteiksi?
+- Melko vähän tutkimusaineistoa. Vähemmän formaaleja artikkeleita, blogitekstejä, konferenssiesityksiä kylläkin paljon; kelpaavatko gradun lähteiksi?
 - Onko tämän tyyppisessä gradussa tarkoitus tehdä suosituksia raportoinnin lisäksi?
 
 ## Aineistoa
 
-- Adzic, Gojko, and Robert Chatley. ["Serverless computing: economic and architectural impact."](http://www.doc.ic.ac.uk/~rbc/papers/fse-serverless-17.pdf) Proceedings of the 2017 11th Joint Meeting on Foundations of Software Engineering. ACM, 2017.
-- Eivy, Adam. ["Be Wary of the Economics of" Serverless" Cloud Computing."](http://ieeexplore.ieee.org/abstract/document/7912239/) IEEE Cloud Computing 4.2 (2017): 6-12.
+- Tutkimusartikkeleita kerätty [tänne](./refs.md)
+- blogiartikkelit ym.
+  - https://martinfowler.com/articles/serverless.html
 - konferenssit:
   - GOTO 2017 https://gotocph.com/
     - *Serverless: the future of architecture*
@@ -70,9 +77,7 @@ Case study-tyyppinen tutkielma web-sovelluksen muuntamisesta serverless-arkkiteh
   - http://serverlessconf.io/
 
 
-# Edellinen idea
-
-Työkalu javascript-ohjelmiston automaattista (tai avustettua) modularisointia varten.
+# Aihe B: Javascript-lähdekoodin avustettu modularisointi
 
 ## Motivaatio
 
