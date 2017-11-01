@@ -4,9 +4,9 @@
 
 Serverless- tai Function as a Service-alusta on pilvilaskenta-alusta lyhytkestoisille ja tilattomille sovelluksille jotka skaalautuvat automaattisesti ja joita laskutetaan varsinaisen käytön mukaan millisekuntien tarkkuudella. Toisin kuin SaaS- ja PaaS-alustat joissa sovellus on aina päällä, FaaS-sovellus käynnistetään ja puretaan joka tapahtuman yhteydessä täysin on-demand, minkä seurauksena myös skaalautuminen ja laskutus toimii on-demand-periaatteella. 
 
-![degrees of automation](https://specify.io/assets/paas-automation-4853683cfba0575047ff557b353f7da47df36d980fd060fb43f7276862e3ffc6.png)
+![https://specify.io/concepts/serverless-baas-faas](https://specify.io/assets/serverless-automation-7265d1b1cc7ae92e9559995db6dd680fce120ab97f65a5c70edbd7fa71e41acd.png)
 
-FaaS-alustan kaksi päällimmäisintä hyötyä ovat kehitystyön nopeuttaminen (fokus toiminnallisuuksiin infrasta huolehtimisen sijaan) sekä potentiaaliset säästöt hostaus-kuluissa.
+FaaS-alustan kaksi päällimmäisintä hyötyä ovat kehitystyön nopeuttaminen (fokus toiminnallisuuksiin infrasta huolehtimisen sijaan) sekä potentiaaliset säästöt hostaus-kuluissa. ([kuvan lähde](https://specify.io/concepts/serverless-baas-faas))
 
 ## Näkökulmia tutkimukseen
 
