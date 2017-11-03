@@ -1,66 +1,67 @@
-# Aihe A: web-sovelluksen migraatio FaaS-alustaan
+# Thesis topic: Migrating a web application to FaaS
 
-## Motivaatio
+## Motivation
 
-Serverless- tai Function as a Service-alusta on pilvilaskenta-alusta lyhytkestoisille ja tilattomille sovelluksille jotka skaalautuvat automaattisesti ja joita laskutetaan varsinaisen käytön mukaan millisekuntien tarkkuudella. Toisin kuin SaaS- ja PaaS-alustat joissa sovellus on aina päällä, FaaS-sovellus käynnistetään ja puretaan joka tapahtuman yhteydessä täysin ns. on-demand, minkä seurauksena myös skaalautuminen ja laskutus toimii on-demand-periaatteella. 
+Function as a Service (FaaS or serverless) is defined as a cloud-native platform for short-running, stateless computation and event-driven applications which scales up and down instantly and automatically and charges for actual usage at a millisecond granularity. Unlike SaaS or PaaS that are always running, but scale on-demand, serverless workloads run on-demand, and consequently, scale on-demand
 
 ![https://specify.io/concepts/serverless-baas-faas](https://specify.io/assets/serverless-automation-7265d1b1cc7ae92e9559995db6dd680fce120ab97f65a5c70edbd7fa71e41acd.png)
 [lähde](https://specify.io/concepts/serverless-baas-faas)
 
-FaaS-alustan kaksi päällimmäisintä hyötyä ovat kehitystyön tuottavuus (fokus toiminnallisuuksiin infrasta huolehtimisen sijaan) sekä potentiaaliset säästöt hostaus-kuluissa.
+The two main benefits of FaaS (as I see them) are gains in developer productivity (less time spent on operations/infrastructure vs. features) and decreased hosting costs. 
 
 > I don't have to manage a virtual machine, operating system, patch management, scaling service, load balancing, availability, fault tolerance, provisioning, anti-virus, anti-malware, vulnerability scanning, continuous monitoring, access control, rightsizing, server tuning, intrusion detection, hardware affinity, OS dependencies [...] and I only pay for what I use ([Groat & Lu, 2017](https://www.slideshare.net/AmazonWebServices/serverless-design-patterns-for-rethinking-traditional-enterprise-application-approaches-aws-public-sector-summit-2017))
 
-Nämä hyödyt huomioiden on aiheellista selvittää millainen työ on siirtää olemassaoleva sovellus FaaS-alustalle ja mitä hyötyä siitä on. Potentiaalisia **tutkimuskysymyksiä** (tai tutkielmassa ainakin sivuttavia aiheita) ovat ainakin
-- miksi web-sovellus kannattaa siirtää FaaS-alustalle?
-- miten web-sovellus siirretään FaaS-alustalle?
-  - miten ja kuinka paljon sovellusta tulee muuttaa?
-  - kuinka työlästä muuttaminen on?
-- lopputuloksen arviointi, ts. miten web-sovelluksen siirtäminen FaaS-alustalle vaikuttaa sen laatuun?
-  - ylläpitokustannukset
-  - suorituskyky, ylläpidettävyys ym. laadulliset ominaisuudet
+These benefits in mind I thought it'd be worthwhile to focus on the topic of migrating an existing web app into FaaS. Potential **research questions** or items to address in the thesis include
+- why should a web app be migrated to FaaS?
+- how do you migrate a web app to FaaS?
+  - in which ways does the app need to be changed?
+  - how laborious is the migration?
+- evaluating the end result, ie. how does migrating a web app into FaaS effect its quality?
+  - performance, maintainability and other quality attributes
+  - developer experience, as in ease of local development, testing, deployment...
+  - hosting costs
 
-## Näkökulmia tutkielmaan
+## Various incoherent thoughts
 
-- miten sovellusta tulee muuttaa? **tapahtumapohjaisuus**, uudelleenmodularisointi, ulkoiset palvelut...?
-  - arkkitehtuurin kannalta
-  - matalammalla tasolla
-- kuinka paljon voidaan säästää?
-- kuinka muuttaa kehitystyötä koodaajan näkökulmasta? devops -> no-op?
-  - lokaalin kehityksen helppous?
-  - debuggaus, testaus, monitorointi, loggaaminen
+- how should the app be changed?
+  - changes both in architecture and code-level
+  - from synchronous to event-driven?
+  - remodularization from a monolith to microservices?
+  - replacing internal modules with external services? db, notifications, logging, monitoring, ...
+- developer experience
+  - devops -> no-ops?
   - > "We use Lambda primarily to improve developer efficiency and to allow dev teams to own their own operations end-to-end, with cost efficiency only a secondary goal. It's been great for that as it's a small enough thing to integrate with that any given developer can learn the entire operations stack (for their team's services) well enough to work on it themselves."
-- pätevätkö samat ongelmat kuin mikropalveluissa tai hajautetuissa jarjestelmissa ylipaatansa? overhead, distributed transactions, ...
-- cold starts, vendor lock-in ym. tyypilliset serverless-ongelmat?
-- tukeeko serverless hyviä arkkitehtuurisuunnittelutapoja?
+- addressing the general problems of distributed systems: overhead, distributed transactions, ...
+- cold starts, vendor lock-in and other unsolved issues in FaaS
+- does FaaS support good architecture design principles?
   - > Different constraints drive different design choices; historically good architecture optimized for what you've got, forgetting principles like isolation and decoupling. With Lambda there's no more financial incentive to bundle services
-- fat vs thin lambdas
-- migraatio pala kerrallaan vai kaikki samalla?
-- lopputuloksena enemmän vai vähemmän koodia?
+- fat vs thin lambdas: the whole app as one huge lambda, each API endpoint as its own lambda, something in the middle?
+- migrating piece by piece or all at once? Is there a logical place to start?
+- do we end up with more or less code?
   - >  A lot of the infra code is gone
-- tietoturva?
-- lähtökohtien huomioiminen: esim. PaaS-alustalle kehitetyn mikroarkkitehtuuri- ja container-tekniikoita hyödyntävän järjestelmän vs. omalla raudalla hostatun vanhan PHP-sovelluksen siirtäminen FaaS:iin (tacit.space on jotain siltä väliltä) - ensimmäinen luultavasti helpompi mutta jälkimmäisellä enemmän hyödyttävää. Kokonaisen sukupolven (PaaS) "skippaaminen"?
+- security https://snyk.io/blog/serverless-security-implications-from-infra-to-owasp/
+- considering the starting point: the amount of work and benefits gained vary when migrating from e.g. a self-hosted PHP app versus a modern PaaS-hosted app. The latter should be easier but the former has more to gain. Skipping an entire generation?
 
-## Siirrettävä sovellus
+## The app to migrate
 
-https://tacit.space/ on moderni web-sovellus muistiinpanojen tekemiseen. Sovellus on melko laaja (noin 30k riviä Javascript- ja Typescript-koodia) ja sitä löytyy useita web-sovelluksille tyypillisiä ominaisuuksia: REST API, single page app-tyylinen web-käyttöliittymä, monimutkainen roolipohjainen autorisaatio, reaaliaikaisia ominaisuuksia (websocket), email- ja SMS-notifikaatiot, luottokorttimaksut, erilliset admin-työkalut, riippuvuuksia ulkopuolisiin palveluihin jne. Sovellus on jaoteltu frontend- ja backend-komponentteihin, joista jälkimmäinen on edelleen jaoteltu kouralliseen eri palveluita.
+https://tacit.space/ is a modern(ish) web application for taking, organizing and sharing notes. It consists of about 30k lines of Javascript and Typescript and it includes many of your typical web app features: REST API, single page app UI, complicated role-based authorization, some (soft) real-time features, email and SMS notifications, credit card billing, separate admin tools, dependencies to external services etc. The app is divided into a frontend and a backend, where the latter is further divided into a handful of distinct services.
 
-Tacit.spacen tapauksessa FaaS-alustalle siirtämisen perusteena ovat skaalautuvuus, rahalliset säästöt sekä kehitystyön fokus infrasta ominaisuuksiin. Koko sovelluksen migraatio alusta loppuun ei välttämättä ole mahdollista gradun aikataulussa, joten pitänee jotenkin valita tutkimuskysymysten kannalta kaikista oleellisimmat kohdat. 
+Migrating the whole app might not be feasible during the thesis project, so I was thinking of picking and choosing the features most essential to the research questions.
 
-## Ongelmia ja avoimia kysymyksiä
+Also, the app currently has only some dozens of active users. Measuring scalability and hosting costs without any actual load can be a bit tricky. Simulated tests to the rescue?
 
-- Tarkempi tutkimuskysymys vielä hakusessa
-- Melko vähän tutkimusaineistoa. Vähemmän formaaleja artikkeleita, blogitekstejä, konferenssiesityksiä kylläkin paljon; kelpaavatko gradun lähteiksi?
-- Onko tämän tyyppisessä gradussa tarkoitus tehdä suosituksia raportoinnin lisäksi? Edellä listatut alustavat tutkimuskysymykset ovat melko subjektiivisia. Joitakin absoluuttisia mittareita toki on (hostaus-kustannukset, koodin määrä), mutta nämäkin ovat jokseenkin sovelluskohtaisia.
-- Seminaarissa oli puhetta insinöörityömäisistä graduista. Onko tämä aihe liikaa sen sorttinen?
-- Muunnettavalla sovelluksella on tällä hetkellä vain muutamia kymmeniä aktiivisia käyttäjiä. Kulujen ja skaalautuvuuden vertailu ilman varsinaista kuormitusta voi olla hankalaa. Avuksi simuloidut testit tai muut arviot?
+## Problems and open questions
 
-## Aineistoa
+- Research questions are still too vague
+- The number of relevant research articles is a bit limited ([examples summaried here](./refs.md)). Less formal articles, blog posts and conference presentations etc. are easily found - not sure if these are ok as thesis references?
+- In a thesis like this are you supposed to just report your experiences/findings, or also make suggestions? The research questions listed above are still very subjective. Even the more absolute measures (hosting costs, amount of code) are application-specific.
+- Is the topic academic enough for a Master's thesis? 
 
-- Tutkimusartikkeleita kerätty [tänne](./refs.md)
-- blogiartikkelit ym.
+## Materials
+- Relevant research articles summaried [here](./refs.md)
+- blog posts etc.
   - https://martinfowler.com/articles/serverless.html
-- konferenssit:
+- technical conferences:
   - GOTO 2017 https://gotocph.com/
     - *Serverless: the future of architecture*
       - lambda is to computing what S3 is to storage
@@ -84,52 +85,3 @@ Tacit.spacen tapauksessa FaaS-alustalle siirtämisen perusteena ovat skaalautuvu
       - push to client, keep state in users' browsers
   - EMIT 2017 http://www.emitconference.com/
   - Serverlessconf (https://serverless.com/blog/serverless-conf-2017-nyc-recap/)
-
-
-# Aihe B: Javascript-lähdekoodin avustettu modularisointi
-
-## Motivaatio
-
-Miksi modularisointi? Modularisoinnin tarkoituksena on hallita järjestelmän kompleksisuutta muodostamalla
-loogisia kokonaisuuksia ja hierarkioita (korkea koheesio), ja minimoida niiden välisiä riippuvuuksia (matala kytkentä).
-Hyvin modularisoitu järjestelmä on helpompi ymmärtää ja ylläpitää.
-
-Miksi Javascript? Pikaisen selauksen perusteella lähes kaikki olemassa oleva tutkimus ja
-työkalut käsittelevät olio-ohjelmointia. Modularisointi on kuitenkin yhtälailla relevantti
-ongelma myös Javascriptin kaltaisissa useampaa paradigmaa soveltavissa kielissä. Nykyiset
-Javascriptin staattisen analyysin työkalut (jshint, jslint, ...) rajoittuvat lähinnä syntaksin tarkastamiseen.
-
-## Tavoitteet
-
-Konkreettinen joskin vielä hämärä esimerkki: ohjelmistoon on lisättävä jokin pätkä koodia.
-Koodi on riippuvainen joukosta muita toiminnallisuuksia.
-Minne koodi tulee sijoittaa, kun halutaan minimoida sen aiheuttama
-lisäkompleksisuus? Koodi voi tässä ilmentyä vaikka funktiona, uutena moduulina, luokkana,
-tiedostona. Vielä konkreettisemmin: editori esittää varoituksen kun tekemäsi
-muokkaus rikkoo (tämä käsite on vielä täysin auki) ohjelmiston modularisointia ja ehdottaa parempia ratkaisuja.
-
-## Menetelmät
-
-Joitain suuntaa-antavia lähteitä kerätty [tänne](./refs.md). Tähän mennessä havaitsin kolme päällimmäistä tapaa tulkita
-ohjelmiston modularisaatiota:
-
-- strukturaalinen: koodi jäsennetään AST:ksi, poimitaan kutsut toisiin moduuleihin (import/export)
-- semanttinen: analysoidaan muuttujien nimiä, kommentteja tms. tekstuaalista dataa
-- historiallinen: analysoidaan versiohallinnan muutoshistoriaa; yhdessä muuttuvat koodinpätkät ovat toisistaan riippuvaisia
-
-Näistä kahta ensimmäistä yhdistellään onnistuneesti muutamassa lähteessä. Voisin siis kuvitella
-soveltavani ainakin koodin jäsentämistä, NLP-menetelmiä (topic modeling?)
-ja/tai klusterointia tai muita koneoppimismenetelmiä.
-
-## Ongelmia ja avoimia kysymyksiä
-
-- Aihe on tietty vielä liian avoin ja laaja. Jonkinlainen tutkimuskysymys pitänee laatia.
-- Miten arvioida työkalun toimivuutta? Mistä tiedetään ovatko ehdotetut modularisaatioratkaisut johdonmukaisia?
-  - coupling/cohesion-metriikat?
-  - kyselyt? mielellään ei
-- Tehdäkö työkalu a) olemassa olevan modularisaation ymmärtämistä/visualisointa vai b) koko ohjelmiston automaattista uudelleen-modularisointia varten?
-  - "software architecture recovery vs. automatic remodularization"
-  - todennäköisesti johonkin tältä väliltä, mutta ei vielä varmuutta miten sijoittua tällä akselilla
-  - ei tarkoitus pelkästään visualisoida (kai?), mutta jonkinlainen visualisaatio voi olla tarpeen (tai ainakin hyödyksi) ratkaisuja ehdottaessa
-- Liian iso pala purtavaksi?
-- ...
