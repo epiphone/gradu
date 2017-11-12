@@ -1,11 +1,18 @@
+### [Baldini, Ioana, et al. "Serverless Computing: Current Trends and Open Problems." (2017)](https://arxiv.org/abs/1706.03178)
+There has not been a corresponding degree of interest in the research community. We feel strongly that there are a wide variety of technically challenging and intellectually deep problems in this space, ranging from infrastructure issues such as optimizations to the cold start problem to the design of a composable programming model. There are even philosophical questions such as the fundamental nature of state in a distributed application. Many of the open problems identified in this chapter are real problems faced by practitioners of serverless computing today and solutions have the potential for significant impact.
+
+Open research problems:
+- What are the **boundaries** of serverless? A fundamental question about serverless computing is of boundaries: is it restricted to FaaS or is broader in scope? How does it relate to other models such as SaaS and MBaaS? 
+- Is **tooling** for serverless fundamentally different from existing solutions? As the granularity of serverless is much smaller than traditional server based tools we may need new tools to deal well with more numerous but much shorter living artifacts.
+- Can **legacy code** be made to run serverless? The amount of existing code that must continue running is much larger than the new code created specifically to run in serverless environments [...] to what degree existing legacy code can be automatically or semi-automatically decomposed into smaller-granularity pieces to take advantage of these new economics.
+- Will there be **patterns** for building serverless solutions? How do we combine low granularity basic building blocks of serverless into bigger solutions? How are we going to decompose apps into functions so that they optimize resource usage? For example how do we identify CPU-bound parts of applications built to run in serverless services? Can we use well-defined patterns for composing functions and external APIs? What should be done on the server vs. client (e.g., are thicker clients more appropriate here)? Are there lessons learned that can be applied from OOP design patterns, Enterprise Integration Patterns, etc.?
+
 ### [Fox, Geoffrey C., et al. "Status of Serverless Computing and Function-as-a-Service (FaaS) in Industry and Research." (2017)](https://arxiv.org/abs/1708.08028)
 
 - definition of FaaS and Serverless as a cloud-native platform for **short-running, stateless** computation  and **event-driven** applications which **scales up and down** instantly and automatically and charges for **actual usage** at a millisecond granularity 
 - unlike SaaS or PaaS that are always running, but scale on-demand, serverless workloads run on-demand, and consequently, scale on-demand
 - great for end developers as they will not need to know scaling and distributed computing
 - debugging was identified as a near term critical problem
-
-### [Baldini, Ioana, et al. "Serverless Computing: Current Trends and Open Problems." (2017)](https://arxiv.org/abs/1706.03178)
 
 ### [Adzic, Gojko, and Robert Chatley. "Serverless computing: economic and architectural impact." (2017)](http://www.doc.ic.ac.uk/~rbc/papers/fse-serverless-17.pdf)
 
