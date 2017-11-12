@@ -22,6 +22,12 @@ This paper presents two case industrial studies of early adopters, showing how m
 - Different Services Billed According to Different Utilisation Metrics: given the fact that different AWS services are billed according to different utilisation metrics, it is possible to significantly optimise costs by letting client applications directly connect to resources.
 - a better summary here https://blog.acolyer.org/2017/10/19/serverless-computing-economic-and-architectural-impact/
 - related blog text https://gojko.net/2017/02/23/serverless-migration-lesson.html
+  - Critical to **embrace the platform**, not just the Lambda service. Crucially, this means not using Lambda to just host traditional apps cheaper. Sure, it is perfectly possible to run traditional web applications inside Lambda containers with minor modifications, you just need to move state somewhere else. There are even libraries out there that will allow you to run Node.js Express apps or Java Spring Apps inside Lambda easily. On one hand, that is quite a compelling way to start using the new architectures. On the other hand, the benefits of that approach are quite questionable. A big part of Patrick Debois’ keynote at the ServerlessConf 2016 in London was how just pushing things to Lambda won’t make things magically cheaper and faster, quite the opposite.
+  - There are three typical aspects of letting the platform take over the responsibilities of a server:
+    - Use distributed authorization
+    - Let clients orchestrate workflows
+    - Allow clients to directly connect to AWS resources
+
 
 ### [Eivy, Adam. "Be Wary of the Economics of" Serverless" Cloud Computing." (2017)](http://ieeexplore.ieee.org/abstract/document/7912239/)
 
