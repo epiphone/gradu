@@ -97,6 +97,7 @@ Migrating the whole tacit.space app to serverless would take ages, so I'd invari
 
 > Some of these patterns will be in application architecture. For instance how big can FaaS functions get before they get unwieldy? Assuming we can atomically deploy a group of FaaS functions what are good ways of creating such groupings - do they map closely to how we’d currently clump logic into microservices or does the difference in architecture push us in a different direction? ([Fowler, 2016](https://martinfowler.com/articles/serverless.html#TheEmergenceOfPatterns))
 
+How do we compose the building blocks of serverless (individual functions or lambdas) into larger systems? Do the same rules and patterns apply as in more traditional platforms?
 
 ## Reseach questions
 
@@ -111,6 +112,8 @@ Potential research questions include
 - Reviewing existing literature for serverless patterns.
 - Reviewing and analyzing the feasibility of traditional patterns on a serverless platform. 
 - Implementing a typical web backend application utilizing different patterns and evaluating the results. The app could be a either subset of the tacit.space app or made up from scratch.
+  - evaluating the suitability of given pattern
+  - evaluating the serverless implementation vs a traditional one
 
 ## Problems
 
