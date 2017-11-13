@@ -7,7 +7,7 @@ Function as a Service (FaaS or serverless) is defined as a cloud-native platform
 ![https://specify.io/concepts/serverless-baas-faas](https://specify.io/assets/serverless-automation-7265d1b1cc7ae92e9559995db6dd680fce120ab97f65a5c70edbd7fa71e41acd.png)
 [lähde](https://specify.io/concepts/serverless-baas-faas)
 
-The two main benefits of FaaS (as I see them) are gains in developer productivity (less time spent on operations/infrastructure vs. features) and decreased hosting costs. 
+The two main benefits of FaaS (as I see them) are gains in developer productivity (less time spent on operations/infrastructure vs. features) and decreased hosting costs. Also "green computing", reduced operational costs, time-to-market and experimentation.
 
 > I don't have to manage a virtual machine, operating system, patch management, scaling service, load balancing, availability, fault tolerance, provisioning, anti-virus, anti-malware, vulnerability scanning, continuous monitoring, access control, rightsizing, server tuning, intrusion detection, hardware affinity, OS dependencies [...] and I only pay for what I use ([Groat & Lu, 2017](https://www.slideshare.net/AmazonWebServices/serverless-design-patterns-for-rethinking-traditional-enterprise-application-approaches-aws-public-sector-summit-2017))
 
@@ -85,3 +85,34 @@ Also, the app currently has only some dozens of active users. Measuring scalabil
       - push to client, keep state in users' browsers
   - EMIT 2017 http://www.emitconference.com/
   - Serverlessconf (https://serverless.com/blog/serverless-conf-2017-nyc-recap/)
+
+
+# Topic B: Serverless web application backend patterns
+
+## Motivation
+
+Migrating the whole tacit.space app to serverless would take ages, so I'd invariably end up picking and choosing the most interesting parts to migrate. This in turn means there's not really any valuable real-world migration case study to be gained. Hence I figured it might be better to focus on the serverless side of serverless migration, as opposed to the migration part.
+
+> Will there be patterns for building serverless solutions? How do we combine low granularity basic building blocks of serverless into bigger solutions? How are we going to decompose apps into functions so that they optimize resource usage? For example how do we identify CPU-bound parts of applications built to run in serverless services? Can we use well-defined patterns for composing functions and external APIs? What should be done on the server vs. client (e.g., are thicker clients more appropriate here)? Are there lessons learned that can be applied from OOP design patterns, Enterprise Integration Patterns, etc.? [Baldini et al., 2017](https://arxiv.org/abs/1706.03178)
+
+> Some of these patterns will be in application architecture. For instance how big can FaaS functions get before they get unwieldy? Assuming we can atomically deploy a group of FaaS functions what are good ways of creating such groupings - do they map closely to how we’d currently clump logic into microservices or does the difference in architecture push us in a different direction? ([Fowler, 2016](https://martinfowler.com/articles/serverless.html#TheEmergenceOfPatterns))
+
+
+## Reseach questions
+
+Potential research questions include
+- What kind of patterns are there for building serverless web application backends?
+- How does the serverless programming model work out with existing patterns? What kind of things have to be taken into consideration when implementing existing patterns on a serverless platform?
+- What kind of patterns are there for migrating an existing application to serverless?
+- What is easier in serverless vs. traditional backend app? What is more difficult?
+
+## Methods
+
+- Reviewing existing literature for serverless patterns.
+- Reviewing and analyzing the feasibility of traditional patterns on a serverless platform. 
+- Implementing a typical web backend application utilizing different patterns and evaluating the results. The app could be a either subset of the tacit.space app or made up from scratch.
+
+## Problems
+
+- Materials are mostly non-academic
+- 
