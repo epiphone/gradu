@@ -40,26 +40,12 @@ These benefits and characteristics in mind I thought it'd be worthwhile to focus
   - evaluating the suitability of given pattern
   - evaluating the serverless implementation vs a traditional one
 
-## Various incoherent thoughts
+## What is **not** included in the topic
 
-- how should the app be changed?
-  - changes both in architecture and code-level
-  - from synchronous to event-driven?
-  - remodularization from a monolith to microservices?
-  - replacing internal modules with external services? db, notifications, logging, monitoring, ...
-- developer experience
-  - devops -> no-ops?
-  - > "We use Lambda primarily to improve developer efficiency and to allow dev teams to own their own operations end-to-end, with cost efficiency only a secondary goal. It's been great for that as it's a small enough thing to integrate with that any given developer can learn the entire operations stack (for their team's services) well enough to work on it themselves."
-- addressing the general problems of distributed systems: overhead, distributed transactions, ...
-- cold starts, vendor lock-in and other unsolved issues in FaaS
-- does FaaS support good architecture design principles?
-  - > Different constraints drive different design choices; historically good architecture optimized for what you've got, forgetting principles like isolation and decoupling. With Lambda there's no more financial incentive to bundle services
-- fat vs thin lambdas: the whole app as one huge lambda, each API endpoint as its own lambda, something in the middle?
-- migrating piece by piece or all at once? Is there a logical place to start?
-- do we end up with more or less code?
-  - >  A lot of the infra code is gone
-- security https://snyk.io/blog/serverless-security-implications-from-infra-to-owasp/
-- considering the starting point: the amount of work and benefits gained vary when migrating from e.g. a self-hosted PHP app versus a modern PaaS-hosted app. The latter should be easier but the former has more to gain. Skipping an entire generation?
+- Other kinds of common serverless use cases e.g. batch/stream processing, data pipelines, scientific computing workflows
+- Theory of system migration or refactoring in general (although I'll probably have to make some references to the topic)
+- Inner workings of serverless runtimes (again, might have to mention briefly)
+- more?
 
 ## The app to migrate
 
@@ -82,15 +68,24 @@ https://tacit.space/ is a modern(ish) web application for taking, organizing and
 ## Outline
 
 A tentative outline:
+
 1. Introduction
-2. FaaS
-  - description of the platform
-  - use cases
-  - benefits and drawbacks
-  - focus on architectural/design patterns
-3. Migrating tacit.space app
-4. Evaluation
-5. Conclusions
+- motivation, research questions, outline
+2. FaaS/Serverless
+- general description of the platform and its implications
+- use cases
+- benefits and drawbacks
+3. Serverless architectural/design patterns
+- how to compose individual functions into larger systems
+- emerging FaaS-specific patterns
+- applying existing patterns
+4. Migrating tacit.space app
+- implementing selected features utilizing patterns described in section 3
+- authentication, notifications, basic CRUD features, push/pull, other?
+5. Evaluation
+- comparing the result with the original app
+- do the benefits/drawbacks outlined in section 2 apply?
+6. Conclusions
 
 ## Materials
 - Relevant research articles summaried [here](./refs.md)
@@ -120,3 +115,24 @@ A tentative outline:
       - push to client, keep state in users' browsers
   - EMIT 2017 http://www.emitconference.com/
   - Serverlessconf (https://serverless.com/blog/serverless-conf-2017-nyc-recap/)
+
+## Various incoherent thoughts
+
+- how should the app be changed?
+  - changes both in architecture and code-level
+  - from synchronous to event-driven?
+  - remodularization from a monolith to microservices?
+  - replacing internal modules with external services? db, notifications, logging, monitoring, ...
+- developer experience
+  - devops -> no-ops?
+  - > "We use Lambda primarily to improve developer efficiency and to allow dev teams to own their own operations end-to-end, with cost efficiency only a secondary goal. It's been great for that as it's a small enough thing to integrate with that any given developer can learn the entire operations stack (for their team's services) well enough to work on it themselves."
+- addressing the general problems of distributed systems: overhead, distributed transactions, ...
+- cold starts, vendor lock-in and other unsolved issues in FaaS
+- does FaaS support good architecture design principles?
+  - > Different constraints drive different design choices; historically good architecture optimized for what you've got, forgetting principles like isolation and decoupling. With Lambda there's no more financial incentive to bundle services
+- fat vs thin lambdas: the whole app as one huge lambda, each API endpoint as its own lambda, something in the middle?
+- migrating piece by piece or all at once? Is there a logical place to start?
+- do we end up with more or less code?
+  - >  A lot of the infra code is gone
+- security https://snyk.io/blog/serverless-security-implications-from-infra-to-owasp/
+- considering the starting point: the amount of work and benefits gained vary when migrating from e.g. a self-hosted PHP app versus a modern PaaS-hosted app. The latter should be easier but the former has more to gain. Skipping an entire generation?
