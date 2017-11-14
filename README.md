@@ -1,4 +1,4 @@
-# Theis topic: Migrating a web application to FaaS
+# Thesis topic: Migrating a web application to FaaS
 
 ## Motivation
 
