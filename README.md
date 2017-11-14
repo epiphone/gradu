@@ -70,21 +70,21 @@ https://tacit.space/ is a modern(ish) web application for taking, organizing and
 A tentative outline:
 
 1. Introduction
-- motivation, research questions, outline
+  - motivation, research questions, outline
 2. FaaS/Serverless
-- general description of the platform and its implications
-- use cases
-- benefits and drawbacks
+  - general description of the platform and its implications
+  - use cases
+  - benefits and drawbacks
 3. Serverless architectural/design patterns
-- how to compose individual functions into larger systems
-- emerging FaaS-specific patterns
-- applying existing patterns
+  - how to compose individual functions into larger systems
+  - emerging FaaS-specific patterns
+  - applying existing patterns
 4. Migrating tacit.space app
-- implementing selected features utilizing patterns described in section 3
-- authentication, notifications, basic CRUD features, push/pull, other?
+  - implementing selected features utilizing patterns described in section 3
+  - authentication, notifications, basic CRUD features, push/pull, other?
 5. Evaluation
-- comparing the result with the original app
-- do the benefits/drawbacks outlined in section 2 apply?
+  - comparing the result with the original app
+  - do the benefits/drawbacks outlined in section 2 apply?
 6. Conclusions
 
 ## Materials
