@@ -37,8 +37,8 @@ These benefits and characteristics in mind I thought it'd be worthwhile to focus
 - Reviewing existing literature for serverless patterns.
 - Reviewing and analyzing the feasibility of traditional patterns on a serverless platform.
 - Implementing a subset of the tacit.space app utilizing different patterns and evaluating the results.
-  - evaluating the suitability of given pattern
-  - evaluating the serverless implementation vs a traditional one
+  - evaluating the suitability of given pattern
+  - evaluating the serverless implementation vs a traditional one
 
 ## Various incoherent thoughts
 
