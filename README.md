@@ -79,6 +79,18 @@ https://tacit.space/ is a modern(ish) web application for taking, organizing and
 - Migrating the whole app isn't feasible during the thesis project, so I was thinking of picking and choosing the features most essential to the research questions. This in turn might make the "case study of migration process"-kind of approach less valid?
 - Also, the app currently has only some dozens of active users. Measuring scalability and hosting costs without any actual load can be a bit tricky. Simulated tests to the rescue?
 
+## Outline
+
+A tentative outline:
+1. Introduction
+2. FaaS
+  - description of the platform
+  - use cases
+  - benefits and drawbacks
+  - focus on architectural/design patterns
+3. Migrating tacit.space app
+4. Evaluation
+5. Conclusions
 
 ## Materials
 - Relevant research articles summaried [here](./refs.md)
