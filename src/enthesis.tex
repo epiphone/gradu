@@ -1,0 +1,699 @@
+\documentclass[utf8,english]{gradu3}
+% If you are writing a Bachelor's Thesis, use the following instead:
+%\documentclass[utf8,bachelor,english]{gradu3}
+
+\usepackage{graphicx} % for including pictures
+
+\usepackage{amsmath} % useful for math (optional)
+
+\usepackage{booktabs} % good for beautiful tables
+
+% NOTE: This must be the last \usepackage in the whole document!
+\usepackage[bookmarksopen,bookmarksnumbered,linktocpage]{hyperref}
+
+\addbibresource{malliopas.bib} % The file name of your bibliography database
+
+\begin{document}
+
+\title{Usage of the {gradu3} document class for \LaTeX\ theses}
+\translatedtitle{\LaTeX-tutkielmapohjan {gradu3} käyttö}
+\studyline{All study lines}
+\avainsanat{%
+  \LaTeX,
+  {gradu3},
+  pro gradu -tutkielmat,
+  kandidaatintutkielmat,
+  käyttöohje}
+\keywords{\LaTeX, {gradu3}, Master's Theses, Bachelor's Theses, user's guide}
+\tiivistelma{%
+  Tämä kirjoitelma on esimerkki siitä, kuinka
+  {gradu3}-tutkielmapohjaa käytetään.  Se sisältää myös
+  käyttöohjeet ja tutkielman rakennetta koskevia ohjeita.
+
+  Tutkielman tiivistelmä on tyypillisesti lyhyt esitys, jossa
+  kerrotaan tutkielman taustoista, tavoitteesta, tutkimusmenetelmistä,
+  saavutetuista tuloksista, tulosten tulkinnasta ja johtopäätöksistä.
+  Tiivistelmän tulee olla niin lyhyt, että se, englanninkielinen
+  abstrakti ja muut metatiedot mahtuvat kaikki samalle sivulle.
+
+  Sen tulee kertoa täsmälleen samat asiat kuin englannikielinen
+  abstrakti.
+}
+\abstract{%
+  This document is a sample {gradu3} thesis document class
+  document.  It also functions as a user manual and supplies
+  guidelines for structuring a thesis document.
+
+  The abstact is typically short and discusses the background, the
+  aims, the research methods, the obtained results, the interpretation
+  of the results and the conculsions of the thesis.  It should be so
+  short that it, the Finnish translation, and all other meta
+  information fit on the same page.
+
+  The Finnish tiivistelmä of a thesis should usually say exactly the same
+  things as the abstract.
+}
+
+\author{Antti-Juhani Kaijanaho}
+\contactinformation{Ag~C416.1, \texttt{antti-juhani.kaijanaho@jyu.fi}}
+% use a separate \author command for each author, if there is more than one
+\supervisor{Unsupervised work}
+% use a separate \supervisor command for each supervisor, if there
+% is more than one
+
+ % you don't need this line in a thesis
+\type{Template and manual for a thesis document class}
+
+\maketitle
+
+\preface
+This is where you can write a preface for your thesis.  Most theses
+don't have prefaces, but if you write one, keep it short (at least one
+page).
+
+The preface should discuss more the thesis process than the content of
+the thesis.  For example, if there is something out of the ordinary in
+your choice of a thesis topic or if something out of the ordinary
+happened during its prepararion, the preface is where you could write
+about it.  It is also customary in a preface to thank by name those
+persons who helped you with your thesis -- at least your supervisor,
+your spouse and your children, if any.  (Your family likely will have
+helped you by encouraging and supporting you.)
+
+The preface is typically in the first person (``I'').  It is also common
+to sign it.
+
+Jyväskylä, \today
+
+\bigskip
+
+The Author
+
+\begin{thetermlist}
+\item[\TeX] A batch-oriented typesetting system written by 
+Donald Knuth in 1977--1989 \parencite[see][]{knuth86:_texbook}. 
+\item[\LaTeX] A system, built on top of \TeX\
+  \parencite{knuth86:_texbook}, for typesetting structured
+  documents \parencite[see][]{lamport94:_latex}.  Its current version
+  is \LaTeXe.
+\end{thetermlist}
+
+\mainmatter
+
+\chapter{Introduction}
+
+The main text of a thesis always starts with an ``Introduction''.
+You can leave writing it to the final phase of writing the thesis.
+
+It is a good idea to start the Introduction with the main thesis
+statement or research question of the thesis.  After that, it is a
+good idea to clarify things by defining any necessary
+terms.\footnote{Definitions after the thesis statement!  Also, don't
+  babble in the introduction.}  The introduction is also a good place
+to discuss why your thesis statement is scientifically or practically
+relevant and interesting.  Ideally, it would be relevant and
+interesting from both the scientific and the practical point of view.
+It would also be excellent if you explained, in the introduction, what
+your contribution is; that is, what such knowledge your thesis
+contains that you have investigated personally instead of reading it
+from somewhere.  The contribution could well be, that you have
+personally checked the truth of a claim you found in a book or
+article.  At the end of the Introduction, it is customary to briefly
+explain the structure of the thesis -- what each chapter is about.
+
+This sample discusses the documentclass gradu3 (version
+\graduclsversion), which assists you in writing a Bachelor's or a
+Master's thesis in the Department of Mathematical Information
+Technology at the University of Jyväskylä.  If you have problems with
+it, you can discuss them on the Tutkielma-TeX mailing list
+(\url{http://lists.jyu.fi/mailman/listinfo/tutkielma-tex}).  You can
+also send comments, suggestions for improvement and bug reports
+directly to me.
+
+\begin{figure}[h]\centering
+  \includegraphics[height=5cm,keepaspectratio]{opus-kissa}
+  \caption[The cover picture of my Finnish-language \LaTeX\ guide
+  \parencite{kaijanaho03:_latex_ams_latex}]{The cover picture of my
+    Finnish-language \LaTeX\
+    guide \parencite{kaijanaho03:_latex_ams_latex} is here merely as
+    an example of how to include a picture in a thesis.}
+  \label{fig:opus-kissa}
+\end{figure}
+
+I will here assume that you know the basics of using the \LaTeX\
+system.  The original \LaTeX\ book \parencite{lamport94:_latex} is the
+official manual.  There are also a lot of books in English about using
+\LaTeX.  I have also written one in
+Finnish \parencite{kaijanaho03:_latex_ams_latex}.\footnote{Many \TeX\
+  and \LaTeX\ books use a cat figure in their cover.  The cover
+  picture of my own book was rather abstract; see
+  Figure~\ref{fig:opus-kissa}.}  A good English guide, freely
+available on the Internet, is \textit{The Not So Short Introduction to
+  \LaTeXe} \parencite{oetiker:_not_so_short_introd_latex}.  Remember
+to read the \LaTeX\ source ode of this sample, not just the typeset
+version (eg.~PDF).
+
+Please note that the instructions given in this sample are by no means
+official.  Always follow your supervisor's instructions even if they
+conflict with what this sample says.
+
+
+\chapter{The structure of the thesis}
+
+There should be 5--9 numbered chapters in a thesis, including
+Introduction and Conclusion.  If necessary, you can use sections
+and subsections to give the thesis a more fine-grained structure.
+
+The chapters that lie between Introduction and Conclusion are
+sometimes collectively called the \textit{body} of the thesis.  It is
+often said to start with a \textit{theoretical part}, which is then
+followed either a \textit{main theorem}, a \textit{constructive part}
+or a \textit{empirical part}.
+
+
+\section{The theoretical part}
+
+The goal of the theoretical part of a thesis is to develop the
+theoretical background required in the thesis.  The idea is that a
+reader of the thesis should, based on just the thesis itself, be able
+to understand all the special concepts and methods used in the thesis.
+A good thesis also gives well-argued reasons for why exactly these
+concepts and methods are in use in the thesis (with the main
+alternatives given in the literature mentioned).
+
+The best way to present and use the theoretical bakcground depends on
+what the thesis is like.  The theoretical part of a
+mathematico-theoretical work differs considerably fron the theoretical
+part of a constructive software development work; quite different from
+both is the theoretical part of a quantitative or qualitative
+empirical study that is based on the traditions of the behavioral or
+the social sciences.  Reading other theses of the same type, as well
+as similar published research reports, will give you a good impression
+of what is required of your own thesis.
+
+\section{After the theory}
+
+The theoretical part is followed by your contribution:
+\begin{itemize}
+\item In a mathematico-theoretical thesis it is usually a sequence of
+  definitions and lemmas of your own devising, which then culminate in
+  the proof of your main theorem.
+\item In a constructive thesis it is usually a computer program or
+  other artefact that you have made yourself.
+\item In an empirical thesis it is a set of empirical results obtained
+  by applying a empirical research method.
+\end{itemize}
+
+You should present your contribution with precision, giving reasons
+for the choices you have made.  You should follow the best practices
+of the research tradition you are using.
+
+\chapter{Using the literature}
+
+The theoretical part is almost always based solely on the literature.
+When discussing your contribution, you may also need to cite the
+literature.
+
+Remember to avoid plagiarism.  If you copy, either verbatim or with
+slight changes (or, example, in your own translation) text from some
+source, make it clear to the reader.  Mark your quotes (using
+quotation marks or some other clear manner) and give a precise
+citation.  If you do not quote verbatim, mark any changes you have
+made.  In most situations, however, it is better to use your own
+words, based on more than one source.  Even then, give clear
+citations.
+
+The {gradu3} document class automatically uses the \textsc{Bib\LaTeX}
+system \parencite{biblatex-manual} and it Chicago
+style \parencite{biblatex-chicago-manual}.  You can switch off this
+automation by using the \string\documentclass-option manualbib, but
+that means you have to take care of the bibliography yourself, and the
+techniques discussed here may not be available.  Please note that the
+Department recommends using a Chicago style for your bibliography.
+
+\section{Citations}
+
+You can cite sources in two ways.  First, you can use the citation as
+a noun: \textcite[Chapter~8.8.4]{aho-compilers} briefly discuss the
+use of graph coloring in the register allocation phase of a compiler.
+In this case, use the \string\textcite\ command.  Second, you can use
+a citation as a parenthetical, which is not read aloud: Graph coloring
+is one possibile way to allocate
+registers \parencite[Chapter~8.8.4]{aho-compilers}.  Use the
+\string\parencite\ command for this.
+
+Both commands (\string\textcite\ and \string\parencite) take three
+parameters, two of which are optional.  The first (optional) parameter
+is a pre-note, the second (optional) parameter is a post-note, and the
+third (mandatory) parameter is the citation
+key \parencite[see][Section~3.7]{biblatex-manual}.  The citation in
+the preceding sentence was made using the following command:
+
+\begingroup\footnotesize
+\begin{verbatim}
+\parencite[see][Section~3.7]{biblatex-manual}
+\end{verbatim}
+\endgroup
+
+If you give these commands just one optional argument (that is, one
+enclosed in square brackets), it will be interpreted as a post-note.
+If you want to give only a pre-note, leave the post-note empty
+\parencite[see][]{biblatex-manual}:
+
+\begingroup\footnotesize
+\begin{verbatim}
+\parencite[see][]{biblatex-manual}
+\end{verbatim}
+\endgroup
+
+It is also possible to cite multiple sources in the same citation
+%
+\parencites%
+  [see][Section~3.7]{biblatex-manual}%
+  [regarding citations in general, see also][Section~5.3.2]%
+    {biblatex-chicago-manual}%
+\relax.
+%
+Use the command  \string\parencites\
+for this.  For each citation, give it the same parameters as you would give
+a single \string\parencite\
+command.  It is good practice (but often not necessary) to end the command
+in a \string\relax, so that no surprises ensue.
+
+\begingroup\footnotesize
+\begin{verbatim}
+\parencites%
+  [see][Section~3.7]{biblatex-manual}%
+  [regarding citations in general, see also][Section~5.3.2]%
+    {biblatex-chicago-manual}%
+\relax.
+\end{verbatim}
+\endgroup
+
+If you break the command into multiple lines, use the comment sign
+to end each line, to prevent spurious spaces.
+
+\section{The bibliography database}
+
+You should add all the sources you want to cite in a separate
+bibliography database written on the \textsc{Bib\TeX} format.  You can
+use many bibliographical tools in creating and maintaining it, but it
+is perfectly possible to write it by hand.  The name of your
+bibliography database must be given as an argument to the
+\string\addbibresource\ command.
+
+The database in \textsc{Bib\TeX} format is a text file following
+special formatting rules.  It consists of records, each of which
+starts with an @~sign, which is then followed by the type of the
+record.  The rest of the record goes inside curly braces.  For example,
+the compilers book cited earlier \parencite{aho-compilers} can be
+represented as the following record:
+
+\begingroup\footnotesize
+\begin{verbatim}
+@Book{aho-compilers,
+  author =       {Alfred V. Aho and Monica S. Lam and Ravi Sethi and
+                  Jeffrey D. Ullman},
+  title =        {Compilers},
+  subtitle =     {Principles, Techniques, \& Tools},
+  publisher =    {Pearson Addison Wesley},
+  year =         2007,
+  address =      {Boston},
+  edition =      2
+}
+\end{verbatim}
+\endgroup%
+
+The type of this record is ``book''.  The first word inside the curly
+braces is the citation key, which is used in the \string\textcite\ and
+\string\parencite\ commands.  It is followed by a comma and a set of
+named fields like ``author'', ``title'', ``subtitle'' and
+``publisher''.  The content of the field is written inside curly
+braces, although numerical data can be written without them.
+
+The names of the authors are written mainly in the conventional way.
+An alternative is to invert it, giving the surname first, followed by
+a comma and the first name (``Aho, Alfred V.''), and in some special
+cases this is mandatory.\footnote{For example, if the author has a
+  double surname without a hyphen separating them; as one example, the
+  name of Simon Peyton Jones should be written in the database as
+  ``Peyton Jones, Simon''.}  If there are multiple authors, their
+names must be separated by an ``and''.  If you do not list all
+authors, put ``and others'' after the last listed name.
+
+If the author of some source is an organization, its name must be written
+within another set of curly braces \parencite[eg.][]{unicode620}:
+
+\begingroup\footnotesize
+\begin{verbatim}
+@Book{unicode620,
+  author =       {{Unicode Consortium}},
+  title =        {The Unicode Standard, Version 6.2.0},
+  year =         {2012},
+  url =          {http://www.unicode.org/versions/Unicode6.2.0/},
+  urldate =      {2013-01-29}
+}
+\end{verbatim}
+\endgroup
+
+If a source, for some reson, has no named author, leave the ``author''
+field out ntirely.  In that case, the citation uses the source's
+title \parencite[eg.][]{presidential-novel}:
+
+\begingroup\footnotesize
+\begin{verbatim}
+@Book{presidential-novel,
+  title =        {O},
+  subtitle =     {A Presidential Novel},
+  publisher =    {Simon \& Schuster},
+  year =         {2011},
+}
+\end{verbatim}
+\endgroup
+
+A journal article \parencite[eg.][]{strachey-fundamentals} is given a
+record like the following:
+
+\begingroup\footnotesize
+\begin{verbatim}
+@Article{strachey-fundamentals,
+  author =       {Christopher Strachey},
+  title =        {Fundamental Concepts in Programming Languages},
+  journal =      {Higher-Order and Symbolic Computation},
+  year =         2000,
+  volume =       13,
+  number =       {1--2},
+  pages =        {11--49},
+  doi =          {10.1023/A:1010000313106}
+}
+\end{verbatim}
+\endgroup
+
+Note especially the field ``doi'', in which you can write the Digital
+Object Idenifier (DOI) of the article.  It is usually a better choice
+than any URL, as the DOI is a permanent identifier for the article.
+Most DOIs are also convertible to URLs by prepending
+\url{http://dx.doi.org/}.
+
+If the DOI of an online source is not known (or there is none at all),
+you can use the ``url'' field.  In that case, you should also give the
+date on which you read the source, in the field ``urldate'' (using the
+international standard format YYYY--MM--DD).  You should choose the
+address with great care, so that it is as precise as possible and
+remains valid as long as possible.  If the page has a specially
+indicated permanent link (or permalink), use it.
+
+When citing a WWW page that is not a book or an article or any other
+formal publication, you can use the ``online'' record
+type \parencite[eg.][]{debian-social-contract}:
+
+\begingroup\footnotesize
+\begin{verbatim}
+@Online{debian-social-contract,
+  title =        {Debian Social Contract},
+  year =         {2004},
+  url =          {http://www.debian.org/social_contract.en.html},
+  urldate =      {2013-01-29}
+}
+\end{verbatim}
+\endgroup
+
+Some sources are edited collections of independent articles.  In that
+case, you should generally cite a specific article in
+it \parencite[eg.][]{prechelt-credibility} instead of the full
+collection.  Even then, you should add both the collection and the
+cited article as their own records, and use a ``crossref'' field in
+the article record to refer to the collection:\footnote{It is
+  permissible to combine the article and the collection into one
+  InCollection record, for example if one cites only one article in
+  the collection.  In that case, the title of the collection goes in a
+  ``booktitle'' field, and no ``crossref'' field is used.}
+
+\begingroup\footnotesize
+\begin{verbatim}
+@Collection{making-software,
+  editor =       {Andy Oram and Greg Wilson},
+  title =        {Making Software},
+  subtitle =     {What Really Works, and Why We Believe It},
+  publisher =    {O'Reilly},
+  year =         2011
+}
+@InCollection{prechelt-credibility,
+  author =       {Lutz Prechelt and Marian Petre},
+  title =        {Credibility, or Why Should I Insist on Being
+                  Convinced},
+  crossref =     {making-software},
+  pages =        {17--34}
+}
+\end{verbatim}
+\endgroup
+
+Note that a collection has an ``editor'' instead of an ``author''.
+
+For more information about the structure of a bibliography databasem
+see the \textsc{Bib\TeX} manual \parencite{bibtexing},
+the \textsc{Bib\LaTeX} manual \parencite[Section~2]{biblatex-manual},
+and the \textsc{Bib\LaTeX}-Chicago manual
+\parencite[Sections 5.1--5.2]{biblatex-chicago-manual}.  There are
+also more examples in the source code of this document.
+
+
+\section{The bibliography}
+
+The bibliography database is converted into the bibliography by using
+the utility program {biber}.  It is fairly new, and is often missing
+from machines whose \TeX\ installation is not up to date.  Of the
+ssh-accessible Linux servers of the University, only charra.it.jyu.fi
+has it at this time.  It is installable in Ubuntu since version~12.10
+(Quantal Quetzal) and in Debian since version~7 (Wheezy).  For
+Windows, use the 32-bit Mik\TeX\ package
+miktex-biber-bin.\footnote{Last I looked, there was no 64-bit package
+  of biber for Mik\TeX.}
+
+On the command line, biber is simple to use.  Once \LaTeX (or
+pdf\LaTeX) has been run once, invoke biber with the document name
+(without the .tex part) as its argument.  After that, run \LaTeX\ (or
+pdf\LaTeX) at least once, until the latest run does not request
+another run.  For example:
+
+\begingroup\footnotesize
+\begin{verbatim}
+$ pdflatex malliopas
+[...]
+Package biblatex Warning: Please (re)run Biber on the file:
+(biblatex)                malliopas
+(biblatex)                and rerun LaTeX afterwards.
+[..]
+Output written on malliopas.pdf (18 pages, 96855 bytes).
+Transcript written on malliopas.log.
+$ biber malliopas
+INFO - This is Biber 0.9.9
+[...]
+INFO - Output to malliopas.bbl
+$ pdflatex malliopas
+[...]
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+[...]
+Output written on malliopas.pdf (21 pages, 107373 bytes).
+Transcript written on malliopas.log.
+$ pdflatex malliopas
+[...]
+Output written on malliopas.pdf (21 pages, 107509 bytes).
+Transcript written on malliopas.log.
+\end{verbatim}
+\endgroup
+
+\section{Known problems}
+
+The \textsc{Bib\LaTeX} version 2.6 (released April~30, 2013) has a bug
+causing the following error message:%
+{\footnotesize%
+\begin{verbatim}
+Runaway argument?
+{bibliography = {{Kirjallisuusluettelo}{Kirjallisuus}}, references = \ETC.
+! Paragraph ended before \DeclareBibliographyStrings was complete.
+\end{verbatim}
+}%
+This bug was fixed in the following version, 2.7 (released July~7,
+2013).  If upgrading is not an option, there is a simple fix.  Look in
+the file \texttt{.../biblatex/lbx/finnish.lbx} for the line
+{\footnotesize%
+\begin{verbatim}
+editorsan        = {{toimittaneet ja selityksin varustaneet,% FIXME: unsure
+\end{verbatim}
+}%
+Edit the line to look like this:
+{\footnotesize%
+\begin{verbatim}
+editorsan        = {{toimittaneet ja selityksin varustaneet}% FIXME: unsure
+\end{verbatim}
+}%
+(Replace the comma with a closing curly brace.)
+
+
+\chapter{Special properties of the document class}
+
+Generally, {gradu3} behaves like the report document class that is shipped
+with \LaTeX.  There are, however, some differences:
+\begin{itemize}
+\item You do not need to load the packages {inputenc}, {fontenc},
+  and {babel}.
+  \begin{itemize}
+  \item You must indicate the character set you are using by giving it as
+    an option to the
+    {\string\documentclass} command.  Nowadays {utf8} 
+    is generally a good choice, although some situations may require
+    using latin1 or latin9.
+  \item If your thesis is written in English, indicate this using the
+    option english to the {\string\documentclass} command.  (The
+    default is Finnish.)
+  \end{itemize}
+\item If you are writing a Bachelor's Thesis, use the option bachelor to the
+  {\string\documentclass} command.
+\item Specify the metadata of your thesis using the commands given in
+  Table~\ref{tbl:metatiedot}.  They must be given before the
+  {\string\maketitle} command.
+\begin{table}[h]\centering
+  \begin{tabular}{lp{9cm}}
+    \toprule
+    Command & Meaning \\
+    \midrule
+    {\string\title}
+    & The title of the thesis (do not use the {\string\thanks} command) \\
+    {\string\translatedtitle}
+    & The Finnish title of an English-language thesis,
+    the English title of a Finnish-language thesis\\
+    {\string\studyline}
+    & Study line (optional if using the bachelor option)\\
+    {\string\tiivistelma}
+    & Abstract in Finnish \\
+    {\string\abstract}
+    & Abstract in English \\
+    {\string\avainsanat}
+    & Keywords in Finnish \\
+    {\string\keywords}
+    & Keywords in English \\
+    {\string\author}
+    & Author's name (if multiple authors, give each their own command 
+      -- the {\string\and} command is not supported) \\
+    {\string\contactinformation}
+    & The contact information of the author \\
+    {\string\supervisor}
+    & The supervisor of the thesis (if multiple supervisor, give each their own command; optional if using the bachelor option)\\
+    \bottomrule
+  \end{tabular}
+  \caption{Commands for declaring metadata}\label{tbl:metatiedot}
+\end{table}
+\item If you want, you can write a preface after the
+  \string\maketitle\ command.  Use the \string\preface\ to start it.
+\item After the preface, if any, you may write a list of terms by
+  using the thetermlist environment.  Inside it, you can use the
+  \string\item[\textit{term}] command to indicate which term you are
+  defining.
+\item After \string\maketitle, preface (if any), and term list (if any),
+  use the \string\mainmatter\ command.  It will automatically generate
+  the tables of contents, figures, and tables that are needful.
+\item The commands \string\subsubsection, \string\paragraph{} ja
+  \string\subparagraph{} are not supported.
+\item Appendices are not \string\chapter s, they are %
+  \string\section s.
+\item The peceding chapter discussed how to cite sources and geneate a
+  bibliography.
+\end{itemize}
+
+\chapter{Conclusion}
+
+The last chapter of a thesis is the Conclusion (some authors use
+Conculsions, instead).  Keep it short, and discuss what one can
+conclude about the thesis statement or research question given in the
+Introduction, in light of all that has been written in the thesis.
+The Conclusion is also the place to discuss any limitations and
+weaknesses of the thesis (especially those that cast doubt on the
+reliabliity of the results given in the thesis), if they have not been
+already discussed, for example in a Discussion chapter.  It is also
+customary to state, what further research might be beneficial in light
+of this thesis.
+
+If the Conclusion threatens to become too long, it is a good idea to
+split the interpretation of the results into its own chapter, often
+called Discussion, making Conclusion short and sweet.
+
+After Conclusion, there is the bibliography, indicated by the
+\string\printbibliography\ command, followed by appendices, if any.
+
+\printbibliography
+
+\appendix
+\section{Moving from gradu2 to gradu3}
+
+Moving an incomplete thesis from gradu2 to gradu4 is not particularly
+difficult.  The first thing to do is to change gradu2 into gradu3 in
+the \string\documentclass\ command.  Most of the options given to it
+must be removed, as they are not supported.  A ``kandi'' option is
+changed into ``bachelor''; any ``english'' option is retained, and so
+is ``utf8'', ``latin1'', or ``latin9''.
+
+
+Table~~\ref{tbl:cmdchange} lists the command name changes that are needed.
+A dash indicates that there is no corresponding command.  Note especially the new commands.
+
+\begin{table}[h]\centering
+  \begin{tabular}{ll}
+    \toprule
+    gradu2                 & gradu3  \\
+    \midrule
+    ---                    & \string\maketitle \\
+    ---                    & \string\supervisor \\
+    \string\acmccs         & --- \\
+    \string\aine           & \string\subject\\
+    \string\copyrightowner & --- \\
+    \string\fulltitle      & --- \\
+    \string\laitos         & \string\department\\
+    \string\license        & --- \\
+    \string\linja          & \string\studyline\\
+    \string\paikka         & --- \\
+    \string\setauthor      & \string\author\\
+    \string\termlist       & thetermlist environment\\
+    \string\tyyppi         & \string\type\\
+    \string\yhteystiedot   & \string\contactinformation\\
+    \string\yliopisto      & \string\university\\
+    \string\ysa            & --- \\
+    \bottomrule
+  \end{tabular}
+  \caption{Command changes from gradu2 to gradu3}
+  \label{tbl:cmdchange}
+\end{table}
+
+The most effort is likely needed to converting citations and the
+bibliography.
+
+\section{Rarely needed features}
+
+In addition to features already mentioned, gradu3 offers the following
+additional features:
+\begin{itemize}
+\item The standard options ``draft'' and ``final''  work.
+\item The option ``finnish'' works (but is not needed, as it is the default).
+\item You can change the University of the thesis by using the
+  \string\university\ command.
+\item You can change the Department of the thesis by using the
+  \string\department\ command.
+\item You can change the formal subject of the thesis by using the
+  \string\subject\ command.  In English theses, the subject should be
+  prefixed by ``in'' (for example, ``in Information Technology''); in
+  Finnish theses, use a capital initial letter and the genitive form
+  (``Tietotekniikan'').
+\item You can change the type of the thesis by using the \string\type\
+  command.
+\item You can set the date of the thesis by using the \string\setdate\
+  command.  Give it three parameters (day of month, month, and year)
+  in numerical form.
+\item The chapterquote environment can be used to give an epigraph to
+  a chapter.  There is one mandatory parameter (the attribution of the
+  epigraph).
+\item The command \string\graduclsdate\ prints the release date of the
+  current version of gradu3, and the command \string\graduclsversion\
+  prints its version number.
+\end{itemize}
+
+\end{document}
