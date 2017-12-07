@@ -43,7 +43,7 @@ The use of serverless computing will increase given that billions of devices wil
 
 ### [van Eyk, Erwin, et al. "The SPEC Cloud Group’s Research Vision on FaaS and Serverless Architectures." (2017)](https://atlarge-research.com/pdfs/spec-vision-serverless-faas17wosc_accepted.pdf)
 
-However useful, serverless and FaaS suffer from a community problem that faces every emerging technology, which has indeed also hampered cloud computing a decade ago: lack of clear terminology, and scattered vision about the field. In this work, we address this community problem. We clarify the term serverless, by reducing it to cloud functions as programming units, and a model of executing simple and complex (e.g., workflows of) functions with operations managed primarily by the cloud provider. We propose a research vision, where 4 key directions (perspectives) present 17 technical opportunities and challenges.
+However useful, serverless and FaaS suffer from a community problem that faces every emerging technology, which has indeed also hampered cloud computing a decade ago: lack of clear terminology, and scattered vision about the field. In this work, we address this community problem. We **clarify the term serverless**, by reducing it to cloud functions as programming units, and a model of executing simple and complex (e.g., workflows of) functions with operations managed primarily by the cloud provider. We propose a research vision, where 4 key directions (perspectives) present 17 technical opportunities and challenges.
 
 ### [Buyya, Rajkumar, et al. "A Manifesto for Future Generation Cloud Computing: Research Directions for the Next Decade." (2017)](https://arxiv.org/abs/1711.09123)
 
