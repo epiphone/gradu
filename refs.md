@@ -41,6 +41,18 @@ A cost comparison of a web application developed and deployed using the same sca
 
 The use of serverless computing will increase given that billions of devices will need to be connected to the edge of the network and data centers. It will not be feasible to have idle servers in resource constrained environments. The challenges that will hinder the widespread adoption of serverless computing will be the **radical shift in the properties of an application** that a programmer will need to focus on; not latency, scalability and elasticity, but those that relate to the modularity of an application, such as **control and flexibility**. Another challenge is developing programming models that will allow for **high-level abstractions** to facilitate serverless computing. The effect and trade-offs of using traditional external services along with serverless computing services will need to be investigated in orchestrating future cloud-based systems.
 
+### [van Eyk, Erwin, et al. "The SPEC Cloud Group’s Research Vision on FaaS and Serverless Architectures." (2017)](https://atlarge-research.com/pdfs/spec-vision-serverless-faas17wosc_accepted.pdf)
+
+However useful, serverless and FaaS suffer from a community problem that faces every emerging technology, which has indeed also hampered cloud computing a decade ago: lack of clear terminology, and scattered vision about the field. In this work, we address this community problem. We clarify the term serverless, by reducing it to cloud functions as programming units, and a model of executing simple and complex (e.g., workflows of) functions with operations managed primarily by the cloud provider. We propose a research vision, where 4 key directions (perspectives) present 17 technical opportunities and challenges.
+
+### [Buyya, Rajkumar, et al. "A Manifesto for Future Generation Cloud Computing: Research Directions for the Next Decade." (2017)](https://arxiv.org/abs/1711.09123)
+
+[...] with serverless computing and FaaS there is the **need for developing novel patterns** to define services that combine traditional external services along with the serverless computing services. Here the effect and trade-offs of orchestration of such service mixes need to be investigated systematically. The influence of the underpinning choice of Cloud resources (e.g., on-demand, reserved, spot, burstable) need also to be examined.
+
+### [Baldini, Ioana, et al. "The serverless trilemma: function composition for serverless computing." (2017)](https://dl.acm.org/citation.cfm?id=3133855)
+
+While an attractive economic proposition, serverless computing currently lags behind the state of the art when it comes to function composition. This paper addresses the challenge of programming a **composition of functions**, where the composition is itself a serverless function. We demonstrate that engineering function composition into a serverless application is possible, but requires a careful evaluation of trade-offs. To help in evaluating these trade-offs, we identify three competing constraints: functions should be considered as black boxes; function composition should obey a substitution principle with respect to synchronous invocation; and invocations should not be double-billed.
+
 ### [Sbarski, P., and S. Kroonenburg. "Serverless Architectures on AWS With examples using AWS Lambda." (2016).](https://www.manning.com/books/serverless-architectures-on-aws)
 A more technical book on various AWS-specific patterns
 
