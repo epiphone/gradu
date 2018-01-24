@@ -53,8 +53,15 @@ However useful, serverless and FaaS suffer from a community problem that faces e
 
 While an attractive economic proposition, serverless computing currently lags behind the state of the art when it comes to function composition. This paper addresses the challenge of programming a **composition of functions**, where the composition is itself a serverless function. We demonstrate that engineering function composition into a serverless application is possible, but requires a careful evaluation of trade-offs. To help in evaluating these trade-offs, we identify three competing constraints: functions should be considered as black boxes; function composition should obey a substitution principle with respect to synchronous invocation; and invocations should not be double-billed.
 
-### [Sbarski, P., and S. Kroonenburg. "Serverless Architectures on AWS With examples using AWS Lambda." (2016).](https://www.manning.com/books/serverless-architectures-on-aws)
+### [Sbarski, P., and S. Kroonenburg. "Serverless Architectures on AWS With examples using AWS Lambda." (2016)](https://www.manning.com/books/serverless-architectures-on-aws)
 A more technical book on various AWS-specific patterns
+
+### [Lynn, Theo, et al. "A Preliminary Review of Enterprise Serverless Cloud Computing (Function-as-a-Service) Platforms." (2017)](https://www.researchgate.net/profile/Pierangelo_Rosati/publication/321753133_A_Preliminary_Review_of_Enterprise_Serverless_Cloud_Computing_Function-as-a-Service_Platforms/links/5a2feb7d458515a13d851ec0/A-Preliminary-Review-of-Enterprise-Serverless-Cloud-Computing-Function-as-a-Service-Platforms.pdf)
+This paper provides an overview and multi-level feature **analysis of seven enterprise serverless computing platforms**. It reviews extant research on these platforms and identifies the emergence of AWS Lambda as a de facto base platform for research on enterprise serverless cloud computing.
+- Reference [6,p.1] defines serverless computing as “a software architecture where an application is decomposed into ‘triggers’ (events) and ‘actions’ (functions), and there is a platform that provides a seamless hosting and execution environment.”
+
+### [Lloyd, Wes, et al. "Serverless Computing: An Investigation of Factors Influencing Microservice Performance." (2017)](https://pdfs.semanticscholar.org/8ee9/de812815ec238ac210af34fb0b154f773bf8.pdf)
+We identify four states of serverless infrastructure including: **provider cold, VM cold, container cold, and warm** and demonstrate how microservice performance varies up to 15x based on these states.
 
 ## Other materials
 
