@@ -90,6 +90,7 @@ Relevant research articles and other sources summaried [here](./refs.md)
   - from synchronous to event-driven?
   - remodularization from a monolith to microservices?
   - replacing internal modules with external services? db, notifications, logging, monitoring, ...
+  - idempotency (e.g. SQS provides at-least-once delivery guarantee)
 - developer experience
   - devops -> no-ops?
   - > "We use Lambda primarily to improve developer efficiency and to allow dev teams to own their own operations end-to-end, with cost efficiency only a secondary goal. It's been great for that as it's a small enough thing to integrate with that any given developer can learn the entire operations stack (for their team's services) well enough to work on it themselves."

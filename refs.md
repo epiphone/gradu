@@ -63,6 +63,12 @@ This paper provides an overview and multi-level feature **analysis of seven ente
 ### [Lloyd, Wes, et al. "Serverless Computing: An Investigation of Factors Influencing Microservice Performance." (2017)](https://pdfs.semanticscholar.org/8ee9/de812815ec238ac210af34fb0b154f773bf8.pdf)
 We identify four states of serverless infrastructure including: **provider cold, VM cold, container cold, and warm** and demonstrate how microservice performance varies up to 15x based on these states.
 
+### [Pozdniakova, Olesia, and Dalius Mazeika. "Systematic Literature Review of the Cloud-ready Software Architecture." (2017)](http://search.proquest.com/openview/b416fd036171a1519fb099eff914c9ad/1?pq-origsite=gscholar&cbl=2040245)
+This systematic literature review aims to summarize information available in studies related to **cloud-ready applications architecture** development by answering to the following research questions:
+- Question 1. What is a cloud-ready application and how it differs from conventional applications?
+- Question 2. What non-functional requirements are raised for cloud-ready applications?
+- Question 3. What architectures are currently used for cloud-ready application?
+
 ## Other materials
 
 - blog posts etc.
