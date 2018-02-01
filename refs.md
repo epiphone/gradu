@@ -69,6 +69,9 @@ This systematic literature review aims to summarize information available in stu
 - Question 2. What non-functional requirements are raised for cloud-ready applications?
 - Question 3. What architectures are currently used for cloud-ready application?
 
+### [Hohpe, Gregor, and Bobby Woolf. "Enterprise integration patterns: Designing, building, and deploying messaging solutions." (2004)](http://www.enterpriseintegrationpatterns.com/index.html)
+A collection of integration & messaging patterns.
+
 ## Other materials
 
 - blog posts etc.
