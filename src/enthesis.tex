@@ -102,7 +102,7 @@ Introduce the following research questions:
 
 The thesis is structured as follows: the second chapter serves as an introduction to the concept of serverless computing. The chapter describes the main benefits and drawbacks of the platform, as well as touching upon its internal mechanisms and briefly comparing the main service providers. Extra emphasis is placed on how the platform's limitations should be taken into account when designing web application backends.
 
-The third chapter consists of a survey into existing serverless design patterns. The applicability of other cloud computing, distributed computing and enterprise integration patterns is also evaluated in the chapter.
+The third chapter consists of a survey into existing serverless design patterns and recommendations. Applicability of other cloud computing, distributed computing and enterprise integration patterns is also evaluated.
 
 The fourth chapter describes the process of migrating an existing web application to serverless architecture. The patterns discovered in the previous chapter are utilized to implemented various typical web application features on a serverless platform. In cases where existing patterns prove insufficient or unsuitable as per the target application's characteristics, modifications or new patterns are proposed. This chapter forms the exploratory or constructive part of the thesis.
 
@@ -118,11 +118,23 @@ The goal of the theoretical part of a thesis is to develop the theoretical backg
 
 \section{What is serverless?}
 
-Definition and implications of serverless computing. Main features or tenets. Benefits, use cases, notable users? \textcite{robert2016serverlessarchitectures} has a thorough description of the platform.
+Definition and implications of serverless computing. Main features or tenets. Benefits, use cases, notable users? \textcite{robert2016serverlessarchitectures} has a thorough description of the platform.  \textcite{van2017spec}, \textcite{varghese18next} and \textcite{buyya2017manifesto} provide a more historical context and future research directions. \textcite{albuquerque17faaspaas} compare FaaS to PaaS.
 
 Two historical/evolutionary views: on-premises infra -> grid -> IaaS -> PaaS -> serverless and on-prem -> VMs -> containers -> serverless.
 
-How does serverless relate to concepts such as FaaS, SOA, cloud-native, microservices, FaaS, containers, ...?
+How does serverless relate to concepts such as FaaS, SOA, cloud-native, microservices, containers, ...? Cloud-ready/cloud-native as defined by \textcite{pozdniakova17cloudready}.
+
+\section{Use cases}
+
+Mention briefly about other use cases than web application backends: scientific computing, edge computing and others.
+
+\textcite{malawski17executescientific} find that while serverless infrastructures are designed mainly for processing background tasks of Web and IoT applications, the simple mode of operation makes this approach easy to use and promising in scientific workflows too. \textcite{jonas17occupy} argue that a serverless execution model with stateless functions can enable radically-simpler, fundamentally elastic, and more user-friendly distributed data processing systems. \textcite{spillner18faaster} also find that in many domains of scientific and high-performance computing, solutions can be engineered based on simple functions which are executed on commercially offered or self-hosted FaaS platforms.
+
+\textcite{glikson17devicelessedge} propose the novel paradigm of Deviceless Edge Computing that extends the serverless paradigm to the edge of the network, enabling IoT and Edge devices to be seamlessly integrated as application execution infrastructure. \textcite{nastic17analyticsedge} present a novel approach implementing cloud-supported, real-time data analytics in serverless edge-computing applications. \textcite{baresi17edgecomputing} propose a serverless architecture at the edge, bringing a highly scalable, intelligent and cost-effective use of edge infrastructure’s resources with minimal configuration and operation efforts.
+
+\textcite{fouladi2017encoding} present a serverless video-processing framework. \textcite{yan16chatbot} present the architecture and prototype of a chatbot using a serverless platform, where developers compose stateless functions together to perform useful actions. \textcite{ishakian17neural} evaluate the suitability of a serverless computing environment for the inferencing of large neural network models.
+
+\textcite{ast17webcomponent} describe an approach of how to utilize serverless computing to enable self-contained web components by deploying Web Component business logic as cloud-hosted functions.
 
 \section{Service providers}
 
@@ -132,33 +144,51 @@ How does serverless relate to concepts such as FaaS, SOA, cloud-native, microser
 
 Describe the two supported execution models, synchronous and asynchronous, and how they relate to application design. The former is used to build a typical request-response flow, e.g. a REST API endpoint, whereas the latter relates to pub-sub and other event-driven flows. Give examples on the kind of triggers supported by serverless platforms (HTTP calls, messaging, database events, ...).
 
+\section{Economics of serverless}
+
+\textcite{eivy2017wary} and \textcite{villamizar2016infrastructure} both focus on the economic aspects of serverless. \textcite{adzic2017serverless} explains how novel design patterns are used to significantly optimize costs -- just running traditional web apps inside Lambda containers doesn't necessarily equate to savings. \textcite{spillner17exploiting} exploits the control plane of AWS Lambda to implement services practically for free. \textcite{leitner16modelcost} present an approach to model deployment costs of AWS Lambda applications in real-time. \textcite{kuhlenkamp17costradamus} present another cost-tracing system that enables per-request cost-tracing for cloud-based software services, noting that cost testing should not only rely on isolated tests of single services but consider comprehensive end-to-end cost traces.
+
+\section{Runtime}
+
+Briefly describe the inner workings of a FaaS runtime.
+
+\textcite{spillner17snafu} presents the design and implementation of a research-friendly FaaS runtime. \textcite{mcgrath17implement} present the design of a novel performance-oriented serverless computing platform, discussing implementation challenges such as function scaling and container discovery, lifecycle, and reuse.
+
+\section{Security}
+
+Address the security implications of serverless.
+
 \section{Drawbacks and limitations}
 
-What to take into consideration when migrating to serverless?
+What to take into consideration when migrating to serverless? Cold start \parencite{lloydserverless}, lack of strong SLA, vendor lock-in, etc.
 
-- cold start \parencite{lloydserverless}
-
-- the need for circuit breakers (risk of DDoSing yourself) when interacting with non-serverless components like a database. Mention novel serverless database services like Google's Cloud Spanner and AWS Aurora.
-
-- SLAs
-
-- vendor lock-in
+The need for circuit breakers (risk of DDoSing yourself) when interacting with non-serverless components like a database. Mention novel serverless database services like Google's Cloud Spanner and AWS Aurora.
 
 \textcite{baldini17trilemma} identify three competing constraints: functions should be considered as black boxes; function composition should obey a substitution principle with respect to synchronous invocation; and invocations should not be double-billed.
 
 \textcite{robert2016serverlessarchitectures} and \textcite{adzic2017serverless} respectively list a number of limitations.
 
+\textcite{kuhlenkamp17costradamus} discover two serverless cost tradeoffs: the retry cost effect and the cost ripple effect.
+
 \chapter{Serverless design patterns}
 
-Survey of serverless design patterns. How to compose individual functions into larger systems?
+Survey of serverless design patterns. \textcite{baldini17currentTrends} put the question as follows:
+
+\begin{quote}
+Will there be patterns for building serverless solutions? How do we combine low granularity basic building blocks of serverless into bigger solutions? How are we going to decompose apps into functions so that they optimize resource usage? For example how do we identify CPU-bound parts of applications built to run in serverless services? Can we use well-defined patterns for composing functions and external APIs? What should be done on the server vs. client (e.g., are thicker clients more appropriate here)? Are there lessons learned that can be applied from OOP design patterns, Enterprise Integration Patterns, etc.?
+\end{quote}
 
 \textcite{sbarski2017serverless} introduce the following five patterns: Command, Messaging Priority queue, Fan-out and Pipes and filters.
 
 Enterprise integration patterns by \textcite{hohpe2004enterprise}.
 
-Serverless programming model embraces modularization and isolation.
+\textcite{adzic2017serverless} suggest 3 methods for optimizing resource usage: use distributed authorization, let clients orchestrate workflows and allow clients to directly connect to AWS resources. The authors also discuss how the serverless programming model removes barriers for good practices like isolation and versioning.
 
-\textcite{adzic2017serverless} suggest embracing the platform by 3 typical aspects: use distributed authorization, let clients orchestrate workflows and allow clients to directly connect to AWS resources.
+\textcite{ast17webcomponent} describe self-contained web components with serverless backends.
+
+\section{FaaSification}
+
+\textcite{spillner17transformpython} describes an automated approach to transform monolithic Python code into modular FaaS units by partially automated decomposition. Doesn't really seem suitable for the web application migration process covered in this thesis but worth mentioning.
 
 \chapter{Migration process}
 

@@ -1,3 +1,6 @@
+### [Albuquerque Jr, Lucas F., et al. "Function-as-a-Service X Platform-as-a-Service: Towards a Comparative Study on FaaS and PaaS." ICSEA 2017 (2017): 217.](https://thinkmind.org/index.php?view=article&articleid=icsea_2017_9_30_10096)
+The present work has proposed to perform a **comparative evaluation between FaaS and PaaS** service delivery models regarding performance, scalability and costs issues in support of mobile applications based on microservices. The conclusions obtained showed that FaaS presented an equivalent performance, a more efficient scalability and the costs influenced by workload type.
+
 ### [Baldini, Ioana, et al. "Serverless Computing: Current Trends and Open Problems." (2017)](https://arxiv.org/abs/1706.03178)
 There has not been a corresponding degree of interest in the research community. We feel strongly that there are a wide variety of technically challenging and intellectually deep problems in this space, ranging from infrastructure issues such as optimizations to the cold start problem to the design of a composable programming model. There are even philosophical questions such as the fundamental nature of state in a distributed application. Many of the open problems identified in this chapter are real problems faced by practitioners of serverless computing today and solutions have the potential for significant impact.
 
@@ -37,7 +40,7 @@ The economic benefits of serverless computing heavily depend on the execution be
 
 A cost comparison of a web application developed and deployed using the same scalable scenarios with three different approaches: 1) a monolithic architecture, 2) a microservice architecture operated by the cloud customer, and 3) a microservice architecture operated by the cloud provider. Test results show that microservices can help reduce infrastructure costs in comparison with standard monolithic architectures. Moreover, the use of services specifically designed to deploy and scale microservices, such as AWS Lambda, **reduces infrastructure costs by 70% or more**, and unlike microservices operated by cloud customers, these specialized services help to guarantee the same performance and response times as the number of users increases.
 
-### [Varghese, Blesson, and Rajkumar Buyya. "Next generation cloud computing: New trends and research directions." (2017)](http://www.sciencedirect.com/science/article/pii/S0167739X17302224)
+### [Varghese, Blesson, and Rajkumar Buyya. "Next generation cloud computing: New trends and research directions." (2018)](https://www.sciencedirect.com/science/article/pii/S0167739X17302224)
 
 The use of serverless computing will increase given that billions of devices will need to be connected to the edge of the network and data centers. It will not be feasible to have idle servers in resource constrained environments. The challenges that will hinder the widespread adoption of serverless computing will be the **radical shift in the properties of an application** that a programmer will need to focus on; not latency, scalability and elasticity, but those that relate to the modularity of an application, such as **control and flexibility**. Another challenge is developing programming models that will allow for **high-level abstractions** to facilitate serverless computing. The effect and trade-offs of using traditional external services along with serverless computing services will need to be investigated in orchestrating future cloud-based systems.
 
@@ -71,6 +74,72 @@ This systematic literature review aims to summarize information available in stu
 
 ### [Hohpe, Gregor, and Bobby Woolf. "Enterprise integration patterns: Designing, building, and deploying messaging solutions." (2004)](http://www.enterpriseintegrationpatterns.com/index.html)
 A collection of integration & messaging patterns.
+
+
+## FaaS runtime
+
+[McGrath, Garrett, and Paul R. Brenner. "Serverless computing: Design, implementation, and performance." (2017)](http://ieeexplore.ieee.org/abstract/document/7979855/)
+We present the design of a novel performance-oriented serverless computing platform implemented in. NET, deployed in Microsoft Azure, and utilizing Windows containers as function execution environments. Implementation challenges such as function scaling and container discovery, lifecycle, and reuse are discussed in detail. We propose metrics to evaluate the execution performance of serverless platforms and conduct tests on our prototype as well as AWS Lambda, Azure Functions, Google Cloud Functions, and IBM's deployment of Apache OpenWhisk.
+
+[Spillner, Josef. "Snafu: Function-as-a-service (FaaS) runtime design and implementation." (2017)](https://arxiv.org/abs/1703.07562)
+Snafu, or Snake Functions, is a modular system to host, execute and manage language-level functions offered as stateless (micro-)services to diverse external triggers. The system interfaces resemble those of commercial FaaS providers but its implementation provides distinct features which make it overall useful to research on FaaS and prototyping of FaaS-based applications. This paper argues about the system motivation in the presence of already existing alternatives, its design and architecture, the open source implementation and collected metrics which characterise the system.
+
+## Economic aspects
+
+[Leitner, Philipp, Jürgen Cito, and Emanuel Stöckli. "Modelling and managing deployment costs of microservice-based cloud applications." (2016)](http://ieeexplore.ieee.org/document/7881628/)
+An approach to **model the deployment costs**, including compute and IO costs, of Microservice-based applications deployed to a public cloud. Our model, which we dubbed CostHat, supports both, Microservices deployed on traditional IaaS or PaaS clouds, and services that make use of novel cloud programming paradigms, such as AWS Lambda. Further, we have used this model to implement tooling that warns cloud developers directly in the Integrated Development Environment (IDE) about certain classes of potentially costly code changes. This enables its use in real-time for developer tooling which continually re-evaluates the costs of an application in the background, while the developer is working on the code.
+
+[Kuhlenkamp, Jörn, and Markus Klems. "Costradamus: A Cost-Tracing System for Cloud-Based Software Services." (2017)](https://link.springer.com/chapter/10.1007/978-3-319-69035-3_48)
+Cloud providers offer a range of fully managed infrastructure services that enable a “serverless” architecture and development paradigm. Following this paradigm, software services can be built on compositions of cloud infrastructure services that offer fine-granular pay-per-use pricing models. It remains an open challenge to make use of fine-granular pricing models for improving cost transparency and reducing cost of service operations. As a solution, we present Costradamus, a cost-tracing system that implements a generic cost model and three different tracing approaches. With Costradamus, we can derive cost and performance information per API operation.
+
+[Spillner, Josef. "Exploiting the Cloud Control Plane for Fun and Profit." (2017)](https://arxiv.org/abs/1701.05945)
+Cloud providers typically charge for their services. There are diverse pricing models which often follow a pay-per-use paradigm. The paper shows how to **exploit the control plane of AWS Lambda** to implement stateful services practically for free and under some circumstances even guaranteed for free which if widely deployed would cause a monetary loss for the provider. It also elaborates on the consistency model for AWS Lambda.
+
+
+## FaaSification
+
+[Spillner, Josef. "Transformation of Python Applications into Function-as-a-Service Deployments." (2017)](https://arxiv.org/abs/1705.08169)
+New cloud programming and deployment models pose challenges to software application engineers who are looking, often in vain, for tools to automate any necessary code adaptation and transformation. Function-as-a-Service interfaces are particular non-trivial targets when considering that most cloud applications are implemented in non-functional languages. Among the most widely used of these languages is Python. This starting position calls for an **automated approach to transform monolithic Python code into modular FaaS units** by partially automated decomposition.
+
+
+## Scientific workflows
+
+[Malawski, Maciej, et al. "Serverless execution of scientific workflows: Experiments with HyperFlow, AWS Lambda and Google Cloud Functions." (2017)](https://www.sciencedirect.com/science/article/pii/S0167739X1730047X)
+Scientific workflows consisting of a high number of interdependent tasks represent an important class of complex scientific applications. In this paper we take a look at serverless infrastructures, which are designed mainly for processing background tasks of Web and Internet of Things applications, or event-driven stream processing. We evaluate their applicability to more compute- and data-intensive scientific workflows and discuss possible ways to repurpose serverless architectures for execution of scientific workflows.Our findings indicate that **the simple mode of operation makes this approach easy to use**, although there are costs involved in preparing portable application binaries for execution in a remote environment. In this paper we considered directions in enhancing security, expressing applications, managing efficiently and developing sustainable systems for next generation cloudcomputing.
+
+[Jonas, Eric, et al. "Occupy the cloud: distributed computing for the 99%."(2017)](https://arxiv.org/abs/1702.04024)
+The authors argue that a serverless execution model with stateless functions can enable **radically simpler, fundamentally elastic, and more user-friendly distributed data processing** systems.
+
+[Spillner, Josef, Cristian Mateos, and David A. Monge. "FaaSter, Better, Cheaper: The Prospect of Serverless Scientific Computing and HPC." (2018)](https://link.springer.com/chapter/10.1007/978-3-319-73353-1_11)
+Scalable web applications, low-latency mobile backends and on-demand provisioned databases are typical cases for which cloud services on the platform or infrastructure level exist and are convincing when considering technical and economical arguments. Applications with specific processing demands, including high-performance computing, high-throughput computing and certain flavours of scientific computing, have historically required special configurations such as compute- or memory-optimised virtual machine instances. With the rise of function-level compute instances through Function-as-a-Service (FaaS) models, the fitness of generic configurations needs to be re-evaluated for these applications. We analyse several **demanding computing tasks with regards to how FaaS models compare** against conventional monolithic algorithm execution. Beside the comparison, we contribute a refined FaaSification process for legacy software and provide a roadmap for future work.
+
+
+## Edge computing
+
+[Glikson, Alex, Stefan Nastic, and Schahram Dustdar. "Deviceless edge computing: extending serverless computing to the edge of the network." (2017)](https://dl.acm.org/citation.cfm?id=3078497)
+In this paper, we propose a novel computing paradigm - **Deviceless Edge Computing** that extends the serverless paradigm to the edge of the network, enabling IoT and Edge devices to be seamlessly integrated as application execution infrastructure. We also discuss open challenges to realize Deviceless Edge Computing, based on our experience in prototyping a deviceless platform.
+
+[Baresi, Luciano, Danilo Filgueira Mendonça, and Martin Garriga. "Empowering Low-Latency Applications Through a Serverless Edge Computing Architecture." (2017)](https://link.springer.com/chapter/10.1007/978-3-319-67262-5_15)
+The exponential increase of the data generated by pervasive and mobile devices requires disrupting approaches for the realization of emerging mobile and IoT applications. Although cloud computing provides virtually unlimited computational resources, low-latency applications cannot afford the high latencies introduced by sending and retrieving data from/to the cloud. In this scenario, edge computing appears as a promising solution by bringing computation and data near to users and devices. However, the resource-finite nature of edge servers constrains the possibility of deploying full applications on them. To cope with these problems, we propose a **serverless architecture at the edge**, bringing a highly scalable, intelligent and cost-effective use of edge infrastructure’s resources with minimal configuration and operation efforts.
+
+[Nastic, Stefan, et al. "A Serverless Real-Time Data Analytics Platform for Edge Computing." IEEE Internet Computing 21.4 (2017): 64-71.](http://ieeexplore.ieee.org/document/7994559/)
+Here, a novel approach implements cloud-supported, real-time data analytics in edge-computing applications. The authors introduce their **serverless edge-data analytics platform** and application model and discuss their main design requirements and challenges, based on real-life healthcare use case scenarios.
+
+## Use cases
+
+[Ast, Markus, and Martin Gaedke. "Self-contained web components through serverless computing." (2017)](https://dl.acm.org/citation.cfm?id=3154849)
+Web Components are an essential building block for modularizing large and complex web applications into smaller pieces. Many Web Components are not self-contained because they require to integrate their business logic into your backend or to use externally hosted third-party services. In this paper, we describe an approach of how to utilize Serverless Computing to enable self-contained web components by deploying Web Component business logic as cloud-hosted functions.
+
+
+[Fouladi, Sadjad, et al. "Encoding, Fast and Slow: Low-Latency Video Processing Using Thousands of Tiny Threads." NSDI. 2017.](https://www.usenix.org/conference/nsdi17/technical-sessions/presentation/fouladi)
+ExCamera is a cloud-based video-processing framework that we envision as the backend for interactive video applications. It can edit, transform, and encode a video, including 4K and VR material, with low latency. The system makes two major contributions: a framework to run general-purpose parallel computations on a commercial “cloud function” service with low latency, and a video encoder built with this framework that achieves fine-grained parallelism without harming compression efficiency.
+
+[Ishakian, Vatche, Vinod Muthusamy, and Aleksander Slominski. "Serving deep learning models in a serverless platform." (2017)](https://arxiv.org/abs/1710.08460)
+In this work we evaluate the suitability of a serverless computing environment for the inferencing of large neural network models. Our experimental results show that while the inferencing latency can be within an acceptable range, longer delays due to cold starts can skew the latency distribution and hence risk violating more stringent SLAs.
+
+[Yan, Mengting, et al. "Building a chatbot with serverless computing." (2016)](https://dl.acm.org/citation.cfm?id=3007217)
+In this work, we present the architecture and prototype of a **chatbot using a serverless platform**, where developers compose stateless functions together to perform useful actions. We describe our serverless architecture based on function sequences, and how we used these functions to coordinate the cognitive microservices in the Watson Developer Cloud to allow the chatbot to interact with external services.
+
 
 ## Other materials
 
