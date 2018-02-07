@@ -3,6 +3,9 @@
 [Albuquerque Jr, Lucas F., et al. "Function-as-a-Service X Platform-as-a-Service: Towards a Comparative Study on FaaS and PaaS." ICSEA 2017 (2017): 217.](https://thinkmind.org/index.php?view=article&articleid=icsea_2017_9_30_10096)
 The present work has proposed to perform a **comparative evaluation between FaaS and PaaS** service delivery models regarding performance, scalability and costs issues in support of mobile applications based on microservices. The conclusions obtained showed that FaaS presented an equivalent performance, a more efficient scalability and the costs influenced by workload type.
 
+[CNCF Serverless WG. https://github.com/cncf/wg-serverless. (2017)](https://github.com/cncf/wg-serverless)
+This paper describes a new model of cloud native computing enabled by emerging "serverless" architectures and their supporting platforms. It defines what serverless computing is, highlights use cases and successful examples of serverless computing, and shows **how serverless computing differs from (and interrelates with) other cloud application development models** such as IaaS, PaaS and container orchestration or Containers-as-a-Service (CaaS).
+
 [Baldini, Ioana, et al. "Serverless Computing: Current Trends and Open Problems." (2017)](https://arxiv.org/abs/1706.03178)
 There has not been a corresponding degree of interest in the research community. We feel strongly that there are a wide variety of technically challenging and intellectually deep problems in this space, ranging from infrastructure issues such as optimizations to the cold start problem to the design of a composable programming model. There are even philosophical questions such as the fundamental nature of state in a distributed application. Many of the open problems identified in this chapter are real problems faced by practitioners of serverless computing today and solutions have the potential for significant impact.
 
@@ -64,6 +67,9 @@ This systematic literature review aims to summarize information available in stu
 A collection of integration & messaging patterns.
 
 ## FaaS runtime
+
+[Hendrickson, Scott, et al. "Serverless computation with openlambda." (2016)](https://dl.acm.org/citation.cfm?id=3027047)
+We present **OpenLambda**, a new, open-source platform for building next-generation web services and applications in the burgeoning model of serverless computation. We describe the key aspects of serverless computation, and present numerous **research challenges that must be addressed in the design and implementation** of such systems.
 
 [McGrath, Garrett, and Paul R. Brenner. "Serverless computing: Design, implementation, and performance." (2017)](http://ieeexplore.ieee.org/abstract/document/7979855/)
 We present the design of a novel performance-oriented serverless computing platform implemented in. NET, deployed in Microsoft Azure, and utilizing Windows containers as function execution environments. Implementation challenges such as function scaling and container discovery, lifecycle, and reuse are discussed in detail. We propose metrics to evaluate the execution performance of serverless platforms and conduct tests on our prototype as well as AWS Lambda, Azure Functions, Google Cloud Functions, and IBM's deployment of Apache OpenWhisk.
@@ -134,8 +140,17 @@ In this work, we present the architecture and prototype of a **chatbot using a s
 
 ## Cloud migration
 
+[Jamshidi, Pooyan, Aakash Ahmad, and Claus Pahl. "Cloud migration research: a systematic review." (2013)](http://ieeexplore.ieee.org/abstract/document/6624108/)
+This paper aims to identify, taxonomically classify, and systematically compare existing research on cloud migration.The findings clearly highlight that cost saving, scalability, and efficient utilization of resources as well as flexibility are key drivers to migrate application to the cloud.
+
 [Balalaie, Armin, Abbas Heydarnoori, and Pooyan Jamshidi. "Migrating to cloud-native architectures using microservices: an experience report." (2016)](https://link.springer.com/chapter/10.1007/978-3-319-33313-7_15)
 The existing approaches on cloud migration does not mostly consider cloud-native architectures as their first-class citizens. As a result, the final product may not meet its primary drivers for migration. In this paper, we intend to report our experience and lessons learned in an ongoing project on **migrating a monolithic on-premise software architecture to microservices**.
+
+
+## Others
+
+[Horner, Nathaniel, and Ines Azevedo. "Power usage effectiveness in data centers: overloaded and underachieving." (2016)](https://www.sciencedirect.com/science/article/pii/S1040619016300446)
+A series of bottom-up estimates has generally found that data centers use on the order of **1–2% of U.S. and global electricity consumption**. Server utilization in data centers is generally very low. In addition to the designed overhead, there is also an issue of “comatose” servers—those that are no longer needed but are still running because no one can positively determine that the data is old or wants to risk pulling the plug: “[a]necdotal evidence indicates that 10–30% of servers in many data centers are using electricity but no longer delivering computing services. These servers have not yet been decommissioned and are probably not counted in installed base statistics. In many facilities nobody even knows these servers exist....” (Koomey, 2011, 7). Figures for comatose servers may be even higher. A sample at a LexisNexis data center revealed that three-fourths of installed servers used, on average, 10% of their capacity (Glanz, 2012). Both intentional overcapacity and failure to consolidate and decommission old equipment result in **very low utilization rates**.
 
 ## Other materials
 

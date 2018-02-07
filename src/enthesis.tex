@@ -84,7 +84,13 @@
 It is a good idea to start the Introduction with the main thesis statement or research question of the thesis.  After that, it is a good idea to clarify things by defining any necessary terms. Definitions after the thesis statement!  Also, don't babble in the introduction. The introduction is also a good place to discuss why your thesis statement is scientifically or practically relevant and interesting.  Ideally, it would be relevant and interesting from both the scientific and the practical point of view. It would also be excellent if you explained, in the introduction, what your contribution is; that is, what such knowledge your thesis contains that you have investigated personally instead of reading it from somewhere. The contribution could well be, that you have personally checked the truth of a claim you found in a book or article.  At the end of the Introduction, it is customary to briefly explain the structure of the thesis -- what each chapter is about.
 \end{quote}
 
+Serverless is defined as a cloud-native platform for short-running, stateless computation and event-driven applications which scales up and down instantly and automatically and charges for actual usage at a millisecond granularity. Unlike SaaS or PaaS that are always running, but scale on-demand, serverless workloads run on-demand, and consequently, scale on-demand.
+
 \textcite{buyya2017manifesto} go as far as to describe cloud computing as the backbone of modern economy.
+
+\textcite{jamshidi13cloudmigrationreview} identify cost saving, scalability, and efficient utilization of resources as well as flexibility as key drivers to migrate application to the cloud.
+
+Particular importance in the current energy-constrained environment. Data centers use on the order of 1-2\% of global energy consumption, but server utilization rates are really low. \parencite{horner16powerusage}
 
 In a nutshell: serverless computing is a relatively new form of cloud computing that enables efficient resource utilization and elasticity, thus bringing about potential savings in hosting costs and increases in developer productivity \parencite{robert2016serverlessarchitectures}. As a rather new development there's a lack of research in serverless computing. Multiple authors, e.g. \textcite{baldini17currentTrends}, \textcite{fox17} and \textcite{van2017spec} note the identification of FaaS-specific patterns (composing functions into larger systems) as an important research topic. The object of this thesis is to fill that gap by a) surveying existing patterns in literature and b) evaluate, extend and propose new patterns by migrating parts of a web application into serverless architecture.
 
@@ -122,11 +128,13 @@ The goal of the theoretical part of a thesis is to develop the theoretical backg
 
 \section{What is serverless?}
 
-Definition and implications of serverless computing. Main features or tenets. Benefits, use cases, notable users? \textcite{robert2016serverlessarchitectures} has a thorough description of the platform.  \textcite{van2017spec}, \textcite{varghese18next} and \textcite{buyya2017manifesto} provide a more historical context and future research directions. \textcite{albuquerque17faaspaas} compare FaaS to PaaS.
+Definition and implications of serverless computing. Main features or tenets. Benefits, use cases, notable users?
 
-Two historical/evolutionary views: on-premises infra -> grid -> IaaS -> PaaS -> serverless and on-prem -> VMs -> containers -> serverless.
+\textcite{robert2016serverlessarchitectures} has a thorough description of the platform.  \textcite{van2017spec}, \textcite{varghese18next} and \textcite{buyya2017manifesto} provide a more historical context and future research directions. \textcite{albuquerque17faaspaas} compare FaaS to PaaS. The \textcite{cncf18serverlessWG} whitepaper describes the platform from a more industry-oriented viewpoint. Includes comparison with other cloud computing models and a detailed view on the serverless processing model.
 
-How does serverless relate to concepts such as FaaS, SOA, cloud-native, microservices, containers, ...? Cloud-ready/cloud-native as defined by \textcite{pozdniakova17cloudready}.
+Historical/evolutionary views: 1) on-premises infra -> grid -> IaaS -> PaaS -> serverless, 2) on-prem -> VMs -> containers -> serverless, 3) monolith -> SOA -> microservices -> serverless.
+
+How does serverless relate to concepts such as FaaS, SOA, microservices, event-driven, virtualiation, containers, cloud-native, ...? Cloud-ready/cloud-native as defined by \textcite{pozdniakova17cloudready}.
 
 \section{Use cases}
 
@@ -144,7 +152,7 @@ Describe the two supported execution models, synchronous and asynchronous, and h
 
 Briefly describe the inner workings of a FaaS runtime.
 
-\textcite{spillner17snafu} presents the design and implementation of a research-friendly FaaS runtime. \textcite{mcgrath17implement} present the design of a novel performance-oriented serverless computing platform, discussing implementation challenges such as function scaling and container discovery, lifecycle, and reuse.
+\textcite{spillner17snafu} presents the design and implementation of a research-friendly FaaS runtime. \textcite{mcgrath17implement} present the design of a novel performance-oriented serverless computing platform, discussing implementation challenges such as function scaling and container discovery, lifecycle, and reuse. \textcite{hendrickson16openlambda} present OpenLambda, an open-source platform for serverless computation, describing the key aspects of serverless computation and presenting numerous research challenges that must be addressed in the design and implementation of such systems.
 
 \section{Service providers}
 
@@ -192,7 +200,7 @@ Composing serverless functions is not like composing regular functions. All the 
 
 \section{Enterprise Integration Patterns}
 
-\textcite{hohpe2004enterprise} present a number of asynchronous messaging architectures in the classic Enterprise Integration Patterns. While predating the whole serverless phenomenon the patterns are still relevant. Hohpe even demonstrated implementing one of his patterns on top of Google's serverless platform \href{http://www.enterpriseintegrationpatterns.com/ramblings/google_cloud_functions.html}{in a blog post}.
+\textcite{hohpe2004enterprise} present a number of asynchronous messaging architectures in the seminal book on EIP. While predating the whole serverless phenomenon the patterns are still relevant. Hohpe even demonstrated implementing one of his patterns on top of Google's serverless platform \href{http://www.enterpriseintegrationpatterns.com/ramblings/google_cloud_functions.html}{in a blog post}.
 
 \section{FaaSification}
 
