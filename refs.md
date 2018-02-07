@@ -3,7 +3,7 @@
 [Albuquerque Jr, Lucas F., et al. "Function-as-a-Service X Platform-as-a-Service: Towards a Comparative Study on FaaS and PaaS." ICSEA 2017 (2017): 217.](https://thinkmind.org/index.php?view=article&articleid=icsea_2017_9_30_10096)
 The present work has proposed to perform a **comparative evaluation between FaaS and PaaS** service delivery models regarding performance, scalability and costs issues in support of mobile applications based on microservices. The conclusions obtained showed that FaaS presented an equivalent performance, a more efficient scalability and the costs influenced by workload type.
 
-[CNCF Serverless WG. https://github.com/cncf/wg-serverless. (2017)](https://github.com/cncf/wg-serverless)
+[CNCF Serverless WG whitepaper (2017)](https://github.com/cncf/wg-serverless)
 This paper describes a new model of cloud native computing enabled by emerging "serverless" architectures and their supporting platforms. It defines what serverless computing is, highlights use cases and successful examples of serverless computing, and shows **how serverless computing differs from (and interrelates with) other cloud application development models** such as IaaS, PaaS and container orchestration or Containers-as-a-Service (CaaS).
 
 [Baldini, Ioana, et al. "Serverless Computing: Current Trends and Open Problems." (2017)](https://arxiv.org/abs/1706.03178)
