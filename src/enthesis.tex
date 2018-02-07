@@ -170,7 +170,7 @@ Address the security implications of serverless.
 
 What to take into consideration when migrating to serverless?
 
-\textcite{lloydserverless} analyze serverless performance and elasticity, identifying the cold start phenomenon.
+\textcite{lloydserverless} analyze serverless performance and elasticity, identifying the cold start phenomenon. Differences in runtimes/languages, and larger library dependencies lead to slower starts. \textcite{oakes17pipsqueak} address the problem by caching package dependencies on platform-level.
 
 \textcite{baldini17trilemma} identify three competing constraints in serverless function composition: functions should be considered as black boxes; function composition should obey a substitution principle with respect to synchronous invocation; and invocations should not be double-billed.
 

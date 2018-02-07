@@ -74,6 +74,9 @@ We present **OpenLambda**, a new, open-source platform for building next-generat
 [McGrath, Garrett, and Paul R. Brenner. "Serverless computing: Design, implementation, and performance." (2017)](http://ieeexplore.ieee.org/abstract/document/7979855/)
 We present the design of a novel performance-oriented serverless computing platform implemented in. NET, deployed in Microsoft Azure, and utilizing Windows containers as function execution environments. Implementation challenges such as function scaling and container discovery, lifecycle, and reuse are discussed in detail. We propose metrics to evaluate the execution performance of serverless platforms and conduct tests on our prototype as well as AWS Lambda, Azure Functions, Google Cloud Functions, and IBM's deployment of Apache OpenWhisk.
 
+[Oakes, Edward, et al. "Pipsqueak: Lean Lambdas with Large Libraries." (2017)](http://ieeexplore.ieee.org/abstract/document/7979853/)
+Lean microservices that depend on **large libraries will start slowly and harm elasticity**. In this paper, we explore the challenges of lean microservices that rely on large libraries in the context of Python packages and the OpenLambda serverless computing platform.
+
 [Spillner, Josef. "Snafu: Function-as-a-service (FaaS) runtime design and implementation." (2017)](https://arxiv.org/abs/1703.07562)
 Snafu, or Snake Functions, is a modular system to host, execute and manage language-level functions offered as stateless (micro-)services to diverse external triggers. The system interfaces resemble those of commercial FaaS providers but its implementation provides distinct features which make it overall useful to research on FaaS and prototyping of FaaS-based applications. This paper argues about the system motivation in the presence of already existing alternatives, its design and architecture, the open source implementation and collected metrics which characterise the system.
 
