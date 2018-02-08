@@ -16,7 +16,7 @@ Open research problems:
 - Will there be **patterns** for building serverless solutions? How do we combine low granularity basic building blocks of serverless into bigger solutions? How are we going to decompose apps into functions so that they optimize resource usage? For example how do we identify CPU-bound parts of applications built to run in serverless services? Can we use well-defined patterns for composing functions and external APIs? What should be done on the server vs. client (e.g., are thicker clients more appropriate here)? Are there lessons learned that can be applied from OOP design patterns, Enterprise Integration Patterns, etc.?
 
 [Fox, Geoffrey C., et al. "Status of Serverless Computing and Function-as-a-Service (FaaS) in Industry and Research." (2017)](https://arxiv.org/abs/1708.08028)
-- definition of FaaS and Serverless as a cloud-native platform for **short-running, stateless** computation  and **event-driven** applications which **scales up and down** instantly and automatically and charges for **actual usage** at a millisecond granularity
+- definition of FaaS and Serverless as a cloud-native platform for **short-running, stateless** computation and **event-driven** applications which **scales up and down** instantly and automatically and charges for **actual usage** at a millisecond granularity
 - unlike SaaS or PaaS that are always running, but scale on-demand, serverless workloads run on-demand, and consequently, scale on-demand
 - great for end developers as they will not need to know scaling and distributed computing
 - debugging was identified as a near term critical problem
@@ -29,10 +29,7 @@ This paper presents two case industrial studies of early adopters, showing how m
 - a better summary here https://blog.acolyer.org/2017/10/19/serverless-computing-economic-and-architectural-impact/
 - related blog text https://gojko.net/2017/02/23/serverless-migration-lesson.html
   - Critical to **embrace the platform**, not just the Lambda service. Crucially, this means not using Lambda to just host traditional apps cheaper. Sure, it is perfectly possible to run traditional web applications inside Lambda containers with minor modifications, you just need to move state somewhere else. There are even libraries out there that will allow you to run Node.js Express apps or Java Spring Apps inside Lambda easily. On one hand, that is quite a compelling way to start using the new architectures. On the other hand, the benefits of that approach are quite questionable. A big part of Patrick Debois’ keynote at the ServerlessConf 2016 in London was how just pushing things to Lambda won’t make things magically cheaper and faster, quite the opposite.
-  - There are three typical aspects of letting the platform take over the responsibilities of a server:
-    - Use distributed authorization
-    - Let clients orchestrate workflows
-    - Allow clients to directly connect to AWS resources
+  - There are three typical aspects of letting the platform take over the responsibilities of a server: Use distributed authorization, Let clients orchestrate workflows, Allow clients to directly connect to AWS resources
 
 
 [Varghese, Blesson, and Rajkumar Buyya. "Next generation cloud computing: New trends and research directions." (2018)](https://www.sciencedirect.com/science/article/pii/S0167739X17302224)
