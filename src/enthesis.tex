@@ -112,23 +112,70 @@ The outcome of the migration process is evaluated in the fifth chapter. The pote
 
 The final chapter of the thesis aims to draw conclusions on the migration process and the resulting artifacts. The chapter contains a summary of the research outcomes and ends with recommendations for further research topics.
 
+
 \chapter{Serverless computing}
+
+This chapter serves as an introduction to serverless computing. We start by (attempting to define serverless) going over the background and motivations behind the serverless paradigm. This is followed by a look at the basic features of a serverless runtime, as well as the major providers and use cases. The chapter closes with notes on the drawbacks and limitations of serverless, particularly from the point of view of web application backends.
+
+\section{Defining serverless}
+
+Defining serverless computing succinctly can be difficult because of the relative immaturity of the field and the fact that there's significant overlap with other cloud computing terms. What's worse, the term has really come to mean two different but overlapping areas. Earlier usage of the term refers to applications that depend on external cloud services, having their business logic concentrated on the client side -- a development model described as Backend-as-a-Service (BaaS) or Mobile-Backend-as-a-Service (MBaaS). More recently the term has been extended to applications whose business logic is located in the cloud, and run in ephemeral compute containers managed by a 3rd party platform. This model is known as Function-as-a-Service (FaaS).
+
+
+Fundamentally serverless computing is about building and running back-end code that does not require server management or server applications \parencite{robert2016serverlessarchitectures}. \textcite{van2017spec} further define serverless computing by three key characteristics:
+
+\begin{enumerate}
+  \item Granular billing: the user of a serverless model is charged only when the application is actually executing
+  \item (Almost) no operational logic: operational logic, such as resource management and autoscaling, is delegated to the infrastructure, making those concerns of the infrastructure operator
+  \item Event-Driven: interactions with serverless applications are designed to be short-lived, allowing the infrastructure to deploy serverless applications to respond to events, so only when needed
+\end{enumerate}
+
+
+\textcite{fox17} present a useful short definition of serverless as a cloud-native platform for short-running, stateless computation and event-driven applications which scales up and down instantly and automatically and charges for actual usage at a millisecond granularity.
+
+As a sidenote, the earliest uses of term 'serverless' can be traced back to peer-to-peer software. The name has evolved into a completely different meaning in the current cloud computing context, so we're dismissing these earliest mentions.
+
+The term 'serverless' in itself can be seen a bit disingenuous, since despite the name serverless computing obviously still involves servers. The name -- coined by industry -- instead implies that there's no longer need to spend time and resources on managing servers. Tasks such as provisioning, maintenance and capacity planning are handled by the serverless platform as needed by current workload. This leaves developers to focus on application logic, providing an abstraction where computation is disconnected from the infrastructure it is going to run on.
+
+We see serverless architectures as making possible the idea of running complex, distributed applications built from relatively simple functions, without requiring the developer (the cloud customer) to manage servers (e.g., through elastic scheduling or auto-scaling) or complex operational aspects (e.g., authentication, authorization, and accounting). Specifically, we see serverless cloud architectures as defined by three key characteristics: (1) Granular billing: the user of a serverless model is charged only when the application is actually executing; (ii) (Almost) no operational logic: operational logic, such as resource management and autoscaling, is delegated to the infrastructure, making those concerns of the infrastructure operator; and (iii) Event-Driven: interactions with serverless applications are designed to be short-lived, allowing the infrastructure to deploy serverless applications to respond to events, so only when needed. \parencite{van2017spec}
+
+We see FaaS as tightly integrated with the notion of executing cloud functions, and, as such, a core component of serverless architectures. Useful especially for applications with narrow functionality, e.g., mobile applications, the (Mobile-)Backend-as-a-Service ((M)BaaS) focuses more than FaaS on operational logic, providing a more configurable, vendor- specific framework with many built-in components that simplify operation, such as user management and data-storage[13]. Thus, we see BaaS as a more tailored, vendor-specific approach to FaaS. \parencite{van2017spec}
+
+FaaS in tandem with BaaS, good as a glue between external services
+
+definition/separation is not clear-cut; for example \textcite{baldini17currentTrends} sees MBaaS as a wholly different paradigm. \textcite{van2017spec} in turn note that some PaaS/SaaS offerings such as Auth0 and FaunaDB, although not generally considered serverless, exhibit the main characteristics of serverless.
+
+Fundamentally serverless computing is about building and running back-end code that does not require server management or server applications. In the serverless paradigm applications are built of small, stateless \textit{cloud functions} that are uploaded to a \textit{serverless platform}. It is then up to the platform to execute, scale an handle billing in response to the exact demand needed at the moment.
+
+why short running?
+
+Historical/evolutionary views: 1) on-premises infra -> grid -> IaaS -> PaaS -> serverless, 2) bare metal -> VMs -> containers -> functions \parencite{fox17}, 3) monolith -> SOA -> microservices -> serverless.
+
+Unlike SaaS or PaaS that are always running, but scale on-demand, serverless workloads run on-demand, and consequently, scale on-demand. \parencite{fox17}
+
+How does serverless relate to concepts such as FaaS, BaaS/MBaaS like Auth0 and Firebase, SOA, microservices, event-driven, virtualiation, containers, cloud-native, ...? Cloud-ready/cloud-native as defined by \textcite{pozdniakova17cloudready}.
+
+\section{Background}
+
+The vision of computing as an utility can be dated back to at least 1969 and ARPANET. \parencite{buyya09cloud}
+
+Cloud computing is by now a well-established paradigm that enables organizations to flexibly deploy their software systems over a pool of computing resources.  \parencite{jamshidi13cloudmigrationreview}
 
 The motivations behind cloud migration in general. \textcite{jamshidi13cloudmigrationreview} identify cost saving, scalability, and efficient utilization of resources as well as flexibility as key drivers to migrate application to the cloud. \textcite{balalaie16migratingcloud} talk about the reasons behind migrating systems to cloud-native architectures.
 
-Particular importance in the current energy-constrained environment. Data centers use on the order of 1-2\% of global energy consumption, but server utilization rates are really low. \parencite{horner16powerusage}
+\textcite{youseff08cloudOntology} with a detailed ontology of cloud computing. The recent evolution of cloud computing has borrowed its basics from several other computing areas and systems engineering concepts. Cluster and Grid Computing on one hand, and virtualization on the other hand are perhaps the most obvious predecessor technologies that enabled the inception of cloud computing. However, several other computing concepts have indirectly shaped today's cloud computing technology, including peer-to-peer (P2P) computing, SOA and autonomic computing.
 
-\section{What is serverless?}
+Serverless platforms promise new capabilities that make writing scalable mi-
+croservices easier and cost effective, positioning themselves as the next step in the
+evolution of cloud computing architectures. \parencite{baldini17currentTrends}
 
-Definition and implications of serverless computing. Main features or tenets. Benefits, use cases, notable users?
+reason behind cloud migration, why is cloud important? organizations migrate to cloud because of A, B, C... note reasons why NOT to migrate to cloud and whether they also apply to serverless.
 
-Serverless is defined as a cloud-native platform for short-running, stateless computation and event-driven applications which scales up and down instantly and automatically and charges for actual usage at a millisecond granularity. Unlike SaaS or PaaS that are always running, but scale on-demand, serverless workloads run on-demand, and consequently, scale on-demand.
+Another particularly important reason is... Particular importance in the current energy-constrained environment. Data centers use on the order of 1-2\% of global energy consumption, but server utilization rates are really low. \parencite{horner16powerusage}
 
-\textcite{robert2016serverlessarchitectures} with a seminal description of the platform.  \textcite{van2017spec}, \textcite{varghese18next} and \textcite{buyya2017manifesto} provide a more historical context and future research directions. \textcite{albuquerque17faaspaas} compare FaaS to PaaS. The \textcite{cncf18serverlessWG} whitepaper describes the platform from a more industry-oriented viewpoint, including comparison with other cloud computing models and a detailed view on the serverless processing model.
+historically cloud has been driven by virtualization, IaaS to PaaS to CaaS...
 
-Historical/evolutionary views: 1) on-premises infra -> grid -> IaaS -> PaaS -> serverless, 2) on-prem -> VMs -> containers -> serverless, 3) monolith -> SOA -> microservices -> serverless.
-
-How does serverless relate to concepts such as FaaS, SOA, microservices, event-driven, virtualiation, containers, cloud-native, ...? Cloud-ready/cloud-native as defined by \textcite{pozdniakova17cloudready}.
+serverless takes these benefits to the extreme... how does serverless work and lean on the existing technology, compare to other platforms
 
 \section{Use cases}
 
@@ -148,7 +195,7 @@ Briefly describe the inner workings of a FaaS runtime. Describe the two supporte
 
 \section{Service providers}
 
-\textcite{lynn2017preliminary} provide an overview and multi-level feature analysis of seven enterprise serverless computing platforms.
+\textcite{lynn2017preliminary} provide an overview and multi-level feature analysis of seven enterprise serverless computing platforms. \textcite{baldini17currentTrends} also has a narrower survey of serverless platforms.
 
 \section{Economics of serverless}
 
@@ -188,9 +235,15 @@ Will there be patterns for building serverless solutions? How do we combine low 
 
 A limited number of purely serverless design patters. \textcite{sbarski2017serverless} introduce five patterns -- Command, Messaging Priority queue, Fan-out and Pipes and filters -- but they seem mostly to be reinterpretations of classic Enterprise Integration Patterns.
 
+Common low-level design patterns such as function chaining and fanout \href{https://github.com/yochay/serverlesspatterns}{in Github}.
+
 API Gateway and messaging patterns as described in platforms' own documentation. \parencite{awslambda0218}
 
-\textcite{adzic2017serverless} suggest 3 methods for optimizing resource usage: use distributed authorization, let clients orchestrate workflows and allow clients to directly connect to AWS resources. The authors also discuss how paying only for actual utilization has two additional benefits of 1) removing incentives for bundling and 2) removing barriers to versioning.
+\textcite{adzic2017serverless} suggest 3 methods for optimizing resource usage: use distributed authorization, let clients orchestrate workflows and allow clients to directly connect to AWS resources. The authors also discuss how paying only for actual utilization has two additional benefits of 1) removing incentives for bundling and 2) removing barriers to versioning: examples of serverless economics affecting architecture. Presenting these (or applications of these) as more formal patterns could be of some value.
+
+\textcite{robert2016serverlessarchitectures} asks how big can FaaS functions get before they get unwieldy? Assuming we can atomically deploy a group of FaaS functions what are good ways of creating such groupings - do they map closely to how we’d currently clump logic into microservices or does the difference in architecture push us in a different direction? Extending this further what are good ways of creating hybrid architectures between FaaS and traditional ‘always on’ persistent server components?
+
+Extending this further what are good ways of creating hybrid architect
 
 \textcite{ast17webcomponent} describe self-contained web components with serverless backends.
 
@@ -205,6 +258,8 @@ API Gateway and messaging patterns as described in platforms' own documentation.
 \chapter{Migration process}
 
 Implement a subset of the target app in a serverless style, utilizing the surveyed patterns and keeping log of the tricky parts. In case the patterns prove unsuitable for the given problem, try to come up with an alternative solution.
+
+Describe the web application to migrate.
 
 Decide on the parts to migrate. Should demonstrate the features and limitations of serverless as outlined above. Possible features include
 \begin{itemize}
