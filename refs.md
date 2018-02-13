@@ -140,6 +140,9 @@ In this work, we present the architecture and prototype of a **chatbot using a s
 
 ## Cloud computing and migration
 
+[Sareen, Pankaj. "Cloud computing: types, architecture, applications, concerns, virtualization and role of it governance in cloud." (2013)](http://www.academia.edu/download/35864304/virtualization_introduction.pdf)
+The paper **defines clouds**, types of cloud Provides, Comparison of Cloud Computing with Grid Computing, applications and concerns of Cloud Computing , Concept of Virtualization in Cloud Computing. Readers will also discover the working, Architecture and Role of I.T Governance in Cloud Computing.
+
 [Youseff, Lamia, Maria Butrico, and Dilma Da Silva. "Toward a unified ontology of cloud computing." (2008)](http://ieeexplore.ieee.org/document/4738443/#)
 Manifesting itself as the descendant of several other computing research areas such as Service-Oriented Architecture, distributed and grid computing, and virtualization, cloud computing inherits their advancements and limitations. Towards the end-goal of a thorough comprehension of the field of cloud computing, and a more rapid adoption from the scientific community, we propose in this paper **an ontology** of this area which demonstrates a dissection of the cloud into five main layers, and illustrates their interrelations as well as their inter-dependency on preceding technologies.
 
