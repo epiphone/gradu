@@ -140,10 +140,11 @@ Backend-as-a-Service refers to an architecture where an application's server-sid
 
 Function-as-a-Service is a more recent development: the first commercial FaaS platform, AWS Lambda, was introduced in November 2014 \parencite{awslambda0218}. In the FaaS architecture an application's business logic is still located server-side. The crucial difference is that instead of self-managed server resources, developers upload small units of code to a FaaS platform that executes the code in short-lived, stateless compute containers in response to events \parencite{robert2016serverlessarchitectures}. The model appears serverless in the sense that the developer has no control over the resources on which the back-end code runs. \textcite{albuquerque17faaspaas} note that the BaaS model of locating business logic on the client side carries with it some complications, namely difficulties in updating and deploying new features as well as reverse engineering risks. FaaS circumvents these problems by retaining business logic server-side.
 
-Another perspective on the difference between the two serverless models is to view BaaS as a more tailored, vendor-specific approach to FaaS \parencite{van2017spec}. Whereas BaaS-type services function as built-in components for many common use cases such as user management and data storage, a FaaS platform allows developers to implement more customized functionality. This thesis focuses on the latter, since out of the two models FaaS is the one with significant differences to traditional web application architecture (as illustrated later) and thus more interesting concerning the research questions in hand. BaaS however plays an important role in serverless architectures as it will often be the supporting infrastructure (e.g. in form of data storage) to the stateles FaaS functions \parencite{cncf18serverlessWG}. Conversely, in case of otherwise BaaS-based applications there's likely still a need for custom server-side functionality; FaaS functions may be a good solution for this \parencite{robert2016serverlessarchitectures}. Serverless applications can utilize both models simultaneously, with BaaS platforms generating events that trigger FaaS functions, and FaaS functions can acting as a 'glue component' between various third party BaaS services.  \textcite{robert2016serverlessarchitectures} also notes convergence in the space, giving the example of the user managemement provider Auth0 starting initially with a BaaS-style offering but later entering the FaaS space with a 'Auth0 Webtask' service.
+Out of the two serverless models FaaS is the one with significant differences to traditional web application architecture \parencite{robert2016serverlessarchitectures}. These differences and their implications are further illustrated in section \ref{faas}. As the more novel architecture, FaaS is especially relevant to the research questions in hand and is thus focused more on the remainder of this thesis.
 
-It's also worth noting that not all authors seem to follow this grouping of FaaS and BaaS as the two forms of serverless set by \textcite[e.g.][]{cncf18serverlessWG}. \textcite{varghese18next}, among others, seem to strictly equate serverless with FaaS; \textcite{baldini17currentTrends} posit that whether serverless is restricted to FaaS or broader in scope is an open question.
-first usage of serverless appeared around 2012 (roberts), so can't be limited to just FaaS since the first FaaS platform was introduced as late as 2014 duhh.
+Another perspective on the difference between the two serverless models is to view BaaS as a more tailored, vendor-specific approach to FaaS \parencite{van2017spec}. Whereas BaaS-type services function as built-in components for many common use cases such as user management and data storage, a FaaS platform allows developers to implement more customized functionality. BaaS plays an important role in serverless architectures as it will often be the supporting infrastructure (e.g. in form of data storage) to the stateless FaaS functions \parencite{cncf18serverlessWG}. Conversely, in case of otherwise BaaS-based applications there's likely still a need for custom server-side functionality; FaaS functions may be a good solution for this \parencite{robert2016serverlessarchitectures}. Serverless applications can utilize both models simultaneously, with BaaS platforms generating events that trigger FaaS functions, and FaaS functions acting as a 'glue component' between various third party BaaS components. \textcite{robert2016serverlessarchitectures} also notes convergence in the space, giving the example of the user managemement provider Auth0 starting initially with a BaaS-style offering but later entering the FaaS space with a 'Auth0 Webtask' service.
+
+It's worth noting that not all authors to follow this grouping of FaaS and BaaS as the two categories of the more abstract 'serverless' model. \textcite{baldini17currentTrends} posit that whether serverless is restricted to FaaS or broader in scope is an open question. \textcite{varghese18next}, among others, seem to strictly equate serverless with FaaS.  However, considering that the term 'serverless' predates the first FaaS platforms by a couple of years \parencite{robert2016serverlessarchitectures}, it seems sensible to at least make a distinction between serverless and FaaS.
 
 \section{Comparison to other cloud computing models}
 
@@ -151,23 +152,13 @@ first usage of serverless appeared around 2012 (roberts), so can't be limited to
 As serverless is gaining popularity the boundaries between different types of ”as-a-Service” may be disappearing (see Figure 9). One could imagine that developersnot only write code but also declare how they want the code to run - as FaaS orMBaaS or PaaS - and can change as needs change. In the future the main distinc-tion may be between caring about server (server-aware) and not caring about serverdetails (server-less). PaaS is in the middle; it makes it very easy to deploy code butdevelopers still need to know about servers and be aware of scaling strategies, suchas how many instances to run. \parencite{baldini17currentTrends}
 \end{quote}
 
-\textcite{van2017spec} in turn note that some PaaS/SaaS offerings such as Auth0 and FaunaDB, although not generally considered serverless, exhibit the main characteristics of serverless.
+\textcite{van2017spec} note that some PaaS/SaaS offerings such as Auth0 and FaunaDB, although not generally considered serverless, exhibit the main characteristics of serverless.
 
 \begin{figure}[h]
   \centering
   \includegraphics[width=\textwidth]{baldini17-paas-faas-saas.jpg}
   \caption{Developer control and serverless computing \parencite{baldini17currentTrends}}
 \end{figure}
-
-\section{Function-as-a-Service}
-
-\textcite{fox17} present a useful short definition of serverless as a cloud-native platform for short-running, stateless computation and event-driven applications which scales up and down instantly and automatically and charges for actual usage at a millisecond granularity.
-
-\section{Serverless application architecture}
-
-\textcite{van2017spec} on serverless and SOA architecture: We see the emerging model based on running individual cloud functions as a consequence of the slow but sustained evolution of computing. For many decades we have witnessed a transition from relatively large, monolithic applications, to smaller or more struc- tured applications with smaller execution units (e.g, workflows with many small tasks). This transition is captured qualitatively by vari- ous software architectures, for example, the Service-Oriented Ar- chitecture, and quantitatively by various workload-characterization and modeling studies, for example of scientific workloads running on supercomputers and grids between 1990 and 2010.
-
-% Historical/evolutionary views: 1) on-premises infra -> grid -> IaaS -> PaaS -> serverless, 2) bare metal -> VMs -> containers -> functions \parencite{fox17}, 3) monolith -> SOA -> microservices -> serverless.
 
 \section{Background}
 
@@ -187,9 +178,19 @@ reason behind cloud migration, why is cloud important? organizations migrate to 
 
 Another particularly important reason is... Particular importance in the current energy-constrained environment. Data centers use on the order of 1-2\% of global energy consumption, but server utilization rates are really low. \parencite{horner16powerusage}
 
-historically cloud has been driven by virtualization, IaaS to PaaS to CaaS...
+historically cloud has been driven by virtualization, IaaS to PaaS to CaaS.... \textcite{bernstein14containers} on how the progression to increasingly lightweight and efficient virtualized and abstracted systems (i.e. virtual machines to containers to unikernels) is indicative of the rapid innovation taking place in the public cloud market.
 
 serverless takes these benefits to the extreme... how does serverless work and lean on the existing technology, compare to other platforms
+
+\section{Function-as-a-Service} \label{faas}
+
+\textcite{fox17} present a useful short definition of serverless as a cloud-native platform for short-running, stateless computation and event-driven applications which scales up and down instantly and automatically and charges for actual usage at a millisecond granularity.
+
+\section{Serverless application architecture}
+
+\textcite{van2017spec} on serverless and SOA architecture: We see the emerging model based on running individual cloud functions as a consequence of the slow but sustained evolution of computing. For many decades we have witnessed a transition from relatively large, monolithic applications, to smaller or more struc- tured applications with smaller execution units (e.g, workflows with many small tasks). This transition is captured qualitatively by vari- ous software architectures, for example, the Service-Oriented Ar- chitecture, and quantitatively by various workload-characterization and modeling studies, for example of scientific workloads running on supercomputers and grids between 1990 and 2010.
+
+% Historical/evolutionary views: 1) on-premises infra -> grid -> IaaS -> PaaS -> serverless, 2) bare metal -> VMs -> containers -> functions \parencite{fox17}, 3) monolith -> SOA -> microservices -> serverless.
 
 \section{Use cases}
 
@@ -221,7 +222,7 @@ Briefly describe the inner workings of a FaaS runtime. Describe the two supporte
 
 \section{Security}
 
-Address the security implications of serverless. Overall the consensus seems to be that compared to services maintaining their own servers and resources, serverless approach reduces the attack surface However, research needs to understand the new security issues introduced by FaaS. For example, because the infrastructure can share resources among cloud-functions, what is the ideal security vs. performance/cost trade-off? \parencite{van2017spec}
+Address the security implications of serverless. Overall the consensus seems to be that compared to services maintaining their own servers and resources, serverless approach reduces the attack surface. However, research needs to understand the new security issues introduced by FaaS. For example, because the infrastructure can share resources among cloud-functions, what is the ideal security vs. performance/cost trade-off? \parencite{van2017spec}
 
 \section{Drawbacks and limitations}
 
@@ -260,6 +261,8 @@ Will there be patterns for building serverless solutions? How do we combine low 
 A limited number of purely serverless design patters. \textcite{sbarski2017serverless} introduce five patterns -- Command, Messaging Priority queue, Fan-out and Pipes and filters -- but they seem mostly to be reinterpretations of classic Enterprise Integration Patterns.
 
 Common low-level design patterns such as function chaining and fanout \href{https://github.com/yochay/serverlesspatterns}{in Github}.
+
+\textcite{mcgrath16cloudEventParadigms} demonstrate a fan-out pattern, easily and performantly solving a large-scale image resizing task.
 
 API Gateway and messaging patterns as described in platforms' own documentation. \parencite{awslambda0218}
 

@@ -145,14 +145,17 @@ In this work, we present the architecture and prototype of a **chatbot using a s
 
 ## Cloud computing and migration
 
+[Youseff, Lamia, Maria Butrico, and Dilma Da Silva. "Toward a unified ontology of cloud computing." (2008)](http://ieeexplore.ieee.org/document/4738443/#)
+Manifesting itself as the descendant of several other computing research areas such as Service-Oriented Architecture, distributed and grid computing, and virtualization, cloud computing inherits their advancements and limitations. Towards the end-goal of a thorough comprehension of the field of cloud computing, and a more rapid adoption from the scientific community, we propose in this paper **an ontology** of this area which demonstrates a dissection of the cloud into five main layers, and illustrates their interrelations as well as their inter-dependency on preceding technologies.
+
 [Mell, Peter, and Tim Grance. "The NIST definition of cloud computing." (2011)](http://faculty.winthrop.edu/domanm/csci411/Handouts/NIST.pdf)
 The seminal definitions of cloud computing terms. Lacks FaaS and serverless.
 
 [Sareen, Pankaj. "Cloud computing: types, architecture, applications, concerns, virtualization and role of it governance in cloud." (2013)](http://www.academia.edu/download/35864304/virtualization_introduction.pdf)
 The paper **defines clouds**, types of cloud Provides, Comparison of Cloud Computing with Grid Computing, applications and concerns of Cloud Computing , Concept of Virtualization in Cloud Computing. Readers will also discover the working, Architecture and Role of I.T Governance in Cloud Computing.
 
-[Youseff, Lamia, Maria Butrico, and Dilma Da Silva. "Toward a unified ontology of cloud computing." (2008)](http://ieeexplore.ieee.org/document/4738443/#)
-Manifesting itself as the descendant of several other computing research areas such as Service-Oriented Architecture, distributed and grid computing, and virtualization, cloud computing inherits their advancements and limitations. Towards the end-goal of a thorough comprehension of the field of cloud computing, and a more rapid adoption from the scientific community, we propose in this paper **an ontology** of this area which demonstrates a dissection of the cloud into five main layers, and illustrates their interrelations as well as their inter-dependency on preceding technologies.
+[Bernstein, David. "Containers and cloud: From lxc to docker to kubernetes." (2014)](http://ieeexplore.ieee.org/abstract/document/7036275/)
+This issue's "Cloud Tidbit" focuses on **container technology** and how it's emerging as an important part of the cloud computing infrastructure. It looks at Docker, an open source project that automates the faster deployment of Linux applications, and Kubernetes, an open source cluster manager for Docker containers.
 
 [Buyya, Rajkumar, et al. "Cloud computing and emerging IT platforms: Vision, hype, and reality for delivering computing as the 5th utility."(2009)](https://www.sciencedirect.com/science/article/pii/S0167739X08001957)
 With the significant advances in Information and Communications Technology (ICT) over the last half century, there is an increasingly perceived vision that computing will one day be **the 5th utility** (after water, electricity, gas, and telephony). To deliver this vision, a number of computing paradigms have been proposed, of which the latest one is known as Cloud computing. Hence, in this paper, we **define Cloud computing** and provide the architecture for creating Clouds with market-oriented resource allocation by leveraging technologies such as Virtual Machines (VMs).
