@@ -31,6 +31,11 @@ This paper presents two case industrial studies of early adopters, showing how m
   - Critical to **embrace the platform**, not just the Lambda service. Crucially, this means not using Lambda to just host traditional apps cheaper. Sure, it is perfectly possible to run traditional web applications inside Lambda containers with minor modifications, you just need to move state somewhere else. There are even libraries out there that will allow you to run Node.js Express apps or Java Spring Apps inside Lambda easily. On one hand, that is quite a compelling way to start using the new architectures. On the other hand, the benefits of that approach are quite questionable. A big part of Patrick Debois’ keynote at the ServerlessConf 2016 in London was how just pushing things to Lambda won’t make things magically cheaper and faster, quite the opposite.
   - There are three typical aspects of letting the platform take over the responsibilities of a server: Use distributed authorization, Let clients orchestrate workflows, Allow clients to directly connect to AWS resources
 
+[McGrath, Garrett, et al. "Cloud event programming paradigms: Applications and analysis." (2016)](http://ieeexplore.ieee.org/document/7820297/#full-text-section)
+In addition to discussing the **current state of cloud event services**, this paper presents **two real world applications** utilizing these platforms. Furthermore, we discuss how cloud event technologies enable and/or limit these applications, motivate new **software design paradigms in a cloud event environment**, and highlight compelling use case scenarios and barriers to entry for cloud event services.
+
+[Malawski, Maciej, et al. "Benchmarking Heterogeneous Cloud Functions." (2018)](https://link.springer.com/chapter/10.1007/978-3-319-75178-8_34)
+In this paper, we focus on **performance evaluation of cloud functions**, taking into account heterogeneity aspects. We developed a cloud function benchmarking framework, consisting of one suite based on Serverless Framework, and one based on HyperFlow. We deployed the CPU-intensive benchmarks: Mersenne Twister and Linpack, and evaluated all the major cloud function providers: AWS Lambda, Azure Functions, Google Cloud Functions and IBM OpenWhisk.
 
 [Varghese, Blesson, and Rajkumar Buyya. "Next generation cloud computing: New trends and research directions." (2018)](https://www.sciencedirect.com/science/article/pii/S0167739X17302224)
 The use of serverless computing will increase given that billions of devices will need to be connected to the edge of the network and data centers. It will not be feasible to have idle servers in resource constrained environments. The challenges that will hinder the widespread adoption of serverless computing will be the **radical shift in the properties of an application** that a programmer will need to focus on; not latency, scalability and elasticity, but those that relate to the modularity of an application, such as **control and flexibility**. Another challenge is developing programming models that will allow for **high-level abstractions** to facilitate serverless computing. The effect and trade-offs of using traditional external services along with serverless computing services will need to be investigated in orchestrating future cloud-based systems.
@@ -139,6 +144,9 @@ In this work, we present the architecture and prototype of a **chatbot using a s
 
 
 ## Cloud computing and migration
+
+[Mell, Peter, and Tim Grance. "The NIST definition of cloud computing." (2011)](http://faculty.winthrop.edu/domanm/csci411/Handouts/NIST.pdf)
+The seminal definitions of cloud computing terms. Lacks FaaS and serverless.
 
 [Sareen, Pankaj. "Cloud computing: types, architecture, applications, concerns, virtualization and role of it governance in cloud." (2013)](http://www.academia.edu/download/35864304/virtualization_introduction.pdf)
 The paper **defines clouds**, types of cloud Provides, Comparison of Cloud Computing with Grid Computing, applications and concerns of Cloud Computing , Concept of Virtualization in Cloud Computing. Readers will also discover the working, Architecture and Role of I.T Governance in Cloud Computing.
