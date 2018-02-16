@@ -124,7 +124,7 @@ As a sidenote, although the earliest uses of term 'serverless' can be traced bac
 
 TODO: How does serverless relate to concepts such as FaaS, BaaS/MBaaS like Auth0 and Firebase, SOA, microservices, event-driven, virtualization, containers, cloud-native, ...? Cloud-ready/cloud-native as defined by \textcite{pozdniakova17cloudready}.
 
-\section{Defining serverless}
+\section{Defining serverless} \label{sec:definingServerless}
 
 Fundamentally serverless computing is about building and running back-end code that does not require server management or server applications. The term itself can seem a bit disingenuous, since despite the name serverless computing obviously still involves servers. The name -- coined by industry -- instead carries the meaning that the resources used by the application are managed by the cloud service provider. As tasks such as provisioning, maintenance and capacity planning are outsourced to the serverless platform, developers are left to focus on application logic. For the cloud customer this provides an abstraction where computation is disconnected from the infrastructure it is going to run on. \parencite{robert2016serverlessarchitectures,cncf18serverlessWG}
 
@@ -148,17 +148,33 @@ It's worth noting that not all authors follow this taxonomy of FaaS and BaaS as 
 
 \section{Comparison to other cloud computing models}
 
-\begin{quote}
-As serverless is gaining popularity the boundaries between different types of ”as-a-Service” may be disappearing (see Figure 9). One could imagine that developers not only write code but also declare how they want the code to run - as FaaS orMBaaS or PaaS - and can change as needs change. In the future the main distinction may be between caring about server (server-aware) and not caring about server details (server-less). PaaS is in the middle; it makes it very easy to deploy code but developers still need to know about servers and be aware of scaling strategies, such as how many instances to run. \parencite{baldini17currentTrends}
-\end{quote}
+% As serverless is gaining popularity the boundaries between different types of ”as-a-Service” may be disappearing (see Figure 9). One could imagine that developers not only write code but also declare how they want the code to run - as FaaS orMBaaS or PaaS - and can change as needs change. In the future the main distinction may be between caring about server (server-aware) and not caring about server details (server-less). PaaS is in the middle; it makes it very easy to deploy code but developers still need to know about servers and be aware of scaling strategies, such as how many instances to run. \parencite{baldini17currentTrends}
 
-\textcite{van2017spec} note that some PaaS/SaaS offerings such as Auth0 and FaunaDB, although not generally considered serverless, exhibit the main characteristics of serverless.
+Another approach to defining serverless is to compare it with other cloud computing service models. The commonly used NIST definition divides cloud offerings into three models: Infrastructure-as-a-Service (IaaS), Platform-as-a-Service (PaaS) and Software-as-a-Service (SaaS), in order of increasing degree of abstraction of cloud infrastructure \parencite{nist11definitions}. On this spectrum serverless computing positions itself in the space between PaaS and SaaS, as illustrated in figure \ref{fig:degreeOfAutomation} \parencite{baldini17currentTrends}. Figure \ref{fig:cloudSpectrum} illustrates how the two serverless models relate, with the cloud provider taking over a larger share of operational logic in BaaS. \textcite{van2017spec} note that there's some overlap and give examples of both PaaS and SaaS offerings that, although not generally considered serverless, exhibit the main characteristics of serverless defined in section \ref{sec:definingServerless}.
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=\textwidth]{baldini17-paas-faas-saas.jpg}
-  \caption{Developer control and serverless computing \parencite{baldini17currentTrends}}
+  \includegraphics[width=\textwidth]{specify-io-cloud-comparison.png}
+  \caption{Degree of automation when using serverless \parencite{wolf16serverless}}
+  \label{fig:degreeOfAutomation}
 \end{figure}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{eyk17-cloud-comparison.jpg}
+  \caption{Serverless and FaaS vs. PaaS and SaaS \parencite{van2017spec}}
+  \label{fig:cloudSpectrum}
+\end{figure}
+
+Since the gap between PaaS and FaaS can be quite subtle it warrants further consideration. Indeed some sources, including \textcite{adzic2017serverless}, refer to FaaS as a new generation of PaaS offerings. Both models provide a high-level and elastic computing platform on which to implement custom business logic. There are however a number of substantial differences between the two models, concerning for example billing and resource allocation. One of the differences lies in units of deployment: PaaS delivers services compared to the function-based delivery of FaaS. Second, PaaS instances are always running whereas serverless workloads are executed on-demand. Third, PaaS platforms, although supporting auto-scaling to some extent, require the developer to explicitly manage the scaling workflow and number of minimum instances. FaaS on the other hand scales transparently and on-demand, without any need for pre-allocation of resources. Perhaps most importantly PaaS is billed by instantiated resources whether they're used or not, whereas FaaS is billed per-event on a millisecond granularity. \parencite{albuquerque17faaspaas}
+
+
+Considering these differences, FaaS offers a more attractive economic proposition due to no danger of under- or overprovisioning of resources.
+On the other hand the PaaS model doesn't suffer from limits on execution duration and many other limitations of FaaS as described in section \ref{sec:limitations}. Cite CNCF recommendations for different tasks (also albuquerque17)
+
+
+
+compare to CaaS \parencite{cncf18serverlessWG}. Buyya17 describes containers.
 
 \section{Background}
 
@@ -186,6 +202,10 @@ serverless takes these benefits to the extreme... how does serverless work and l
 
 \textcite{fox17} present a useful short definition of serverless as a cloud-native platform for short-running, stateless computation and event-driven applications which scales up and down instantly and automatically and charges for actual usage at a millisecond granularity.
 
+Briefly describe the inner workings of a FaaS runtime. Describe the two supported execution models, synchronous and asynchronous, and how they relate to application design. The former is used to build a typical request-response flow, e.g. a REST API endpoint, whereas the latter relates to pub-sub and other event-driven flows. Give examples on the kind of triggers supported by serverless platforms (HTTP calls, messaging, database events, ...).
+
+\textcite{spillner17snafu} presents the design and implementation of a research-friendly FaaS runtime. \textcite{mcgrath17implement} present the design of a novel performance-oriented serverless computing platform, discussing implementation challenges such as function scaling and container discovery, lifecycle, and reuse. \textcite{hendrickson16openlambda} present OpenLambda, an open-source platform for serverless computation, describing the key aspects of serverless computation and presenting numerous research challenges that must be addressed in the design and implementation of such systems.
+
 \section{Serverless application architecture}
 
 \textcite{van2017spec} on serverless and SOA architecture: We see the emerging model based on running individual cloud functions as a consequence of the slow but sustained evolution of computing. For many decades we have witnessed a transition from relatively large, monolithic applications, to smaller or more struc- tured applications with smaller execution units (e.g, workflows with many small tasks). This transition is captured qualitatively by vari- ous software architectures, for example, the Service-Oriented Ar- chitecture, and quantitatively by various workload-characterization and modeling studies, for example of scientific workloads running on supercomputers and grids between 1990 and 2010.
@@ -204,12 +224,6 @@ Introduce edge computing as a particularly strong driver for serverless. \textci
 
 \textcite{fouladi2017encoding} present a serverless video-processing framework. \textcite{yan16chatbot} present the architecture and prototype of a chatbot using a serverless platform, where developers compose stateless functions together to perform useful actions. \textcite{ishakian17neural} evaluate the suitability of a serverless computing environment for the inferencing of large neural network models. \textcite{ast17webcomponent} describe an approach of how to utilize serverless computing to enable self-contained web components by deploying Web Component business logic as cloud-hosted functions.
 
-\section{Runtime}
-
-Briefly describe the inner workings of a FaaS runtime. Describe the two supported execution models, synchronous and asynchronous, and how they relate to application design. The former is used to build a typical request-response flow, e.g. a REST API endpoint, whereas the latter relates to pub-sub and other event-driven flows. Give examples on the kind of triggers supported by serverless platforms (HTTP calls, messaging, database events, ...).
-
-\textcite{spillner17snafu} presents the design and implementation of a research-friendly FaaS runtime. \textcite{mcgrath17implement} present the design of a novel performance-oriented serverless computing platform, discussing implementation challenges such as function scaling and container discovery, lifecycle, and reuse. \textcite{hendrickson16openlambda} present OpenLambda, an open-source platform for serverless computation, describing the key aspects of serverless computation and presenting numerous research challenges that must be addressed in the design and implementation of such systems.
-
 \section{Service providers}
 
 \textcite{lynn2017preliminary} provide an overview and multi-level feature analysis of seven enterprise serverless computing platforms. \textcite{baldini17currentTrends} also has a narrower survey of serverless platforms.
@@ -224,7 +238,7 @@ Briefly describe the inner workings of a FaaS runtime. Describe the two supporte
 
 Address the security implications of serverless. Overall the consensus seems to be that compared to services maintaining their own servers and resources, serverless approach reduces the attack surface. However, research needs to understand the new security issues introduced by FaaS. For example, because the infrastructure can share resources among cloud-functions, what is the ideal security vs. performance/cost trade-off? \parencite{van2017spec}
 
-\section{Drawbacks and limitations}
+\section{Drawbacks and limitations} \label{sec:limitations}
 
 What to take into consideration when migrating to serverless?
 
