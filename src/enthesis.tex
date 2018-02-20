@@ -114,7 +114,7 @@ The outcome of the migration process is evaluated in the fifth chapter. The pote
 The final chapter of the thesis aims to draw conclusions on the migration process and the resulting artifacts. The chapter contains a summary of the research outcomes and ends with recommendations for further research topics.
 
 
-\chapter{Serverless computing}
+\chapter{Serverless computing} \label{cha:serverless}
 
 This chapter serves as an introduction to serverless computing. Defining serverless computing succinctly can be difficult because of the relative immaturity of the field. The NIST definitions of cloud computing have yet to catch up with the technology \parencite{nist11definitions}, and an effort to formalize and standardize serverless computing by the industry-headed Cloud Native Computing Foundation is still underway \parencite{cncf18serverlessWG}. As a result the boundaries between serverless and other cloud computing terms are still somewhat blurred, and the terms seem to carry slightly different meanings depending on the author or context. To complicate matters further, serverless computing has come to appear in two different but overlapping forms. A multilayered approach is therefore in order.
 
@@ -124,31 +124,35 @@ As a sidenote, although the earliest uses of term 'serverless' can be traced bac
 
 % TODO: How does serverless relate to concepts such as FaaS, BaaS/MBaaS like Auth0 and Firebase, SOA, microservices, event-driven, virtualization, containers, cloud-native, ...? Cloud-ready/cloud-native as defined by \textcite{pozdniakova17cloudready}.
 
-\section{Background}
+\section{Background} \label{sec:background}
 
-The vision of computing as an utility can be dated back to at least 1969 and ARPANET. \parencite{buyya09cloud}
+Utility computing refers to a model where computing resources are commoditized and delivered in a manner similar to traditional utilities such as water, electricity and telephony. Utilities are readily available to consumers at any time whenever required and billed per actual usage. In computing, this has come to mean on-demand access to highly scalable subscribtion-based IT resources. The availability of computing as an utility has enabled organizations to avoid investing heavily on building and maintaining complex IT infrastructure. \parencite{buyya09cloud}
 
-Cloud computing is by now a well-established paradigm that enables organizations to flexibly deploy their software systems over a pool of computing resources.  \parencite{jamshidi13cloudmigrationreview}
+This vision of utility computing can be traced all the way back to 1969 and ARPANET. Leonard Kleinrock, one of the chieft scientists in the project, is quoted as saying, "as of now, computer networks are still in their infancy, but as they grow up and become sophisticated, we will probably see the spread of ‘computer utilities’ which, like present electric and telephone utilities, will service individual homes and offices across the country" \parencite{kleinrock03internet}. The creation of the Internet first facilitated weaving computer resources together into large-scale distributed systems. Onset by these discoveries, multiple computing paradigms have been proposed and adopted to take on the role of a ubiquitous computing utility. Building on the various preceding paradigms, cloud computing has in the past decade revolutionized the computer science horizon and truly enabled the emergence of computing as an utility \parencite{buyya2017manifesto}.
 
-The motivations behind cloud migration in general. \textcite{jamshidi13cloudmigrationreview} identify cost saving, scalability, and efficient utilization of resources as well as flexibility as key drivers to migrate application to the cloud. \textcite{balalaie16migratingcloud} talk about the reasons behind migrating systems to cloud-native architectures.
+\textcite{sareen13cloudTypes} defines a cloud as a pool of scalable and highly available virtualized computer resources that support hosting a variety of different workloads.
 
 \textcite{youseff08cloudOntology} with a detailed ontology of cloud computing. The recent evolution of cloud computing has borrowed its basics from several other computing areas and systems engineering concepts. Cluster and Grid Computing on one hand, and virtualization on the other hand are perhaps the most obvious predecessor technologies that enabled the inception of cloud computing. However, several other computing concepts have indirectly shaped today's cloud computing technology, including peer-to-peer (P2P) computing, SOA and autonomic computing.
 
-% Serverless platforms promise new capabilities that make writing scalable microservices easier and cost effective, positioning themselves as the next step in the evolution of cloud computing architectures. \parencite{baldini17currentTrends}
+cloud is built on virtualization...
 
-% reason behind cloud migration, why is cloud important? organizations migrate to cloud because of A, B, C... note reasons why NOT to migrate to cloud and whether they also apply to serverless.
+today cloud computing is...
+Cloud computing is by now a well-established paradigm that enables organizations to flexibly deploy their software systems over a pool of computing resources. Both major IT companies and startups see migrating on-premise legacy systems to the cloud as an opportunistic business strategy and as a competetive advantage. Cost saving, scalability, and efficient utilization of resources as well as flexibility are identified as key drivers to migrate applications to the cloud. \parencite{jamshidi13cloudmigrationreview}
+{balalaie16migratingcloud} talk about the reasons behind migrating systems to cloud-native architectures.
 
-Particular importance in the current energy-constrained environment. Data centers use on the order of 1-2\% of global energy consumption, but server utilization rates are really low. \parencite{horner16powerusage}
-% Another particularly important driver for is...
-
+recent advances in VM, containers, lead to...
 \textcite{bernstein14containers} on how the progression to increasingly lightweight and efficient virtualized and abstracted systems (i.e. virtual machines to containers to unikernels) is indicative of the rapid innovation taking place in the public cloud market.
-% historically cloud has been driven by virtualization, IaaS to PaaS to CaaS....
+
+Serverless platforms promise new capabilities that make writing scalable microservices easier and cost effective, positioning themselves as the next step in the evolution of cloud computing architectures. \parencite{baldini17currentTrends}
+
+Another particularly important driver for is...
+Particular importance in the current energy-constrained environment. Data centers use on the order of 1-2\% of global energy consumption, but server utilization rates are really low. \parencite{horner16powerusage}
 
 % Historical/evolutionary views: 1) on-premises infra -> grid -> IaaS -> PaaS -> serverless, 2) bare metal -> VMs -> containers -> functions \parencite{fox17}, 3) monolith -> SOA -> microservices -> serverless.
 
 \section{Defining serverless} \label{sec:definingServerless}
 
-% serverless takes these benefits to the extreme... how does serverless work and lean on the existing technology, compare to other platforms. link to prev section!
+% serverless takes these benefits to the extreme... how does serverless lean on the prev mentioned technology, compare to other platforms. link to prev section!
 
 Fundamentally serverless computing is about building and running back-end code that does not require server management or server applications. The term itself can seem a bit disingenuous, since despite the name serverless computing obviously still involves servers. The name -- coined by industry -- instead carries the meaning that the resources used by the application are managed by the cloud service provider. As tasks such as provisioning, maintenance and capacity planning are outsourced to the serverless platform, developers are left to focus on application logic. For the cloud customer this provides an abstraction where computation is disconnected from the infrastructure it is going to run on. \parencite{robert2016serverlessarchitectures,cncf18serverlessWG}
 
@@ -178,7 +182,7 @@ It's worth noting that not all authors follow this taxonomy of FaaS and BaaS as 
 % As serverless is gaining popularity the boundaries between different types of ”as-a-Service” may be disappearing (see Figure 9). One could imagine that developers not only write code but also declare how they want the code to run - as FaaS orMBaaS or PaaS - and can change as needs change. In the future the main distinction may be between caring about server (server-aware) and not caring about server details (server-less). PaaS is in the middle; it makes it very easy to deploy code but developers still need to know about servers and be aware of scaling strategies, such as how many instances to run. \parencite{baldini17currentTrends}
 
 Another approach to defining serverless is to compare it with other cloud service models. The commonly used NIST definition divides cloud offerings into three categories: Infrastructure-as-a-Service (IaaS), Platform-as-a-Service (PaaS) and Software-as-a-Service (SaaS), in order of increasing degree of abstraction of cloud infrastructure \parencite{nist11definitions}. On this spectrum serverless computing positions itself in the space between PaaS and SaaS, as illustrated in figure \ref{fig:degreeOfAutomation} \parencite{baldini17currentTrends}. Figure \ref{fig:cloudSpectrum} illustrates how the two serverless models relate, with the cloud provider taking over a larger share of operational logic in BaaS. \textcite{van2017spec} note that there's some overlap and give examples of non-serverless products in both the PaaS and SaaS worlds that nonetheless exhibit the main characteristics of serverless defined in section \ref{sec:definingServerless}.
-% TODO flesh out this paragraph
+% TODO flesh out this paragraph (explain IaaS etc as per buyya17?)
 
 \begin{figure}[h]
   \centering
@@ -198,11 +202,8 @@ Since the gap between PaaS and FaaS can be quite subtle it warrants further cons
 
 \textcite{albuquerque17faaspaas} derive a number of specific differences between PaaS and FaaS in their comparative analysis. First of all the units of deployment vary: in PaaS applications are deployed as services, compared to the more granular function-based deployment of FaaS. Second, PaaS instances are always running whereas serverless workloads are executed on-demand. Third, PaaS platforms, although supporting auto-scaling to some extent, require the developer to explicitly manage the scaling workflow and number of minimum instances. FaaS on the other hand scales transparently and on-demand without any need for resource pre-allocation. Perhaps most important distinction lies in billing: PaaS is billed by instantiated resources whether they're used or not, whereas FaaS is billed per-event on a millisecond granularity. The analysis concludes that PaaS is well suited for predictable or constant workloads with long or variable per-request execution times; FaaS in turn provides better cost benefit for unpredictable or seasonal workloads with short per-request execution times. It's also to be noted that PaaS doesn't suffer from limits on execution duration and many other restrictions of FaaS as described in section \ref{sec:limitations}.
 
-scaling mechanisms of PaaS are well suited for application's with constant or predictable workloads.
-
-Cite CNCF  recommendations for different tasks (also albuquerque17)
-
-compare to CaaS \parencite{cncf18serverlessWG}. Buyya17 describes containers.
+Another recent cloud-native technology is Container-as-a-Service (CaaS)
+compare to CaaS \parencite{cncf18serverlessWG}. Buyya17 describes containers. \textcite{robert2016serverlessarchitectures} also has a few words on the topic.
 
 \section{Function-as-a-Service} \label{faas}
 
@@ -260,6 +261,10 @@ The need for circuit breakers (risk of DDoSing yourself) when interacting with n
 Address maintainability: debugging serverless functions, following the flow of control can be tough.
 
 Composing serverless functions is not like composing regular functions. All the difficulties of distributed computing -- message loss, timeouts and others -- apply and have to be handled. Possible solutions include retry policies, dead-letter queues and idempotent functions.
+
+A full-fledged general-purpose serverless computing model is still a vision that needs to be achieved. \parencite{buyya2017manifesto}
+
+Unlike the abstract concept of cloud functions, FaaS cannot completely abstract away all operation logic from the user. The FaaS user can still change parameters and configurations, such as the suggested memory size or number of CPUs of the underlying function host, which influence the operation of the deployed cloufunction. \parencite{van2017spec}
 
 \chapter{Serverless design patterns}
 
