@@ -151,6 +151,9 @@ Manifesting itself as the descendant of several other computing research areas s
 [Mell, Peter, and Tim Grance. "The NIST definition of cloud computing." (2011)](http://faculty.winthrop.edu/domanm/csci411/Handouts/NIST.pdf)
 The seminal definitions of cloud computing terms. Lacks FaaS and serverless.
 
+[Pahl, Claus. "Containerization and the paas cloud." (2015)](http://ieeexplore.ieee.org/abstract/document/7158965/)
+This article reviews the virtualization principles behind **containers**, particularly in comparison with VMs. Specifically, I investigate the relevance of the new container technology for PaaS clouds, although containers also relate to the IaaS level through their sharing and isolation aspects.
+
 [Sareen, Pankaj. "Cloud computing: types, architecture, applications, concerns, virtualization and role of it governance in cloud." (2013)](http://www.academia.edu/download/35864304/virtualization_introduction.pdf)
 The paper **defines clouds**, types of cloud Provides, Comparison of Cloud Computing with Grid Computing, applications and concerns of Cloud Computing , Concept of Virtualization in Cloud Computing. Readers will also discover the working, Architecture and Role of I.T Governance in Cloud Computing.
 

@@ -132,21 +132,29 @@ This vision of utility computing can be traced all the way back to 1969 and ARPA
 
 %\textcite{sareen13cloudTypes} defines the cloud as a pool of virtualized computer resources. The cloud supports a wide variety of different workloads and quick scaling through rapid provisioning of additional machines.
 
-Cloud computing is by now a well-established paradigm that enables organizations to flexibly deploy their software systems over a pool of computing resources. Both major IT companies and startups see migrating on-premise legacy systems to the cloud as an opportunistic business strategy for gaining competetive advantage. Cost saving, scalability, and efficient utilization of resources as well as flexibility are identified as key drivers for migrating applications to the cloud. \parencite{jamshidi13cloudmigrationreview}
+Cloud computing is by now a well-established paradigm that enables organizations to flexibly deploy their software systems over a pool of computing resources. Both major IT companies and startups see migrating on-premise legacy systems to the cloud as an opportunistic business strategy for gaining competetive advantage. Cost saving, scalability, reliability and efficient utilization of resources as well as flexibility are identified as key drivers for migrating applications to the cloud. \parencite{jamshidi13cloudmigrationreview}
 % expand on flexibility!
-% {balalaie16migratingcloud} talk about the reasons behind migrating systems to cloud-native architectures.
+% {balalaie16migratingcloud} talk about the reasons behind migrating systems to cloud-native architectures; cloud-native architectures that consider availability and scaling have to be utilized to fully benefit from cloud migration
 
 The first cloud providers were born out of huge corporations offering their surplus computing resources as a service in order to offset expenses and improve utilization rates. To address consumers' concerns about outages and other risks, cloud providers guarantee a certain level of service delivery through so-called Service Level Agreements (SLA) that are negotiated between providers and consumers. \parencite{youseff08cloudOntology}
 
-The key technology that enables cloud providers to transparently handle the consumers' requests without affecting its own usage of the resources is \textit{virtualization}. Virtualization is one of the main components behind cloud computing, and the thing that sets it apart from grid computing. \textcite{sareen13cloudTypes} defines virtualization as using computer resources to imitate other computer resources or whole computers. This enables the abstraction of the underlying physical resources as a set of multiple logical virtual machines. Virtualization has three characteristics that make it ideal for cloud computing: partitioning supports running many applications and operating systems in a single physical system; isolation ensures boundaries between the host physical system and virtual containers; encapsulation enables packaging virtual machines as complete entities to prevent applicationss from interfering with each other.
-
-recent advances in VM, containers, lead to...
-\textcite{bernstein14containers} on how the progression to increasingly lightweight and efficient virtualized and abstracted systems (i.e. virtual machines to containers to unikernels) is indicative of the rapid innovation taking place in the public cloud market.
-
-Serverless platforms promise new capabilities that make writing scalable microservices easier and cost effective, positioning themselves as the next step in the evolution of cloud computing architectures. \parencite{baldini17currentTrends}
-
-Another particularly important driver for is...
 Particular importance in the current energy-constrained environment. Data centers use on the order of 1-2\% of global energy consumption, but server utilization rates are really low. \parencite{horner16powerusage}
+
+The key technology that enables cloud providers to transparently handle consumers' requests without affecting its own usage of the resources is \textit{virtualization}. Virtualization is one of the main components behind cloud computing and the factor that sets it apart from grid computing. \textcite{sareen13cloudTypes} defines virtualization as using computer resources to imitate other computer resources or whole computers. This enables the abstraction of the underlying physical resources as a set of multiple logical virtual machines (VM). Virtualization has three characteristics that make it ideal for cloud computing: 1) \textit{partitioning} supports running many applications and operating systems in a single physical system; 2) \textit{isolation} ensures boundaries between the host physical system and virtual containers; 3) \textit{encapsulation} enables packaging virtual machines as complete entities to prevent applications from interfering with each other.
+
+Virtual machines provide strong security guarantees by isolation, i.e. allocating each VM its own set of resources with minimal sharing between the host system. Minimal sharing however translates into high memory and storage requirements as each virtual machine requires a full OS image in addition to the actual application files. A virtual machine also has to go through the standard OS boot process on startup, resulting in launching times measured in minutes. Rapid innovation in the cloud market and virtualization technologies has recently lead to an alternative, more lightweight \textit{container}-based solution. Container-based applications share a kernel with the host, resulting in significantly smaller deployments and fast launching times ranging from less than a second to a few seconds. Due to resource sharing a single host is capable of hosting hundreds of containers simultaneously. Differences in resource sharing between VM- and container-based deployment is illustrated in figure \ref{fig:vmVsContainer}. As a downside containers lack the VM's strong isolation guarantee and the ability to run a different OS per deployment. On the other hand, containers provide isolation via namespaces, so processes inside containers are still isolated from each other as well as the host. \textit{Containerization} has emerged as a common practice of packaging applications and related dependencies into standardized container images to ease development efficiency and interoperability. \parencite{pahl15containerization}
+% mention CaaS, kubernetes etc
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{bernstein14-vm-vs-container.jpg}
+  \caption{Comparison of a) virtual machine and b) container-based deployments \parencite{bernstein14containers}}
+  \label{fig:vmVsContainer}
+\end{figure}
+
+As shown in further detail in section \ref{sec:faas}, containers play a crucial part in serverless computing as well...
+
+%Serverless platforms promise new capabilities that make writing scalable microservices easier and cost effective, positioning themselves as the next step in the evolution of cloud computing architectures. \parencite{baldini17currentTrends}
 
 % Historical/evolutionary views: 1) on-premises infra -> grid -> IaaS -> PaaS -> serverless, 2) bare metal -> VMs -> containers -> functions \parencite{fox17}, 3) monolith -> SOA -> microservices -> serverless.
 
@@ -163,6 +171,7 @@ Fundamentally serverless computing is about building and running back-end code t
 \end{enumerate}
 
 TODO: application architecture view on serverless (SOA -> microservices -> cloud functions)
+% Forrester How To Capture The Benefits Of Microservice Design
 % \textcite{van2017spec} on serverless and SOA architecture: We see the emerging model based on running individual cloud functions as a consequence of the slow but sustained evolution of computing. For many decades we have witnessed a transition from relatively large, monolithic applications, to smaller or more structured applications with smaller execution units (e.g, workflows with many small tasks). This transition is captured qualitatively by various software architectures, for example, the Service-Oriented Architecture, and quantitatively by various workload-characterization and modeling studies, for example of scientific workloads running on supercomputers and grids between 1990 and 2010.
 
 Serverless computing has in effect come to encompass two distinct cloud computing models: Backend-as-a-Service (BaaS) as well as Function-as-a-Service (FaaS). The two serverless models, while different in operation as explained below, are nonetheless grouped under the same serverless umbrella since they both deliver the same main benefits: zero server maintenance overhead and the elimination of idle costs. \parencite{cncf18serverlessWG}
@@ -171,13 +180,13 @@ Backend-as-a-Service refers to an architecture where an application's server-sid
 
 Function-as-a-Service is a more recent development: the first commercial FaaS platform, AWS Lambda, was introduced in November 2014 \parencite{awslambda0218}. In the FaaS architecture an application's business logic is still located server-side. The crucial difference is that instead of self-managed server resources, developers upload small units of code to a FaaS platform that executes the code in short-lived, stateless compute containers in response to events \parencite{robert2016serverlessarchitectures}. The model appears serverless in the sense that the developer has no control over the resources on which the back-end code runs. \textcite{albuquerque17faaspaas} note that the BaaS model of locating business logic on the client side carries with it some complications, namely difficulties in updating and deploying new features as well as reverse engineering risks. FaaS circumvents these problems by retaining business logic server-side.
 
-Out of the two serverless models FaaS is the one with significant differences to traditional web application architecture \parencite{robert2016serverlessarchitectures}. These differences and their implications are further illustrated in section \ref{faas}. As the more novel architecture, FaaS is especially relevant to the research questions in hand and is thus paid more attention in the remainder of this thesis.
+Out of the two serverless models FaaS is the one with significant differences to traditional web application architecture \parencite{robert2016serverlessarchitectures}. These differences and their implications are further illustrated in section \ref{sec:faas}. As the more novel architecture, FaaS is especially relevant to the research questions in hand and is thus paid more attention in the remainder of this thesis.
 
 Another perspective on the difference between the two serverless models is to view BaaS as a more tailored, vendor-specific approach to FaaS \parencite{van2017spec}. Whereas BaaS-type services function as built-in components for many common use cases such as user management and data storage, a FaaS platform allows developers to implement more customized functionality. BaaS plays an important role in serverless architectures as it will often be the supporting infrastructure (e.g. in form of data storage) to the stateless FaaS functions \parencite{cncf18serverlessWG}. Conversely, in case of otherwise BaaS-based applications there's likely still a need for custom server-side functionality; FaaS functions may be a good solution for this \parencite{robert2016serverlessarchitectures}. Serverless applications can utilize both models simultaneously, with BaaS platforms generating events that trigger FaaS functions, and FaaS functions acting as a 'glue component' between various third party BaaS components. \textcite{robert2016serverlessarchitectures} also notes convergence in the space, giving the example of the user managemement provider Auth0 starting initially with a BaaS-style offering but later entering the FaaS space with a 'Auth0 Webtask' service.
 
 It's worth noting that not all authors follow this taxonomy of FaaS and BaaS as the two subcategories of a more abstract serverless model. \textcite{baldini17currentTrends} explicitly raise the question on whether serverless is limited to FaaS or broader in scope, identifying the boundaries of serverless as an open question. Some sources \parencite[][among others]{hendrickson16openlambda,mcgrath17implement,varghese18next} seem to strictly equate serverless with FaaS, using the terms synonymously. Considering however that the term 'serverless' predates the first FaaS platforms by a couple of years \parencite{robert2016serverlessarchitectures}, it seems sensible to at least make a distinction between serverless and FaaS. In this thesis we'll stick to the \textcite{cncf18serverlessWG} definition as outlined above.
 
-\section{Comparison to other cloud computing models}
+\section{Comparison to other cloud computing models} \label{sec:comparisonCloud}
 
 % As serverless is gaining popularity the boundaries between different types of ”as-a-Service” may be disappearing (see Figure 9). One could imagine that developers not only write code but also declare how they want the code to run - as FaaS orMBaaS or PaaS - and can change as needs change. In the future the main distinction may be between caring about server (server-aware) and not caring about server details (server-less). PaaS is in the middle; it makes it very easy to deploy code but developers still need to know about servers and be aware of scaling strategies, such as how many instances to run. \parencite{baldini17currentTrends}
 
@@ -202,10 +211,10 @@ Since the gap between PaaS and FaaS can be quite subtle it warrants further cons
 
 \textcite{albuquerque17faaspaas} derive a number of specific differences between PaaS and FaaS in their comparative analysis. First of all the units of deployment vary: in PaaS applications are deployed as services, compared to the more granular function-based deployment of FaaS. Second, PaaS instances are always running whereas serverless workloads are executed on-demand. Third, PaaS platforms, although supporting auto-scaling to some extent, require the developer to explicitly manage the scaling workflow and number of minimum instances. FaaS on the other hand scales transparently and on-demand without any need for resource pre-allocation. Perhaps most important distinction lies in billing: PaaS is billed by instantiated resources whether they're used or not, whereas FaaS is billed per-event on a millisecond granularity. The analysis concludes that PaaS is well suited for predictable or constant workloads with long or variable per-request execution times; FaaS in turn provides better cost benefit for unpredictable or seasonal workloads with short per-request execution times. It's also to be noted that PaaS doesn't suffer from limits on execution duration and many other restrictions of FaaS as described in section \ref{sec:limitations}.
 
-Another recent cloud-native technology is Container-as-a-Service (CaaS)
-compare to CaaS \parencite{cncf18serverlessWG}. Buyya17 describes containers. \textcite{robert2016serverlessarchitectures} also has a few words on the topic.
+Another recent cloud-native technology is Container-as-a-Service (CaaS)...
+% compare to CaaS \parencite{cncf18serverlessWG}. Buyya17 describes containers. \textcite{robert2016serverlessarchitectures} also has a few words on the topic: scaling and Reduced packaging and deployment complexity
 
-\section{Function-as-a-Service} \label{faas}
+\section{Function-as-a-Service} \label{sec:faas}
 
 Briefly describe the inner workings of a FaaS runtime. Describe the two supported execution models, synchronous and asynchronous, and how they relate to application design. The former is used to build a typical request-response flow, e.g. a REST API endpoint, whereas the latter relates to pub-sub and other event-driven flows. Give examples on the kind of triggers supported by serverless platforms (HTTP calls, messaging, database events, ...).
 
@@ -213,7 +222,7 @@ Briefly describe the inner workings of a FaaS runtime. Describe the two supporte
 
 \textcite{spillner17snafu} presents the design and implementation of a research-friendly FaaS runtime. \textcite{mcgrath17implement} present the design of a novel performance-oriented serverless computing platform, discussing implementation challenges such as function scaling and container discovery, lifecycle, and reuse. \textcite{hendrickson16openlambda} present OpenLambda, an open-source platform for serverless computation, describing the key aspects of serverless computation and presenting numerous research challenges that must be addressed in the design and implementation of such systems.
 
-\section{Use cases}
+\section{Use cases} \label{sec:useCases}
 
 Introduce the main/intended use cases for serverless, as well as the more esoteric applications in literature.
 
@@ -225,17 +234,17 @@ Introduce edge computing as a particularly strong driver for serverless. \textci
 
 \textcite{fouladi2017encoding} present a serverless video-processing framework. \textcite{yan16chatbot} present the architecture and prototype of a chatbot using a serverless platform, where developers compose stateless functions together to perform useful actions. \textcite{ishakian17neural} evaluate the suitability of a serverless computing environment for the inferencing of large neural network models. \textcite{ast17webcomponent} describe an approach of how to utilize serverless computing to enable self-contained web components by deploying Web Component business logic as cloud-hosted functions.
 
-\section{Service providers}
+\section{Service providers} \label{sec:providers}
 
 \textcite{lynn2017preliminary} provide an overview and multi-level feature analysis of seven enterprise serverless computing platforms. \textcite{baldini17currentTrends} also has a narrower survey of serverless platforms.
 
 \textcite{malawski18benchmark} benchmark different cloud function providers.
 
-\section{Security}
+\section{Security} \label{sec:security}
 
 Address the security implications of serverless. Overall the consensus seems to be that compared to services maintaining their own servers and resources, serverless approach reduces the attack surface. However, research needs to understand the new security issues introduced by FaaS. For example, because the infrastructure can share resources among cloud-functions, what is the ideal security vs. performance/cost trade-off? \parencite{van2017spec}
 
-\section{Economics of serverless}
+\section{Economics of serverless} \label{sec:economics}
 
 % Considering these differences, FaaS offers a more attractive economic proposition due to no danger of under- or overprovisioning of resources.
 \textcite{eivy2017wary} and \textcite{villamizar2016infrastructure} both focus on the economic aspects of serverless. \textcite{adzic2017serverless} explain how novel design patterns are used to significantly optimize costs -- just running traditional web apps inside Lambda containers doesn't necessarily equate to savings. \textcite{adzic2017serverless} also report savings between 66 and 95\% in two case studies, and present a handly table comparing hosting prices for intermittent service tasks. \textcite{spillner17exploiting} exploits the control plane of AWS Lambda to implement services practically for free. \textcite{leitner16modelcost} present an approach to model deployment costs of AWS Lambda applications in real-time. \textcite{kuhlenkamp17costradamus} present another cost-tracing system that enables per-request cost-tracing for cloud-based software services, noting that cost testing should not only rely on isolated tests of single services but consider comprehensive end-to-end cost traces. \textcite{albuquerque17faaspaas} have a detailed price comparison running the same app in FaaS and PaaS.
