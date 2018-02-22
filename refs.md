@@ -148,6 +148,9 @@ In this work, we present the architecture and prototype of a **chatbot using a s
 [Foster, Ian, et al. "Cloud computing and grid computing 360-degree compared." (2008)](http://ieeexplore.ieee.org/abstract/document/4738445/)
 This paper strives to compare and **contrast Cloud Computing with Grid Computing** from various angles and give insights into the essential characteristics of both.
 
+[Gannon, Dennis, Roger Barga, and Neel Sundaresan. "Cloud-Native Applications." (2017)](http://ieeexplore.ieee.org/document/8125550/#full-text-section)
+In this editorial we describe basic properties of successful cloud applications including dynamic scalability, extreme fault tolerance, seamless upgradeability and maintenance and security. To make it possible to build applications that meet these requirements we describe the microservice architecture and serverless computing foundation that are central to **cloud-native design**.
+
 [Youseff, Lamia, Maria Butrico, and Dilma Da Silva. "Toward a unified ontology of cloud computing." (2008)](http://ieeexplore.ieee.org/document/4738443/#)
 Manifesting itself as the descendant of several other computing research areas such as Service-Oriented Architecture, distributed and grid computing, and virtualization, cloud computing inherits their advancements and limitations. Towards the end-goal of a thorough comprehension of the field of cloud computing, and a more rapid adoption from the scientific community, we propose in this paper **an ontology** of this area which demonstrates a dissection of the cloud into five main layers, and illustrates their interrelations as well as their inter-dependency on preceding technologies.
 
