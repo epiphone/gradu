@@ -175,6 +175,10 @@ This paper aims to identify, taxonomically classify, and systematically compare 
 [Balalaie, Armin, Abbas Heydarnoori, and Pooyan Jamshidi. "Migrating to cloud-native architectures using microservices: an experience report." (2016)](https://link.springer.com/chapter/10.1007/978-3-319-33313-7_15)
 The existing approaches on cloud migration does not mostly consider cloud-native architectures as their first-class citizens. As a result, the final product may not meet its primary drivers for migration. In this paper, we intend to report our experience and lessons learned in an ongoing project on **migrating a monolithic on-premise software architecture to microservices**.
 
+## Event-driven, SOA and other architectural paradigms
+
+[Schmidt, Kay-Uwe, Darko Anicic, and Roland Stühmer. "Event-driven reactivity: A survey and requirements analysis." (2008)](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.163.8576)
+In this paper we survey the current state of the art in **event-driven architecture** with special focus on event and action processing. We describe the prerequisites of a completely novel conceptual model for describing **reactivity** that is more close to the way people react on events: based on the ability to identify the context during which active behavior is relevant and the situations in which it is required.
 
 ## Others
 

@@ -187,9 +187,9 @@ Fundamentally serverless computing is about building and running back-end code t
   \item Event-driven: interactions with serverless applications are designed to be short-lived, allowing the infrastructure to deploy serverless applications to respond to events, so only when needed
 \end{enumerate}
 
-TODO: application architecture view on serverless (SOA -> microservices -> cloud functions)
-% Forrester How To Capture The Benefits Of Microservice Design
-% \textcite{van2017spec} on serverless and SOA architecture: We see the emerging model based on running individual cloud functions as a consequence of the slow but sustained evolution of computing. For many decades we have witnessed a transition from relatively large, monolithic applications, to smaller or more structured applications with smaller execution units (e.g, workflows with many small tasks). This transition is captured qualitatively by various software architectures, for example, the Service-Oriented Architecture, and quantitatively by various workload-characterization and modeling studies, for example of scientific workloads running on supercomputers and grids between 1990 and 2010.
+TODO: link to SOA and microservices: ``We see the emerging model based on running individual cloud functions as a consequence of the slow but sustained evolution of computing. For many decades we have witnessed a transition from relatively large, monolithic applications, to smaller or more structured applications with smaller execution units (e.g, workflows with many small tasks). This transition is captured qualitatively by various software architectures, for example, the Service-Oriented Architecture, and quantitatively by various workload-characterization and modeling studies, for example of scientific workloads running on supercomputers and grids between 1990 and 2010.'' \parencite{van2017spec} Also \textcite{forrester16microservices} with ``Microservices lead to a serverless''.
+
+TODO: link to the event-driven paradigm: ``Serverless computing is a partial realization of an event-driven ideal, in which applications are defined by actions and the events that trigger them. This language is reminiscent of active database systems, and the event-driven literature has theorized for some time about general computing systems in which actions are processed reactively to event streams. Serverless function platforms fully embrace these ideas, defining actions through simple function abstractions and building out event processing logic across their clouds.'' \parencite{schmidt08event}
 
 Serverless computing has in effect come to encompass two distinct cloud computing models: Backend-as-a-Service (BaaS) as well as Function-as-a-Service (FaaS). The two serverless models, while different in operation as explained below, are nonetheless grouped under the same serverless umbrella since they deliver the same main benefits: zero server maintenance overhead and the elimination of idle costs. \parencite{cncf18serverlessWG}
 
@@ -250,13 +250,31 @@ The \textcite{cncf18serverlessWG} whitepaper divides a generalized serverless so
   \label{fig:processingModel}
 \end{figure}
 
-At the heart of serverless architecture is the concept of a \textit{function} (also \textit{Lambda function} or \textit{cloud function}). A function represents a piece of code that a developer writes and uploads on to a FaaS platform, which in turn executes the code in response to specific events. Functions are the fundamental building block from which to compose complex and distributed applications. A function is defined as a small, stateless, short-lived, on-demand service with a single functional responsibility \parencite{van2017spec}. Being stateless and short-lived, serverless functions have fundamentally limited expressiveness compared to a conventional PaaS-hosted service. This is a direct result of being built to maximise scalability. A FaaS platform will need to execute the arbitrary code in a function in response to any number of events, without any explicit specification of resources required for the operation \parencite{buyya2017manifesto}. To make this possible, FaaS platforms pose restrictions on what functions can do and how long they can operate.
+The interrelation of the various parts is further demonstrated with an example of a typical serverless development workflow: the developer first selects a runtime environment (e.g. Python 3.6), writes a piece of code and uploads it on a FaaS platform, publishing the code as a serverless function. The developer then maps one or more event sources to trigger the function, with event sources ranging from HTTP calls to database changes and messaging services. Now when any of the specified events occurs, the FaaS ontroller spins up a container, loads up the function with any dependencies and executes the code. The function code typically contains API calls to external BaaS services to handle data storage and other integrations. After execution the container is torn down. Later the developer is billed according to the measured execution time, typically in 100 millisecond increments. \parencite{awslambda0218}
+
+At the heart of serverless architecture is the concept of a \textit{function} (also \textit{Lambda function} or \textit{cloud function}). A function represents a piece of logic executed in response to specified events. Functions are the fundamental building block from which to compose complex and distributed applications. A function is defined as a small, stateless, short-lived, on-demand service with a single functional responsibility \parencite{van2017spec}. Being stateless and short-lived, serverless functions have fundamentally limited expressiveness compared to a conventional PaaS-hosted application. This is a direct result of being built to maximise scalability. A FaaS platform will need to execute the arbitrary code in a function in response to any number of events, without explicitly specifying resources required for the operation \parencite{buyya2017manifesto}. To make this possible, FaaS platforms pose restrictions on what functions can do and how long they can operate. Statelessness here means that a function loses all local state after termination; none of the local state created during invocation will necessarily be available during subsequent invocations of the same function. This is where stateful BaaS services comes in, providing persistence through external stateful services such as key-value stores, databases and file or blob storages.
+
+function requirements... figure \ref{fig:evolutionOfSharing} illustrates how serverless functions take the container abstraction one step further.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{hendrickson16-evolution-of-sharing.jpg}
+  \caption{Evolution of sharing -- gray layers are shared \parencite{hendrickson16openlambda}}
+  \label{fig:evolutionOfSharing}
+\end{figure}
+
+
+execution/invocation models...
+
+function input/output...
+
+event sources...
+
+function workflow/use cases...
 
 % \textcite{fox17} present a useful short definition of a FaaS platform like Lambda as a cloud-native platform for short-running, stateless computation and event-driven applications which scales up and down instantly and automatically and charges for actual usage at a millisecond granularity.
 
-Briefly describe the inner workings of the serverless processing model and FaaS runtime. Describe the two supported execution models, synchronous and asynchronous, and how they relate to application design. The former is used to build a typical request-response flow, e.g. a REST API endpoint, whereas the latter relates to pub-sub and other event-driven flows. Give examples on the kind of triggers supported by serverless platforms (HTTP calls, messaging, database events, ...).
-
-\textcite{spillner17snafu} presents the design and implementation of a research-friendly FaaS runtime. \textcite{mcgrath17implement} present the design of a novel performance-oriented serverless computing platform, discussing implementation challenges such as function scaling and container discovery, lifecycle, and reuse. \textcite{hendrickson16openlambda} present OpenLambda, an open-source platform for serverless computation, describing the key aspects of serverless computation and presenting numerous research challenges that must be addressed in the design and implementation of such systems.
+runtime details and problems... \textcite{spillner17snafu} presents the design and implementation of a research-friendly FaaS runtime. \textcite{mcgrath17implement} present the design of a novel performance-oriented serverless computing platform, discussing implementation challenges such as function scaling and container discovery, lifecycle, and reuse. \textcite{hendrickson16openlambda} present OpenLambda, an open-source platform for serverless computation, describing the key aspects of serverless computation and presenting numerous research challenges that must be addressed in the design and implementation of such systems.
 
 \section{Use cases} \label{sec:useCases}
 
@@ -279,6 +297,8 @@ Introduce edge computing as a particularly strong driver for serverless. \textci
 \section{Security} \label{sec:security}
 
 Address the security implications of serverless. Overall the consensus seems to be that compared to services maintaining their own servers and resources, serverless approach reduces the attack surface. However, research needs to understand the new security issues introduced by FaaS. For example, because the infrastructure can share resources among cloud-functions, what is the ideal security vs. performance/cost trade-off? \parencite{van2017spec}
+
+``Hosting arbitrary user code in containers on multi- tenant systems is a dangerous proposition, and care must be taken when constructing and running function containers to 409prevent vulnerabilities. This intersection of remote procedure calls (RPC) and container security represents a significant real- world test of general container security.'' \parencite{mcgrath17implement}
 
 \section{Economics of serverless} \label{sec:economics}
 
