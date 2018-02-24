@@ -240,7 +240,7 @@ The \textcite{cncf18serverlessWG} whitepaper divides a generalized serverless so
   \item Event sources - trigger or stream events into one or more function instances
   \item Function instances - a single function/microservice, that can be scaled with demand
   \item FaaS Controller- deploy, control and monitor function instances and their sources
-  \item Platform services - general cluster or cloud services used by the FaaS solution (sometimes referred to as Backend-as-a-Service)
+  \item Platform services - general cluster or cloud services (BaaS) used by the FaaS solution
 \end{itemize}
 
 \begin{figure}[h]
@@ -250,9 +250,9 @@ The \textcite{cncf18serverlessWG} whitepaper divides a generalized serverless so
   \label{fig:processingModel}
 \end{figure}
 
-Interrelation of the various parts is further demonstrated with an example of a typical serverless development workflow: the developer first selects a runtime environment (e.g. Python 3.6), writes a piece of code and uploads it on a FaaS platform where the code is published as a serverless function. The developer then maps one or more event sources to trigger the function, with event sources ranging from HTTP calls to database changes and messaging services. Now when any of the specified events occurs, the FaaS ontroller spins up a container, loads up the function with any dependencies and executes the code. The function code typically contains API calls to external BaaS services to handle data storage and other integrations. After execution the container is torn down. Later the developer is billed according to the measured execution time, typically in 100 millisecond increments. \parencite{awslambda0218}
+Interrelation of the various parts is further demonstrated with an example of a typical serverless development workflow. First, the developer selects a runtime environment (e.g. Python 3.6), writes a piece of code and uploads it on a FaaS platform where the code is published as a serverless function. The developer then maps one or more event sources to trigger the function, with event sources ranging from HTTP calls to database changes and messaging services. Now when any of the specified events occurs, the FaaS ontroller spins up a container, loads up the function along with its dependencies and executes the code. The function code typically contains API calls to external BaaS resources to handle data storage and other integrations. After execution the container is torn down. Later the developer is billed according to the measured execution time, typically in 100 millisecond increments. \parencite{awslambda0218}
 
-At the heart of serverless architecture is the concept of a \textit{function} (also \textit{Lambda function} or \textit{cloud function}). A function represents a piece of logic executed in response to specified events. Functions are the fundamental building block from which to compose complex and distributed applications. A function is defined as a small, stateless, short-lived, on-demand service with a single functional responsibility \parencite{van2017spec}. Being stateless and short-lived, serverless functions have fundamentally limited expressiveness compared to a conventional PaaS-hosted application. This is a direct result of being built to maximise scalability. A FaaS platform will need to execute the arbitrary code in a function in response to any number of events, without explicitly specifying resources required for the operation \parencite{buyya2017manifesto}. To make this possible, FaaS platforms pose restrictions on what functions can do and how long they can operate. Statelessness here means that a function loses all local state after termination; none of the local state created during invocation will necessarily be available during subsequent invocations of the same function. This is where stateful BaaS services comes in, with external stateful services such as key-value stores, databases and file or blob storages providing a persistence layer.
+At the heart of serverless architecture is the concept of a \textit{function} (also \textit{lambda function} or \textit{cloud function}). A function represents a piece of logic executed in response to specified events. Functions are the fundamental building block from which to compose complex and distributed applications. A function is defined as a small, stateless, short-lived, on-demand service with a single functional responsibility \parencite{van2017spec}. Being stateless and short-lived, serverless functions have fundamentally limited expressiveness compared to a conventional PaaS-hosted application. This is a direct result of being built to maximise scalability. A FaaS platform will need to execute the arbitrary code in a function in response to any number of events, without explicitly specifying resources required for the operation \parencite{buyya2017manifesto}. To make this possible, FaaS platforms pose restrictions on what functions can do and how long they can operate. Statelessness here means that a function loses all local state after termination; none of the local state created during invocation will necessarily be available during subsequent invocations of the same function. This is where BaaS services come in, with external stateful services such as key-value stores, databases and file or blob storages providing a persistence layer.
 
 function requirements... figure \ref{fig:evolutionOfSharing} illustrates how serverless functions take the container abstraction one step further.
 
@@ -263,13 +263,16 @@ function requirements... figure \ref{fig:evolutionOfSharing} illustrates how ser
   \label{fig:evolutionOfSharing}
 \end{figure}
 
-execution/invocation models...
+execution/invocation models, input, context, meta (env variables, auth role, ...), output...
+not quite devoid of operational management: time limit, memory size, although automated approaches exist
 
 function input/output...
 
 event sources...
 
 function workflow/use cases...
+
+platform also supports versioning, monitoring/statistics, RPC invoke...
 
 % \textcite{fox17} present a useful short definition of a FaaS platform like Lambda as a cloud-native platform for short-running, stateless computation and event-driven applications which scales up and down instantly and automatically and charges for actual usage at a millisecond granularity.
 
@@ -285,7 +288,7 @@ Introduce the main/intended use cases for serverless, as well as the more esoter
 
 Introduce edge computing as a particularly strong driver for serverless. \textcite{glikson17devicelessedge} propose the novel paradigm of Deviceless Edge Computing that extends the serverless paradigm to the edge of the network, enabling IoT and Edge devices to be seamlessly integrated as application execution infrastructure. \textcite{nastic17analyticsedge} present a novel approach implementing cloud-supported, real-time data analytics in serverless edge-computing applications. \textcite{baresi17edgecomputing} propose a serverless architecture at the edge, bringing a highly scalable, intelligent and cost-effective use of edge infrastructure’s resources with minimal configuration and operation efforts.
 
-\textcite{fouladi2017encoding} present a serverless video-processing framework. \textcite{yan16chatbot} present the architecture and prototype of a chatbot using a serverless platform, where developers compose stateless functions together to perform useful actions. \textcite{ishakian17neural} evaluate the suitability of a serverless computing environment for the inferencing of large neural network models. \textcite{ast17webcomponent} describe an approach of how to utilize serverless computing to enable self-contained web components by deploying Web Component business logic as cloud-hosted functions.
+\textcite{fouladi2017encoding} present a serverless video-processing framework. \textcite{yan16chatbot} present the architecture and prototype of a chatbot using a serverless platform, where developers compose stateless functions together to perform useful actions. \textcite{ishakian17neural} evaluate the suitability of a serverless computing environment for the inferencing of large neural network models. \textcite{ast17webcomponent} describe an approach of how to utilize serverless computing to enable self-contained web components by deploying Web Component business logic as cloud-hosted functions. \textcite{lehva18chatbot} present a case study on building and designing a Messenger chatbot for a media company using a Serverless Microservice architecture. \textcite{petrenko17nasa} present a NASA data exploration tool implemented on AWS Lambda.
 
 \section{Service providers} \label{sec:providers}
 
