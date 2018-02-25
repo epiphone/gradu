@@ -254,6 +254,8 @@ Interrelation of the various parts is further demonstrated with an example of a 
 
 At the heart of serverless architecture is the concept of a \textit{function} (also \textit{lambda function} or \textit{cloud function}). A function represents a piece of logic executed in response to specified events. Functions are the fundamental building block from which to compose complex and distributed applications. A function is defined as a small, stateless, short-lived, on-demand service with a single functional responsibility \parencite{van2017spec}. Being stateless and short-lived, serverless functions have fundamentally limited expressiveness compared to a conventional PaaS-hosted application. This is a direct result of being built to maximise scalability. A FaaS platform will need to execute the arbitrary code in a function in response to any number of events, without explicitly specifying resources required for the operation \parencite{buyya2017manifesto}. To make this possible, FaaS platforms pose restrictions on what functions can do and how long they can operate. Statelessness here means that a function loses all local state after termination; none of the local state created during invocation will necessarily be available during subsequent invocations of the same function. This is where BaaS services come in, with external stateful services such as key-value stores, databases and file or blob storages providing a persistence layer.
 
+``To enable better scaling, a service provider of FaaS platform may decide to host thousands of function services (or Lambda functions in AWS Lambda) on the available resources to achieve both clients and operator goals with low cost. In many situations, however, these goals are conflicting with each other, e.g. the fast execution time demanded by the end-users versus the high resource utilization targeted by the service providers. [...] All the required data must be given as the input parameters. This allows the platform to execute multiple instantiations of an action at the same time, while each instantiation keeps its own state.'' \parencite{reza17controller}
+
 function requirements... figure \ref{fig:evolutionOfSharing} illustrates how serverless functions take the container abstraction one step further.
 
 \begin{figure}[h]
@@ -265,6 +267,8 @@ function requirements... figure \ref{fig:evolutionOfSharing} illustrates how ser
 
 execution/invocation models, input, context, meta (env variables, auth role, ...), output...
 not quite devoid of operational management: time limit, memory size, although automated approaches exist
+
+\textcite{reza17controller} present a QoS-aware resource allocation controller for FaaS
 
 function input/output...
 
@@ -301,6 +305,8 @@ Introduce edge computing as a particularly strong driver for serverless. \textci
 Address the security implications of serverless. Overall the consensus seems to be that compared to services maintaining their own servers and resources, serverless approach reduces the attack surface. However, research needs to understand the new security issues introduced by FaaS. For example, because the infrastructure can share resources among cloud-functions, what is the ideal security vs. performance/cost trade-off? \parencite{van2017spec}
 
 ``Hosting arbitrary user code in containers on multi- tenant systems is a dangerous proposition, and care must be taken when constructing and running function containers to 409prevent vulnerabilities. This intersection of remote procedure calls (RPC) and container security represents a significant real- world test of general container security.'' \parencite{mcgrath17implement}
+
+Puresec has a report on the 10 most critical security risks in serverless architectures \parencite{segal18risks}.
 
 \section{Economics of serverless} \label{sec:economics}
 
