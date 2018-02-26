@@ -8,6 +8,8 @@
 
 \usepackage{booktabs} % good for beautiful tables
 
+\usepackage{listings}
+
 % NOTE: This must be the last \usepackage in the whole document!
 \usepackage[bookmarksopen,bookmarksnumbered,linktocpage]{hyperref}
 
@@ -263,8 +265,14 @@ At the heart of serverless architecture is the concept of a \textit{function} (a
 
 Being stateless and short-lived, serverless functions have fundamentally limited expressiveness compared to a conventional PaaS-hosted application. This is a direct result of being built to maximise scalability. A FaaS platform will need to execute the arbitrary code in a function in response to any number of events, without explicitly specifying resources required for the operation \parencite{buyya2017manifesto}. To make this possible, FaaS platforms pose restrictions on what functions can do and how long they can operate. Statelessness here means that a function loses all local state after termination; none of the local state created during invocation will necessarily be available during subsequent invocations of the same function. This is where BaaS services come in, with external stateful services such as key-value stores, databases and file or blob storages providing a persistence layer. In addition to statelessness, FaaS platforms limit a funtion's execution duration and resource usage: AWS Lambda for example has a maximum execution duration of 5 minutes and a maximum memory allocation of 3008 MB \parencite{awslambda0218}.
 
-FaaS event sources can be divided into two categories, synchronous and asynchronous. The first category follows a typical request-response flow: a client issues a request and blocks while waiting for a response. Synchronous event sources include HTTP and RPC calls which can be used to implement a REST API, a command line client or any other service requiring immediate feedback. Asynchronous event sources on the other hand result in non-blocking function execution, and they're typically used to implement background workers, scheduled event handlers and queue workers. Asynchronous event sources include message queues, publish-subscribe systems, database or file storage change feeds and CRON jobs among others.
-The details and metadata of the triggering event are passed to the function as an input parameter, with exact implementation varying per event type and provider. In case of a HTTP call, for example, the event object might include the request path, headers, body and query parameters. A function instance is also commonly supplied a context object, which in turn contains runtime information and other general properties that span multiple function invocations. Function name, version, memory limit and remaining execution time are examples of typical context variables. FaaS platforms also usually allow users to set environment variables which function instances can access through the context object -- useful for handling security keys and tokens. As for output, functions can either directly return a value (in case of synchronous invocation) or either trigger the next execution phase in a workflow or simply log the result (in case of asynchronous invocation). In addition to publishing and executing serverless functions, FaaS platforms also typically provide auxiliary capabilities such as monitoring, statistics, versioning and logging. \parencite{cncf18serverlessWG}
+FaaS event sources can be divided into two categories, synchronous and asynchronous. The first category follows a typical request-response flow: a client issues a request and blocks while waiting for a response. Synchronous event sources include HTTP and RPC calls which can be used to implement a REST API, a command line client or any other service requiring immediate feedback. Asynchronous event sources on the other hand result in non-blocking function execution, and they're typically used to implement background workers, scheduled event handlers and queue workers. Asynchronous event sources include message queues, publish-subscribe systems, database or file storage change feeds and CRON jobs among others. The details and metadata of the triggering event are passed to the function as an input parameter, with exact implementation varying per event type and provider. In case of a HTTP call, for example, the event object might include the request path, headers, body and query parameters. A function instance is also commonly supplied a context object, which in turn contains runtime information and other general properties that span multiple function invocations. Function name, version, memory limit and remaining execution time are examples of typical context variables. FaaS platforms also usually allow users to set environment variables which function instances can access through the context object -- useful for handling security keys and tokens. As for output, functions can either directly return a value (in case of synchronous invocation) or either trigger the next execution phase in a workflow or simply log the result (in case of asynchronous invocation). An example function handler is presented in listing \ref{lst:handlerExample}. In addition to publishing and executing serverless functions, FaaS platforms also typically provide auxiliary capabilities such as monitoring, statistics, versioning and logging. \parencite{cncf18serverlessWG}
+
+\renewcommand\thelstlisting{\arabic{lstlisting}}
+\setcounter{lstlisting}{0}
+\begin{lstlisting}[language=Python,caption=Example FaaS handler,captionpos=b,label=lst:handlerExample,showstringspaces=false,belowskip=2em,frame=tb,aboveskip=2em]
+  def main(event, context):
+      return {"payload": "Hello, " + event.name}
+\end{lstlisting}
 
 As mentioned in section \ref{sec:definingServerless}, serverless is \textit{almost} but not completely devoid of operational logic. In case of serverless functions, this qualification means that parameters such as memory reservation size, maximum parallelism and execution time are still left for the user to configure. Whereas the latter parameters are mainly used as safeguards to control costs, memory reservation size has important implications regarding execution efficiency \parencite{lloydserverless}. There are however tools available to determine the optimal memory reservation size per given workload. Also some platforms automatically reserve the required amount of memory without pre-allocation \parencite{microsoft18azureFunctions}.
 
@@ -333,7 +341,14 @@ Unlike the abstract concept of cloud functions, FaaS cannot completely abstract 
 
 AWS whitepaper \parencite{aws18architectures} lists best practices.
 
-\chapter{Serverless design patterns}
+\chapter{Serverless design patterns} \label{cha:patterns}
+
+% \renewcommand\thelstlisting{\arabic{lstlisting}}
+% \setcounter{lstlisting}{1}
+% \begin{lstlisting}[language=Python,caption=Another]
+%   def main(event, context):
+%       return {} jee
+% \end{lstlisting}
 
 Survey of serverless design patterns. \textcite{baldini17currentTrends} put the question as follows:
 
