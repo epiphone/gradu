@@ -294,7 +294,16 @@ Despite the potential efficiencies gained, hosting and scaling applications at t
 
 \section{Service providers} \label{sec:providers}
 
-\textcite{lynn2017preliminary} provide an overview and multi-level feature analysis of seven enterprise serverless computing platforms. \textcite{baldini17currentTrends} also has a narrower survey of serverless platforms.
+\textcite{lynn2017preliminary} provide an overview and multi-level feature analysis of the various enterprise serverless computing platforms. The authors identified seven different commercial platforms: AWS Lambda, Google Cloud Functions, Microsoft Azure Functions, IBM Bluemix OpenWhisk, Iron.io Ironworker, Auth0 Webtask, and Galactic Fog Gestal Laser. All the platforms provide roughly the same basic functionality, with differences in the available integrations, event sources and resource limits. The most commonly supported runtime languages are Javascript followed by Python, with secondary support for Java, C\#, Go, Ruby, Swift and others. The serverless platforms of the big cloud service providers, Amazon, Google, Microsoft and IBM, benefit from tight integration with their respective cloud ecosystems. The study finds that AWS Lambda, the oldest commercial serverless platform, has emerged as a \textit{de facto} base platform for research on enterprise serverless cloud computing. AWS Lambda has also the most cited high profile use cases ranging from video transcoding at Netflix to data analysis at Major League Baseball Advanced Media. Google Cloud Functions remains in beta stage at the time of writing, and has limited functionality but is expected to grow in future versions \parencite{google18cloudFunctions}. The architecture of OpenWhisk is shown in figure \ref{fig:openwhisk} as an example of a commercial serverless platform. In addition to the commercial offerings, a number of self-hosted open-source FaaS platforms have emerged: the \textcite{cncf18serverlessWG} whitepaper mentions fission.io, Fn Project, kubeless, microcule, Nuclio, OpenFaaS and riff among others. The core of the commercial IBM OpenWhisk is also available as an Apache open-source project \parencite{ibm18cloudFunctions}. In addition, research-oriented FaaS platforms have been presented in literature, including OpenLambda \parencite{hendrickson16openlambda} and Snafu \parencite{spillner17snafu}.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.9\textwidth]{baldini17-openwhisk-architecture.png}
+  \caption{IBM OpenWhisk architecture \parencite{baldini17currentTrends}}
+  \label{fig:openwhisk}
+\end{figure}
+
+\textcite{baldini17currentTrends} also has a narrower survey of serverless platforms.
 
 \textcite{malawski18benchmark} benchmark different cloud function providers.
 
