@@ -328,9 +328,11 @@ Pricing among FaaS providers is more homogeneous. FaaS providers typically charg
 
 To demonstrate how FaaS pricing works out in the customer's advantage in the case of intermittent computation, \textcite{adzic2017serverless} compare the cost of running a 200ms service task every 5 minutes on various hosting platforms. Running a 512MB VM with an additional fail-over costs \$0.0059 per hour, whereas a similarly sized Lambda function executing the described service task costs \$0.000020016 for one hour -- a cost reduction of more than 99.8\%. The authors also present two real-world cases of FaaS migration. The first case, a mind-mapping web application, was migrated from PaaS to FaaS and resulted in hosting cost savings of about 66\%. In the second case a social networking company migrated parts of their backend services from self-operated VMs to FaaS, and estimated a 95\% reduction in operational costs.
 
-other real-world cases
+TODO other real-world cases
 
 A large part of the expenses incurred in developing today's computer systems derive from the need for \textit{resiliency}. Resiliency means the ability to withstand a major disruption caused by unknown events. A resilient system is expected to be up and functioning at all times, while simultaneously providing good performance and certain security guarantees. Meeting these requirements forces organizations to over-provision and isolate their cloud resources which leads to increased costs. The FaaS model can significantly reduce the cost of resiliency by offloading resource management to the provider. This was exemplified in the above uses cases, where majority of the cost savings arose from not having to pay for excess or idling resources. \parencite{wagner16resilient}
+
+a big part of provider income comes from auxiliary services \parencite{fox17}
 
 however eivy
 not quite there yet as observed by \textcite{fox17}, since network waiting time is wasted
@@ -350,6 +352,8 @@ What to take into consideration when migrating to serverless?
 \textcite{malawski18benchmark} talk about interoperability challenges running a heterogeneous benchmark, as well as discussion on RAM allocation.
 
 \textcite{cncf18serverlessWG} on technical immaturity, lack of interoperability, standardization, tools, documentation, best practices.
+
+\textcite{eivy2017wary} notes that function size choosing is in fact paying for allocation, not the ``pay what you use''-promise of serverless. \textcite{microsoft18azureFunctions} has automatic memory provisioning.
 
 The need for circuit breakers (risk of DDoSing yourself) when interacting with non-serverless components like a database. Mention novel cloud-native database services like Google's Cloud Spanner and AWS Aurora. Figure out a source for this -- \textcite{hohpe2004enterprise} might have a relevant pattern.
 
