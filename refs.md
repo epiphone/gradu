@@ -68,6 +68,11 @@ This systematic literature review aims to summarize information available in stu
 [Hohpe, Gregor, and Bobby Woolf. "Enterprise integration patterns: Designing, building, and deploying messaging solutions." (2004)](http://www.enterpriseintegrationpatterns.com/index.html)
 A collection of integration & messaging patterns.
 
+[Leitner, Philipp, et al. "A mixed-method empirical study of Function-as-a-Service software development in industrial practice." (2018)](https://peerj.com/preprints/27005.pdf)
+Currently, there is no systematic research on how developers use serverless, what types of applications lend themselves to this model, or what architectural styles and practices FaaS-based applications are based on. We present results from a mixed-method study, combining **interviews with advanced practitioners**, a **systematic analysis of grey literature**, and a **Web-based survey**. We find that successfully adopting FaaS requires a different **mental model**, where systems are primarily constructed by composing pre-existing services, with FaaS often acting as the “glue” that brings these services together. Tooling availability and maturity, especially related to testing and deployment, remains a major difficulty. Further, we find that current **FaaS systems lack systematic support for function reuse, and abstractions and programming models for building non-trivial FaaS applications are limited**.
+- According to some of our interviewees, FaaS should really be understood as “serverless for computing”, whereas **“serverless for data storage” has been available since the early days of cloud computing**. One problem with this broad definition is that the **delineation to PaaS is not clear-cut**. In fact, a minority of interviewees actually consider PaaS services such as Heroku to be an early version of serverless.
+- In many ways, serverless can be seen as a real-life resurgence of Service-Oriented Architecture (SOA) concepts, such as service composition.
+
 ## FaaS runtime
 
 [Hendrickson, Scott, et al. "Serverless computation with openlambda." (2016)](https://dl.acm.org/citation.cfm?id=3027047)
