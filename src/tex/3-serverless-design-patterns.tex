@@ -1,0 +1,42 @@
+\chapter{Serverless design patterns} \label{cha:patterns}
+
+% \renewcommand\thelstlisting{\arabic{lstlisting}}
+% \setcounter{lstlisting}{1}
+% \begin{lstlisting}[language=Python,caption=Another]
+%   def main(event, context):
+%       return {} jee
+% \end{lstlisting}
+
+Survey of serverless design patterns. \textcite{baldini17currentTrends} put the question as follows:
+
+\begin{quote}
+Will there be patterns for building serverless solutions? How do we combine low granularity basic building blocks of serverless into bigger solutions? How are we going to decompose apps into functions so that they optimize resource usage? For example how do we identify CPU-bound parts of applications built to run in serverless services? Can we use well-defined patterns for composing functions and external APIs? What should be done on the server vs. client (e.g., are thicker clients more appropriate here)? Are there lessons learned that can be applied from OOP design patterns, Enterprise Integration Patterns, etc.?
+\end{quote}
+
+\section{Serverless patterns}
+
+% in the upcoming http://www.serverlessdesignpatterns.com/ book: primitive patterns (periodical cron job, messaging), API patterns (wrapper/proxy, facade, async), orchestration (one way chain, two way chain, fan out, fan in), pipes & filters (workflow and long running, streams), traditional (command, singleton). Traditional patterns hint to GoF, something to adopt from there?
+
+A limited number of purely serverless design patters. \textcite{sbarski2017serverless} introduce five patterns -- Command, Messaging Priority queue, Fan-out and Pipes and filters -- but they seem mostly to be reinterpretations of classic Enterprise Integration Patterns.
+
+Common low-level design patterns such as function chaining and fanout \href{https://github.com/yochay/serverlesspatterns}{in Github}.
+
+\textcite{mcgrath16cloudEventParadigms} demonstrate a fan-out pattern, easily and performantly solving a large-scale image resizing task.
+
+API Gateway and messaging patterns as described in platforms' own documentation. \parencite{awslambda0218}
+
+\textcite{adzic2017serverless} suggest 3 methods for optimizing resource usage: use distributed authorization, let clients orchestrate workflows and allow clients to directly connect to AWS resources. The authors also discuss how paying only for actual utilization has two additional benefits of 1) removing incentives for bundling and 2) removing barriers to versioning: examples of serverless economics affecting architecture. Presenting these (or applications of these) as more formal patterns could be of some value.
+
+\textcite{robert2016serverlessarchitectures} asks how big can FaaS functions get before they get unwieldy? Assuming we can atomically deploy a group of FaaS functions what are good ways of creating such groupings - do they map closely to how we’d currently clump logic into microservices or does the difference in architecture push us in a different direction? Extending this further what are good ways of creating hybrid architectures between FaaS and traditional ‘always on’ persistent server components?
+
+Extending this further what are good ways of creating hybrid architect
+
+\textcite{ast17webcomponent} describe self-contained web components with serverless backends.
+
+\section{Enterprise Integration Patterns}
+
+\textcite{hohpe2004enterprise} present a number of asynchronous messaging architectures in the seminal book on EIP. While predating the whole serverless phenomenon the patterns are still relevant. Hohpe even demonstrated implementing one of his patterns on top of Google's serverless platform \href{http://www.enterpriseintegrationpatterns.com/ramblings/google_cloud_functions.html}{in a blog post}.
+
+\section{FaaSification}
+
+\textcite{spillner17transformpython} describes an automated approach to transform monolithic Python code into modular FaaS units by partially automated decomposition. Doesn't really seem suitable for the web application migration process covered in this thesis but worth mentioning.

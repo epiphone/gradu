@@ -1,0 +1,14 @@
+\chapter{Migration process}
+
+Implement a subset of the target app in a serverless style, utilizing the surveyed patterns and keeping log of the tricky parts. In case the patterns prove unsuitable for the given problem, try to come up with an alternative solution.
+
+Describe the web application to migrate.
+
+Decide on the parts to migrate. Should demonstrate the features and limitations of serverless as outlined above. Possible features include
+\begin{itemize}
+  \item A simple REST API endpoint to showcase API Gateway and synchronous invocation. Shouldn't require any big changes to application code.
+  \item Interaction between multiple services to demonstrate distributed transactions.
+  \item A scheduled (cron) event.
+  \item Interacting with an external SaaS service like Twilio, Auth0. Demonstrate event-driven invocation.
+  \item others?
+\end{itemize}
