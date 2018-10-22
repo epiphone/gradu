@@ -76,7 +76,6 @@
 
 @InProceedings{balalaie16migratingcloud,
   author="Balalaie, Armin and Heydarnoori, Abbas and Jamshidi, Pooyan",
-  editor="Celesti, Antonio and Leitner, Philipp",
   title="Migrating to Cloud-Native Architectures Using Microservices: An Experience Report",
   booktitle="Advances in Service-Oriented and Cloud Computing",
   year="2016",
@@ -120,7 +119,6 @@
 
 @InProceedings{baresi17edgecomputing,
   author="Baresi, Luciano and Filgueira Mendon{\c{c}}a, Danilo and Garriga, Martin",
-  editor="De Paoli, Flavio and Schulte, Stefan and Broch Johnsen, Einar",
   title="Empowering Low-Latency Applications Through a Serverless Edge Computing Architecture",
   booktitle="Service-Oriented and Cloud Computing",
   year="2017",
@@ -142,6 +140,15 @@
   doi={10.1109/MCC.2014.51},
   ISSN={2325-6095},
   month={Sept}
+}
+
+@inproceedings{boucher18puttingmicroback,
+  title={Putting the “Micro” Back in Microservice},
+  author={Boucher, Sol and Kalia, Anuj and Andersen, David G and Kaminsky, Michael},
+  booktitle={2018 $\{$USENIX$\}$ Annual Technical Conference ($\{$USENIX$\}$$\{$ATC$\}$ 18)},
+  pages={645--650},
+  year={2018},
+  organization={USENIX Association}
 }
 
 @article{buyya09cloud,
@@ -290,6 +297,14 @@
   publisher={Addison-Wesley Professional}
 }
 
+@inproceedings{hong18securingviaserverlesspatterns,
+  title={Go serverless: securing cloud via serverless design patterns},
+  author={Hong, Sanghyun and Srivastava, Abhinav and Shambrook, William and Dumitras, Tudor},
+  booktitle={10th $\{$USENIX$\}$ Workshop on Hot Topics in Cloud Computing (HotCloud 18)},
+  year={2018},
+  organization={USENIX Association}
+}
+
 @article{horner16powerusage,
   title = "Power usage effectiveness in data centers: overloaded and underachieving",
   journal = "The Electricity Journal",
@@ -361,7 +376,6 @@
 
 @InProceedings{kuhlenkamp17costradamus,
   author="Kuhlenkamp, J{\"o}rn and Klems, Markus",
-  editor="Maximilien, Michael and Vallecillo, Antonio and Wang, Jianmin and Oriol, Marc",
   title="Costradamus: A Cost-Tracing System for Cloud-Based Software Services",
   booktitle="Service-Oriented Computing",
   year="2017",
@@ -380,8 +394,6 @@
 
 @InProceedings{lehva18chatbot,
   author="Lehv{\"a}, Jyri and M{\"a}kitalo, Niko and Mikkonen, Tommi",
-  editor="Garrig{\'o}s, Irene
-  and Wimmer, Manuel",
   title="Case Study: Building a Serverless Messenger Chatbot",
   booktitle="Current Trends in Web Engineering",
   year="2018",
@@ -402,6 +414,20 @@
   doi={},
   ISSN={},
   month={Dec}
+}
+
+@article{leitner18industrialpractice,
+ title = {A mixed-method empirical study of Function-as-a-Service software development in industrial practice},
+ author = {Leitner, Philipp and Wittern, Erik and Spillner, Josef and Hummer, Waldemar},
+ year = 2018,
+ month = jun,
+ keywords = {cloud computing, serverless, Function-as-a-Service, empirical study},
+ volume = 6,
+ pages = {e27005v1},
+ journal = {PeerJ Preprints},
+ issn = {2167-9843},
+ url = {https://doi.org/10.7287/peerj.preprints.27005v1},
+ doi = {10.7287/peerj.preprints.27005v1}
 }
 
 @article{lloydserverless,
@@ -434,7 +460,6 @@
 
 @InProceedings{malawski18benchmark,
   author="Malawski, Maciej and Figiela, Kamil and Gajek, Adam and Zima, Adam",
-  editor="Heras, Dora B. and Boug{\'e}, Luc",
   title="Benchmarking Heterogeneous Cloud Functions",
   booktitle="Euro-Par 2017: Parallel Processing Workshops",
   year="2018",
@@ -547,7 +572,6 @@
 
 @InProceedings{reza17controller,
   author="HoseinyFarahabady, MohammadReza and Lee, Young Choon and Zomaya, Albert Y. and Tari, Zahir",
-  editor="Maximilien, Michael and Vallecillo, Antonio and Wang, Jianmin and Oriol, Marc",
   title="A QoS-Aware Resource Allocation Controller for Function as a Service (FaaS) Platform",
   booktitle="Service-Oriented Computing",
   year="2017",
@@ -640,8 +664,6 @@
 
 @InProceedings{spillner18faaster,
   author="Spillner, Josef and Mateos, Cristian and Monge, David A.",
-  editor="Mocskos, Esteban
-  and Nesmachnow, Sergio",
   title="FaaSter, Better, Cheaper: The Prospect of Serverless Scientific Computing and HPC",
   booktitle="High Performance Computing",
   year="2018",
@@ -659,6 +681,37 @@
   year={2017},
   organization={ACM}
 }
+
+@inproceedings{van18perfchallenges,
+ author = {van Eyk, Erwin and Iosup, Alexandru and Abad, Cristina L. and Grohmann, Johannes and Eismann, Simon},
+ title = {A SPEC RG Cloud Group's Vision on the Performance Challenges of FaaS Cloud Architectures},
+ booktitle = {Companion of the 2018 ACM/SPEC International Conference on Performance Engineering},
+ series = {ICPE '18},
+ year = {2018},
+ isbn = {978-1-4503-5629-9},
+ location = {Berlin, Germany},
+ pages = {21--24},
+ numpages = {4},
+ url = {http://doi.acm.org/10.1145/3185768.3186308},
+ doi = {10.1145/3185768.3186308},
+ acmid = {3186308},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {FaaS, benchmarking, function-as-a-service, performance evaluation, reference architecture, serverless computing},
+}
+
+@ARTICLE{van18fromPAAStoPresent,
+author={E. van Eyk and L. Toader and S. Talluri and L. Versluis and A. Uță and A. Iosup},
+journal={IEEE Internet Computing},
+title={Serverless is More: From PaaS to Present Cloud Computing},
+year={2018},
+volume={22},
+number={5},
+pages={8-17},
+keywords={Cloud computing;Internet;Economics;Servers;serverless;function-as-a-service;cloud computing;workflows;internet;internet computing},
+doi={10.1109/MIC.2018.053681358},
+ISSN={1089-7801},
+month={Sep},}
 
 @article{varghese18next,
   title = "Next generation cloud computing: New trends and research directions",
@@ -703,6 +756,18 @@
   year =         {2017},
   url =          {https://www.gartner.com/smarterwithgartner/top-trends-in-the-gartner-hype-cycle-for-emerging-technologies-2017/},
   urldate =      {2018-02-07}
+}
+
+@inproceedings {wang18peekingbehindcurtains,
+author = {Liang Wang and Mengyuan Li and Yinqian Zhang and Thomas Ristenpart and Michael Swift},
+title = {Peeking Behind the Curtains of Serverless Platforms},
+booktitle = {2018 {USENIX} Annual Technical Conference ({USENIX} {ATC} 18)},
+year = {2018},
+isbn = {978-1-931971-44-7},
+address = {Boston, MA},
+pages = {133--146},
+url = {https://www.usenix.org/conference/atc18/presentation/wang-liang},
+publisher = {{USENIX} Association},
 }
 
 @online{wolf16serverless,
