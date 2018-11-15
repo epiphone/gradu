@@ -100,10 +100,10 @@ Since the gap between PaaS and FaaS can be quite subtle it warrants further cons
 The \textcite{cncf18serverlessWG} whitepaper divides a generalized serverless solution into four constituents, as illustrated in figure \ref{fig:processingModel}:
 
 \begin{itemize}
-  \item Event sources - trigger or stream events into one or more function instances
-  \item Function instances - a single function/microservice, that can be scaled with demand
-  \item FaaS Controller- deploy, control and monitor function instances and their sources
-  \item Platform services - general cluster or cloud services (BaaS) used by the FaaS solution
+  \item Event sources - trigger or stream events into one or more function instances.
+  \item Function instances - a single function/microservice, that can be scaled with demand.
+  \item FaaS Controller- deploy, control and monitor function instances and their sources.
+  \item Platform services - general cluster or cloud services (BaaS) used by the FaaS solution.
 \end{itemize}
 
 \begin{figure}[h]
@@ -115,7 +115,7 @@ The \textcite{cncf18serverlessWG} whitepaper divides a generalized serverless so
 
 Interrelation of the various parts is further demonstrated with an example of a typical serverless development workflow. First, the developer selects a runtime environment (e.g. Python 3.6), writes a piece of code and uploads it on a FaaS platform where the code is published as a serverless function. The developer then maps one or more event sources to trigger the function, with event sources ranging from HTTP calls to database changes and messaging services. Now when any of the specified events occurs, the FaaS ontroller spins up a container, loads up the function along with its dependencies and executes the code. The function code typically contains API calls to external BaaS resources to handle data storage and other integrations. When there are multiple events to respond to simultaneously, more copies of the same function are run in parallel. Serverless functions thus scale precisely with the size of the workload, down to the individual request. After execution the container is torn down. Later the developer is billed according to the measured execution time, typically in 100 millisecond increments. \parencite{awslambda0218}
 
-At the heart of serverless architecture is the concept of a \textit{function} (also \textit{lambda function} or \textit{cloud function}). A function represents a piece of business logic executed in response to specified events. Functions are the fundamental building block from which to compose serverless applications. A function is defined as a small, stateless, short-lived, on-demand service with a single functional responsibility \parencite{van2017spec}. As discussed in section \ref{sec:background}, the technology underlying cloud computing has evolved from individual servers to virtual machines and containers. \textcite{hendrickson16openlambda} see the serverless function model as the logical conclusion of this evolution towards more sharing between applications (figure \ref{fig:evolutionOfSharing}).
+At the heart of serverless architecture is the concept of a function (also \textit{lambda function} or \textit{cloud function}). A function represents a piece of business logic executed in response to specified events. Functions are the fundamental building block from which to compose serverless applications. A function is defined as a small, stateless, short-lived, on-demand service with a single functional responsibility \parencite{van2017spec}. As discussed in section \ref{sec:background}, the technology underlying cloud computing has evolved from individual servers to virtual machines and containers. \textcite{hendrickson16openlambda} see the serverless function model as the logical conclusion of this evolution towards more sharing between applications (figure \ref{fig:evolutionOfSharing}).
 
 \begin{figure}[h]
   \centering
