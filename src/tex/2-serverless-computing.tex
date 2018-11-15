@@ -207,6 +207,14 @@ What to take into consideration when migrating to serverless?
 
 \textcite{lloydserverless} analyze serverless performance and elasticity, identifying the cold start phenomenon. Differences in runtimes/languages, and larger library dependencies lead to slower starts. \textcite{oakes17pipsqueak} address the problem by caching package dependencies on platform-level. \textcite{boucher18puttingmicroback} identify latency as an important problem (``a microservice is only as fast as the slowest service it relies on'') and introduce restructuring of FaaS architecture centered around low-latency.
 
+\textcite{alali18moreServerless} Making Serverless Computing More Serverless ``we propose a new abstraction
+for serverless computing: a developer supplies a process and
+the serverless framework seamlessly scales out the process’s
+resource usage across the datacenter. This abstraction enables
+processing to not only be more general purpose, but also
+allows a process to break out of the limitations of a single
+server''.
+
 \textcite{baldini17trilemma} identify three competing constraints in serverless function composition: functions should be considered as black boxes; function composition should obey a substitution principle with respect to synchronous invocation; and invocations should not be double-billed.
 
 \textcite{robert2016serverlessarchitectures}, \textcite{adzic2017serverless} and \textcite{baldini17currentTrends} each list a number of limitations, including lack of strong SLA, vendor lock-in, short life-span, immature local development tools, statelessness and many others.
