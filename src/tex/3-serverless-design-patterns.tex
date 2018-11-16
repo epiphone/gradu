@@ -17,6 +17,8 @@ Will there be patterns for building serverless solutions? How do we combine low 
 
 % in the upcoming http://www.serverlessdesignpatterns.com/ book: primitive patterns (periodical cron job, messaging), API patterns (wrapper/proxy, facade, async), orchestration (one way chain, two way chain, fan out, fan in), pipes & filters (workflow and long running, streams), traditional (command, singleton). Traditional patterns hint to GoF, something to adopt from there?
 
+\textcite{baldini17currentTrends} suggests the following use cases: event processing, api composition, api aggregation to reduce API calls, flow control.
+
 A limited number of purely serverless design patters. \textcite{sbarski2017serverless} introduce five patterns -- Command, Messaging Priority queue, Fan-out and Pipes and filters -- but they seem mostly to be reinterpretations of classic Enterprise Integration Patterns.
 
 Common low-level design patterns such as function chaining and fanout \href{https://github.com/yochay/serverlesspatterns}{in Github}.

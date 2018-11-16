@@ -196,26 +196,41 @@ One apparent flaw in FaaS pricing concerns network delays. A function that spend
 
 \section{Drawbacks and limitations} \label{sec:limitations}
 
-What to take into consideration when migrating to serverless?
+\textcite{robert2016serverlessarchitectures} observes two categories of drawbacks in serverless computing: trade-offs inherent to the serverless concept itself, and the ones tied to current implementations. Inherent trade-offs are something developers are going to have to adapt to, with no foreseeable solution in sight. Statelessness, for example, is one of the core properties of serverless, with each function invocation being unaware of any preceding or parallel invocations. This property enables scalability, but at the same time poses a novel software engineering challenge, as articulated by \textcite{robert2016serverlessarchitectures}: ``so where does your state go with FaaS if you can’t keep it in memory?'' One might push function state to an external database, in-memory cache or object storage, but all of these equate to extra dependencies and network latency. Stateful cookie-based sessions that web applications use for user authentication also require rethinking in the serverless context \parencite{hendrickson16openlambda}.
+
+Another inherent trade-off to FaaS relates to function composition. Composing serverless function is not like composing regular functions in software code. The difficulties of distributed computing
+
+
+
+- statelessness
+- function composition
+  - more operational surface for calls
+  \textcite{baldini17trilemma} identify three competing constraints in serverless function composition: functions should be considered as black boxes; function composition should obey a substitution principle with respect to synchronous invocation; and invocations should not be double-billed.
+  Composing serverless functions is not like composing regular functions. All the difficulties of distributed computing -- message loss, timeouts and others -- apply and have to be handled. Possible solutions include retry policies, dead-letter queues and idempotent functions.
+  \textcite{leitner18industrialpractice} find that building serverless applications requires a ``different mental model that emphasizes plugging together small microservices''.
+
+- vendor lock-in
+- repetition of logic in clients
+- loss of server optimiz
+
+
+The latter category we can expect to be resolved as serverless platforms reach maturity.
+The most apparent implementation-side limitations of FaaS are limits on function life-span and resource usage, as outlined in section \ref{sec:processingModel}.
+
+\textcite{hendrickson16openlambda} how to handle WebSockets, TCP, etc long-lived communications: ``If the TCP connections are maintained within a Lambda handler, and a handler is idle between communication, charges to the customer should reflect the fact that the handler incurs a mem- ory overhead, but consumes no CPU. Alternatively, if the platform provides management of TCP connections outside of the handlers, care must be taken to provide a new Lambda invocation with the connections it needs that were initiated by past invocations.''
 
 \textcite{cncf18serverlessWG}: ``1) an emerging computing model, rapid innovation with less comprehensive and stable documentation, samples, tools, and best practices. 2) Due to the more dynamic nature of the runtime, it may be more challenging to debug when compared to IaaS and PaaS. 3) Due to the on-demand structure, the cold start aspect on some serverless runtimes could be a performance issue if the runtime removes all instances of a function when idle. 4) In more complex cases (e.g., functions triggering other functions), there can be more operational surface area for the same amount of logic. 5) Lack of standardization and ecosystem maturity. 6) Potential for platform lock-in due to the platform’s programming model, eventing/message interface and BaaS offerings.''
 \textcite{robert2016serverlessarchitectures}, \textcite{adzic2017serverless} and \textcite{baldini17currentTrends} each list a number of limitations, including lack of strong SLA, vendor lock-in, short life-span, immature local development tools, statelessness and many others.
+Risk of DDoSing yourself \parencite{robert2016serverlessarchitectures}
 
-apart from the aforementioned limits of execution time and resource limits (source?) in section \ref{sec:processingModel}
 \textcite{eivy2017wary} notes that function size choosing is in fact paying for allocation, not the ``pay what you use''-promise of serverless: ``Sadly, this is a case where you don’t just pay for what you use, you pay for what you allocate. When provisioning a Lambda function, you must specify how much compute memory it will be able to consume. That memory cap is what determines the GB-second cost of your function and ranges from 128MB-1.5GB. Each time the function runs, the execution time is rounded up to a coarse-grained time-based billing increment, then multiplied by the cost associated with the rounded-up memory allocation. This means that the cost to use one bit for a nanosecond is no different than the cost to use 128MB for 100 milliseconds.'' This is where the "pay only for what you use" ideal of serverless seemingly falls short. \textcite{microsoft18azureFunctions} has automatic memory provisioning however.
 Unlike the abstract concept of cloud functions, FaaS cannot completely abstract away all operation logic from the user. The FaaS user can still change parameters and configurations, such as the suggested memory size or number of CPUs of the underlying function host, which influence the operation of the deployed cloud function. \parencite{van2017spec}
 
 technical limits:
 
 \textcite{lloydserverless} analyze serverless performance and elasticity, identifying the cold start phenomenon. Differences in runtimes/languages, and larger library dependencies lead to slower starts. \textcite{oakes17pipsqueak} address the problem by caching package dependencies on platform-level.
-\textcite{hendrickson16openlambda} with a number of observations: 1) JIT optimizations difficult due to short running times: ``Making dynamic optimization effective for Lambdas may require sharing profiling data between different Lambda workers''. 2) package support needed (cache) instead of bundling libraries inside handlers 3) cookies and sessions, how to handle WebSockets, TCP, etc long-lived communications: ``If the TCP connections are maintained within a Lambda handler, and a handler is idle between communication, charges to the customer should reflect the fact that the handler incurs a mem- ory overhead, but consumes no CPU. Alternatively, if the platform provides management of TCP connections outside of the handlers, care must be taken to provide a new Lambda invocation with the connections it needs that were initiated by past invocations.''
+\textcite{hendrickson16openlambda} with a number of observations: 1) JIT optimizations difficult due to short running times: ``Making dynamic optimization effective for Lambdas may require sharing profiling data between different Lambda workers''. 2) package support needed (cache) instead of bundling libraries inside handlers
 \textcite{van18perfchallenges} identify 6 performance-related challenges for the serverless domain and plot a roadmap for alleviating these challenges.
-
-function composition:
-
-\textcite{baldini17trilemma} identify three competing constraints in serverless function composition: functions should be considered as black boxes; function composition should obey a substitution principle with respect to synchronous invocation; and invocations should not be double-billed.
-Composing serverless functions is not like composing regular functions. All the difficulties of distributed computing -- message loss, timeouts and others -- apply and have to be handled. Possible solutions include retry policies, dead-letter queues and idempotent functions.
-\textcite{leitner18industrialpractice} find that building serverless applications requires a ``different mental model that emphasizes plugging together small microservices''.
 
 Future directions:
 
