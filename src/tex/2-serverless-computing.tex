@@ -196,22 +196,19 @@ One apparent flaw in FaaS pricing concerns network delays. A function that spend
 
 \section{Drawbacks and limitations} \label{sec:limitations}
 
-\textcite{robert2016serverlessarchitectures} observes two categories of drawbacks in serverless computing: trade-offs inherent to the serverless concept itself, and the ones tied to current implementations. Inherent trade-offs are something developers are going to have to adapt to, with no foreseeable solution in sight. Statelessness, for example, is one of the core properties of serverless, with each function invocation being unaware of any preceding or parallel invocations. This property enables scalability, but at the same time poses a novel software engineering challenge, as articulated by \textcite{robert2016serverlessarchitectures}: ``so where does your state go with FaaS if you can’t keep it in memory?'' One might push function state to an external database, in-memory cache or object storage, but all of these equate to extra dependencies and network latency. Stateful cookie-based sessions that web applications use for user authentication also require rethinking in the serverless context \parencite{hendrickson16openlambda}.
+\textcite{robert2016serverlessarchitectures} observes two categories of drawbacks in serverless computing: trade-offs inherent to the serverless concept itself, and the ones tied to current implementations. Inherent trade-offs are something developers are going to have to adapt to, with no foreseeable solution in sight. Statelessness, for example, is one of the core properties of serverless, with each function invocation being unaware of any preceding or parallel invocation state. This property enables scalability, but at the same time poses a novel software engineering challenge as articulated by \textcite{robert2016serverlessarchitectures}: ``where does your state go with FaaS if you can’t keep it in memory?'' One might push function state to an external database, in-memory cache or object storage, but all of these equate to extra dependencies and network latency. A common stateful pattern in web applications is to use cookie-based sessions for user authentication; in the serverless paradigm this would either call for an external state store or an alternative stateless authentication pattern \parencite{hendrickson16openlambda}.
 
-Another inherent trade-off to FaaS relates to function composition. Composing serverless function is not like composing regular functions in software code. The difficulties of distributed computing
+Another inherent trade-off of FaaS relates to function composition, i.e. combining individual serverless functions into larger applications. Composing serverless functions is not like composing regular functions in software code, in that all the difficulties of distributed computing -- e.g. message loss, timeouts, consistency problems -- apply and have to be dealt with. In complex cases this might result in more operational surface area for the same amount of logic when compared to a traditional web application \parencite{cncf18serverlessWG}. \textcite{baldini17trilemma} explore the problem of serverless composition and identify a number of challenges. First of all, when a function sequentially invokes and waits for the return of another function, the parent function must stay active during the child function's execution. This results in the customer paying twice, once for the parent function and again for the invoked function. This phenomenon of \textit{double billing} extends to any number of nested invocations and is thus highly undesirable. As well as billing, limits on execution duration constraint this form of function composition. The authors describe another form of function composition where a function upon return fires a completion trigger that in turn asynchronously invokes another function, akin to continuation-passing style. This form avoids the problem of double billing, but in effect makes the resulting composition event-driven and thus not synchronously composable.
 
-
+A fundamental difference ... mental model \parencite{leitner18industrialpractice}
 
 - statelessness
 - function composition
   - more operational surface for calls
   \textcite{baldini17trilemma} identify three competing constraints in serverless function composition: functions should be considered as black boxes; function composition should obey a substitution principle with respect to synchronous invocation; and invocations should not be double-billed.
-  Composing serverless functions is not like composing regular functions. All the difficulties of distributed computing -- message loss, timeouts and others -- apply and have to be handled. Possible solutions include retry policies, dead-letter queues and idempotent functions.
-  \textcite{leitner18industrialpractice} find that building serverless applications requires a ``different mental model that emphasizes plugging together small microservices''.
-
 - vendor lock-in
 - repetition of logic in clients
-- loss of server optimiz
+- loss of server optimizations
 
 
 The latter category we can expect to be resolved as serverless platforms reach maturity.
