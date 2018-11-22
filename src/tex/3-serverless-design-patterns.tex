@@ -1,11 +1,6 @@
 \chapter{Serverless design patterns} \label{cha:patterns}
 
-% \renewcommand\thelstlisting{\arabic{lstlisting}}
-% \setcounter{lstlisting}{1}
-% \begin{lstlisting}[language=Python,caption=Another]
-%   def main(event, context):
-%       return {} jee
-% \end{lstlisting}
+What kind of patterns are there for building serverless web application backends?
 
 Survey of serverless design patterns. \textcite{baldini17currentTrends} put the question as follows:
 
@@ -32,6 +27,10 @@ API Gateway and messaging patterns as described in platforms' own documentation.
 \textcite{hong18securingviaserverlesspatterns} introduce a ``taxonomy of serverless design patterns that we realize using Lambda and primitives provided by AWS. We categorize serverless design patterns into six groups: 1) periodic invocation, 2) event-driven, 3) data transformation, 4) data streaming, 5) state machine, and 6) bundled pattern.''
 
 \textcite{leitner18industrialpractice} find that ``Current FaaS applications are commonly small, and often consist of 10 functions or less. Developers use various application patterns and workarounds to deal with the inherent limitations of current FaaS platforms''. Authors further point out 5 patterns that are mainly workarounds over limitations of serverless platforms.
+
+\textcite{bardsley18optimizationStrategies} with Robust retry implementation (and avoiding deep nested Lambdas), Circuit breakers, Bulkheads, Language-agnostic approach and Warming strategies.
+
+\textcite{daly18blogPatterns} with a fantastic blog post of 19 serverless design patterns.
 
 \textcite{adzic2017serverless} suggest 3 methods for optimizing resource usage: use distributed authorization, let clients orchestrate workflows and allow clients to directly connect to AWS resources. The authors also discuss how paying only for actual utilization has two additional benefits of 1) removing incentives for bundling and 2) removing barriers to versioning: examples of serverless economics affecting architecture. Presenting these (or applications of these) as more formal patterns could be of some value. Related to this, \textcite{albuquerque17faaspaas} note that ``in order to keep costs low using FaaS, in addition to the concern with the execution time of the requests, the results showed that the dependence on the use of external services, such as database, authentication services, among others, can interfere considerably with the expenses. In these cases, it is worth investing in better-performing external services, to reduce the time to perform functions while reducing costs''.
 
