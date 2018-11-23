@@ -137,9 +137,9 @@ FaaS event sources can be divided into two categories, synchronous and asynchron
 
 As mentioned in section \ref{sec:definingServerless}, serverless is \textit{almost} but not completely devoid of operational management. In case of serverless functions, this qualification means that parameters such as memory reservation size, maximum parallelism and execution time are still left for the user to configure. Whereas the latter parameters are mainly used as safeguards to control costs, memory reservation size has important implications regarding execution efficiency \parencite{lloydserverless}. There are however tools available to determine the optimal memory reservation size per given workload. Also some platforms automatically reserve the required amount of memory without pre-allocation \parencite{microsoft18azureFunctions}.
 
-% \textcite{fox17} present a useful short definition of a FaaS platform like Lambda as a cloud-native platform for short-running, stateless computation and event-driven applications which scales up and down instantly and automatically and charges for actual usage at a millisecond granularity.
-
 Even with the restrictions on a serverless function's capabilities, implementing a FaaS platform is a difficult problem. From the customer's point of view the platform has to be as fast as possible in both spin-up and execution time, as well as scale indefinitely and transparently. The provider on the other hand seeks maximum resource utilization at minimal costs while avoiding violating the consumer's QoS expectations. Given that these goals are in conflict with each other, the task of resource allocation and scheduling bears crucial importance \parencite{reza17controller}. A FaaS platform must also safely and efficiently isolate functions from each other, and make low-latency decisions at the load balancer-level while considering session, code, and data locality \parencite{hendrickson16openlambda}.
+
+% TODO mention state machine/orchestration tools like Step Functions and reusable function registeries like AWS Serverless Application Registry
 
 \section{Use cases} \label{sec:useCases}
 

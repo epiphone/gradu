@@ -1,34 +1,33 @@
 \chapter{Serverless design patterns} \label{cha:patterns}
 
-What kind of patterns are there for building serverless web application backends?
-
-Survey of serverless design patterns. \textcite{baldini17currentTrends} put the question as follows:
+What kind of patterns are there for building serverless web application backends? \textcite{baldini17currentTrends} put the question as follows:
 
 \begin{quote}
 Will there be patterns for building serverless solutions? How do we combine low granularity basic building blocks of serverless into bigger solutions? How are we going to decompose apps into functions so that they optimize resource usage? For example how do we identify CPU-bound parts of applications built to run in serverless services? Can we use well-defined patterns for composing functions and external APIs? What should be done on the server vs. client (e.g., are thicker clients more appropriate here)? Are there lessons learned that can be applied from OOP design patterns, Enterprise Integration Patterns, etc.?
 \end{quote}
 
-\textcite{robert2016serverlessarchitectures} asks how big can FaaS functions get before they get unwieldy? Assuming we can atomically deploy a group of FaaS functions what are good ways of creating such groupings - do they map closely to how we’d currently clump logic into microservices or does the difference in architecture push us in a different direction? Extending this further what are good ways of creating hybrid architectures between FaaS and traditional ‘always on’ persistent server components? Extending this further what are good ways of creating hybrid architect
+\textcite{robert2016serverlessarchitectures} asks how big can FaaS functions get before they get unwieldy? Assuming we can atomically deploy a group of FaaS functions what are good ways of creating such groupings - do they map closely to how we’d currently clump logic into microservices or does the difference in architecture push us in a different direction? Extending this further, what are good ways of creating hybrid architectures between FaaS and traditional “always on” persistent server components? What are good ways of introducing BaaS into an existing ecosystem? And, for the reverse, what are the warning signs that a fully or mostly BaaS system needs to start embracing or using more custom server-side code?
 
 \section{Serverless patterns} \label{sec:serverlessPatterns}
 
-% in the upcoming http://www.serverlessdesignpatterns.com/ book: primitive patterns (periodical cron job, messaging), API patterns (wrapper/proxy, facade, async), orchestration (one way chain, two way chain, fan out, fan in), pipes & filters (workflow and long running, streams), traditional (command, singleton). Traditional patterns hint to GoF, something to adopt from there?
+% \textcite{baldini17trilemma} identifies 4 low-level patterns for function composition: reflection, fusion, async and client.
 
-\textcite{baldini17trilemma} identifies 4 low-level patterns for function composition: reflection, fusion, async and client.
+% in the upcoming http://www.serverlessdesignpatterns.com/ book: primitive patterns (periodical cron job, messaging), API patterns (wrapper/proxy, facade, async), orchestration (one way chain, two way chain, fan out, fan in), pipes & filters (workflow and long running, streams), traditional (command, singleton). Traditional patterns hint to GoF, something to adopt from there?
 
 \textcite{baldini17currentTrends} suggests the following use cases: event processing (image processing as an exemplary use case of a bursty, compute intensive workload), api composition (mobile app avoids the cost of invoking multiple APIs over a potentially resource constrained mobile network connection, and offloads the filtering and aggregation logic to the backend), api aggregation to reduce API calls, flow control.
 
-\textcite{sbarski2017serverless} introduce five patterns -- Command, Messaging Priority queue, Fan-out and Pipes and filters -- but they seem mostly to be reinterpretations of classic Enterprise Integration Patterns. Legacy API proxy pattern?
+\textcite{sbarski2017serverless} introduce five patterns -- Command, Messaging, Priority queue, Fan-out and Pipes and filters -- but they seem mostly to be reinterpretations of classic Enterprise Integration Patterns. Legacy API proxy pattern?
 
-Common low-level design patterns such as function chaining and fanout \href{https://github.com/yochay/serverlesspatterns}{in Github}.
-
-\textcite{mcgrath16cloudEventParadigms} demonstrate a fan-out pattern, easily and performantly solving a large-scale image resizing task.
-
-API Gateway and messaging patterns as described in platforms' own documentation. \parencite{awslambda0218}
+\textcite{mcgrath16cloudEventParadigms} apply the fan-out pattern to performantly solve a highly parallel large-scale image resizing task.
 
 \textcite{hong18securingviaserverlesspatterns} introduce a ``taxonomy of serverless design patterns that we realize using Lambda and primitives provided by AWS. We categorize serverless design patterns into six groups: 1) periodic invocation, 2) event-driven, 3) data transformation, 4) data streaming, 5) state machine, and 6) bundled pattern.''
 
-\textcite{leitner18industrialpractice} find that ``Current FaaS applications are commonly small, and often consist of 10 functions or less. Developers use various application patterns and workarounds to deal with the inherent limitations of current FaaS platforms''. Authors further point out 5 patterns that are mainly workarounds over limitations of serverless platforms.
+\textcite{leitner18industrialpractice} find that ``Current FaaS applications are commonly small, and often consist of 10 functions or less. Developers use various application patterns and workarounds to deal with the inherent limitations of current FaaS platforms''.
+1) externalized state
+2) routing function: basically the command pattern, used because API gateways are cumbersome to configure
+3) function chain: works around execution duration limitations, on the other hand creates coupling and some tasks might be difficult to chain
+4) function pinging: works aroud cold starts, results in costs and extra management
+5) oversized function: select the max memory allocation for CPU performance, costs more
 
 \textcite{bardsley18optimizationStrategies} with Robust retry implementation (and avoiding deep nested Lambdas), Circuit breakers, Bulkheads, Language-agnostic approach and Warming strategies.
 
@@ -36,13 +35,19 @@ API Gateway and messaging patterns as described in platforms' own documentation.
 
 \textcite{adzic2017serverless} suggest 3 methods for optimizing resource usage: use distributed authorization, let clients orchestrate workflows and allow clients to directly connect to AWS resources. The authors also discuss how paying only for actual utilization has two additional benefits of 1) removing incentives for bundling and 2) removing barriers to versioning: examples of serverless economics affecting architecture. Presenting these (or applications of these) as more formal patterns could be of some value. Related to this, \textcite{albuquerque17faaspaas} note that ``in order to keep costs low using FaaS, in addition to the concern with the execution time of the requests, the results showed that the dependence on the use of external services, such as database, authentication services, among others, can interfere considerably with the expenses. In these cases, it is worth investing in better-performing external services, to reduce the time to perform functions while reducing costs''.
 
-\textcite{zambrano18patterns} with a book on serverless design patterns, migration/proxy, fan-out and messaging.
-
 The need for circuit breakers (risk of DDoSing yourself) when interacting with non-serverless components like a database. Mention novel cloud-native database services like Google's Cloud Spanner and AWS Aurora. Figure out a source for this -- \textcite{hohpe2004enterprise} might have a relevant pattern.
 
 \section{Enterprise Integration Patterns} \label{sec:enterpriseIntegrationPatterns}
 
-\textcite{hohpe2004enterprise} present a number of asynchronous messaging architectures in the seminal book on EIP. While predating the whole serverless phenomenon the patterns are still relevant. Hohpe even demonstrated implementing one of his patterns on top of Google's serverless platform \href{http://www.enterpriseintegrationpatterns.com/ramblings/google_cloud_functions.html}{in a blog post}.
+Serverless is all about integrations, so...
+\textcite{hohpe2004enterprise} present a number of asynchronous messaging architectures in the seminal book on EIP. While predating the whole serverless phenomenon the patterns are still relevant. Hohpe even demonstrated implementing one of his patterns on top of Google's serverless platform \href{http://www.enterpriseintegrationpatterns.com/ramblings/google_cloud_functions.html}{in a blog post}. E.g. patterns like Idempotent Receiver, Dead-letter Channel as well as the 4 more general integration styles of File Transfer, Shared Database, RPC and Messaging.
+Many patterns implemented internally by the FaaS platform already!
+
+\section{SOA Patterns} \label{sec:soaPatterns}
+
+FaaS functions are self-contained nanoservices, so...
+SOA patterns \parencite{rotem12soa} include Saga, Decoupled Invocation and others.
+As above, some patterns are already implemented by the FaaS platform.
 
 \section{FaaSification} \label{sec:faasification}
 
