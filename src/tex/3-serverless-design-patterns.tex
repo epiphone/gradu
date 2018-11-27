@@ -26,7 +26,7 @@ Schedule function invocations using cron-like systems.
 
 \subsection{State machine} \label{subsubsec:stateMachine}
 
-AWS Step Functions etc.
+AWS Step Functions etc. Caveat that (at least in AWS) step functions cannot be synchronously executed and are thus not composable functions themselves, i.e. a state machine cannot contain a state machine \parencite{lopez18orchestration}; \textcite{daly18blogPatterns} wraps step function in a function for this reason.
 
 \subsection{Fat Client} \label{subsubsec:fatClient}
 
