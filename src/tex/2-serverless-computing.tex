@@ -139,7 +139,7 @@ As mentioned in section \ref{sec:definingServerless}, serverless is \textit{almo
 
 Even with the restrictions on a serverless function's capabilities, implementing a FaaS platform is a difficult problem. From the customer's point of view the platform has to be as fast as possible in both spin-up and execution time, as well as scale indefinitely and transparently. The provider on the other hand seeks maximum resource utilization at minimal costs while avoiding violating the consumer's QoS expectations. Given that these goals are in conflict with each other, the task of resource allocation and scheduling bears crucial importance \parencite{reza17controller}. A FaaS platform must also safely and efficiently isolate functions from each other, and make low-latency decisions at the load balancer-level while considering session, code, and data locality \parencite{hendrickson16openlambda}.
 
-% TODO mention state machine/orchestration tools like Step Functions and reusable function registeries like AWS Serverless Application Registry
+TODO mention state machine/orchestration tools like Step Functions and reusable function registeries like AWS Serverless Application Registry. \textcite{lopez18orchestration} with a comparison.
 
 \section{Use cases} \label{sec:useCases}
 
