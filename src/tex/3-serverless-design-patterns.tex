@@ -8,47 +8,127 @@ Will there be patterns for building serverless solutions? How do we combine low 
 
 \textcite{robert2016serverlessarchitectures} asks how big can FaaS functions get before they get unwieldy? Assuming we can atomically deploy a group of FaaS functions what are good ways of creating such groupings - do they map closely to how we’d currently clump logic into microservices or does the difference in architecture push us in a different direction? Extending this further, what are good ways of creating hybrid architectures between FaaS and traditional “always on” persistent server components? What are good ways of introducing BaaS into an existing ecosystem? And, for the reverse, what are the warning signs that a fully or mostly BaaS system needs to start embracing or using more custom server-side code?
 
-\section{Serverless patterns} \label{sec:serverlessPatterns}
+Enterprise integration patterns, as serverless is all about integrations. \textcite{hohpe2004enterprise} present a number of asynchronous messaging architectures in the seminal book on EIP. While predating the whole serverless phenomenon the patterns are still relevant. Hohpe even demonstrated implementing one of his patterns on top of Google's serverless platform \href{http://www.enterpriseintegrationpatterns.com/ramblings/google_cloud_functions.html}{in a blog post}. E.g. patterns like Idempotent Receiver, Dead-letter Channel as well as the 4 more general integration styles of File Transfer, Shared Database, RPC and Messaging. Many patterns implemented internally by FaaS platforms already!
 
-% \textcite{baldini17trilemma} identifies 4 low-level patterns for function composition: reflection, fusion, async and client.
+SOA patterns: FaaS functions are self-contained nanoservices these might have some relevance. SOA patterns \parencite{rotem12soa} include Saga, Decoupled Invocation and others. As with EIP, some patterns are already implemented by the FaaS platform.
 
-% in the upcoming http://www.serverlessdesignpatterns.com/ book: primitive patterns (periodical cron job, messaging), API patterns (wrapper/proxy, facade, async), orchestration (one way chain, two way chain, fan out, fan in), pipes & filters (workflow and long running, streams), traditional (command, singleton). Traditional patterns hint to GoF, something to adopt from there?
+FaaSification: \textcite{spillner17transformpython} describes an automated approach to transform monolithic Python code into modular FaaS units by partially automated decomposition. Doesn't really seem suitable for the web application migration process covered in this thesis but worth mentioning.
 
-\textcite{baldini17currentTrends} suggests the following use cases: event processing (image processing as an exemplary use case of a bursty, compute intensive workload), api composition (mobile app avoids the cost of invoking multiple APIs over a potentially resource constrained mobile network connection, and offloads the filtering and aggregation logic to the backend), api aggregation to reduce API calls, flow control.
+\section{Orchestration patterns} \label{sec:orchestrationPatterns}
 
-\textcite{sbarski2017serverless} introduce five patterns -- Command, Messaging, Priority queue, Fan-out and Pipes and filters -- but they seem mostly to be reinterpretations of classic Enterprise Integration Patterns. Legacy API proxy pattern?
+Function orchestration and composition.
 
-\textcite{mcgrath16cloudEventParadigms} apply the fan-out pattern to performantly solve a highly parallel large-scale image resizing task.
+\subsection{Routing function} \label{subsubsec:routingFunction}
 
-\textcite{hong18securingviaserverlesspatterns} introduce a ``taxonomy of serverless design patterns that we realize using Lambda and primitives provided by AWS. We categorize serverless design patterns into six groups: 1) periodic invocation, 2) event-driven, 3) data transformation, 4) data streaming, 5) state machine, and 6) bundled pattern.''
+FaaS version of the GoF Component pattern.
 
-\textcite{leitner18industrialpractice} find that ``Current FaaS applications are commonly small, and often consist of 10 functions or less. Developers use various application patterns and workarounds to deal with the inherent limitations of current FaaS platforms''.
-1) externalized state
-2) routing function: basically the command pattern, used because API gateways are cumbersome to configure
-3) function chain: works around execution duration limitations, on the other hand creates coupling and some tasks might be difficult to chain
-4) function pinging: works aroud cold starts, results in costs and extra management
-5) oversized function: select the max memory allocation for CPU performance, costs more
+\subsection{Function chain} \label{subsubsec:functionChain}
 
-\textcite{bardsley18optimizationStrategies} with Robust retry implementation (and avoiding deep nested Lambdas), Circuit breakers, Bulkheads, Language-agnostic approach and Warming strategies.
+Chain functions to avoid timeouts.
 
-\textcite{daly18blogPatterns} with a fantastic blog post of 19 serverless design patterns.
+\subsection{Periodic invocation} \label{subsubsec:periodicInvocation}
 
-\textcite{adzic2017serverless} suggest 3 methods for optimizing resource usage: use distributed authorization, let clients orchestrate workflows and allow clients to directly connect to AWS resources. The authors also discuss how paying only for actual utilization has two additional benefits of 1) removing incentives for bundling and 2) removing barriers to versioning: examples of serverless economics affecting architecture. Presenting these (or applications of these) as more formal patterns could be of some value. Related to this, \textcite{albuquerque17faaspaas} note that ``in order to keep costs low using FaaS, in addition to the concern with the execution time of the requests, the results showed that the dependence on the use of external services, such as database, authentication services, among others, can interfere considerably with the expenses. In these cases, it is worth investing in better-performing external services, to reduce the time to perform functions while reducing costs''.
+Schedule function invocations using cron-like systems.
 
-The need for circuit breakers (risk of DDoSing yourself) when interacting with non-serverless components like a database. Mention novel cloud-native database services like Google's Cloud Spanner and AWS Aurora. Figure out a source for this -- \textcite{hohpe2004enterprise} might have a relevant pattern.
+\subsection{State machine} \label{subsubsec:stateMachine}
 
-\section{Enterprise Integration Patterns} \label{sec:enterpriseIntegrationPatterns}
+AWS Step Functions etc.
 
-Serverless is all about integrations, so...
-\textcite{hohpe2004enterprise} present a number of asynchronous messaging architectures in the seminal book on EIP. While predating the whole serverless phenomenon the patterns are still relevant. Hohpe even demonstrated implementing one of his patterns on top of Google's serverless platform \href{http://www.enterpriseintegrationpatterns.com/ramblings/google_cloud_functions.html}{in a blog post}. E.g. patterns like Idempotent Receiver, Dead-letter Channel as well as the 4 more general integration styles of File Transfer, Shared Database, RPC and Messaging.
-Many patterns implemented internally by the FaaS platform already!
+\subsection{Fat Client} \label{subsubsec:fatClient}
 
-\section{SOA Patterns} \label{sec:soaPatterns}
+Let client orchestrate workflows.
 
-FaaS functions are self-contained nanoservices, so...
-SOA patterns \parencite{rotem12soa} include Saga, Decoupled Invocation and others.
-As above, some patterns are already implemented by the FaaS platform.
 
-\section{FaaSification} \label{sec:faasification}
+\section{API/Integration patterns} \label{sec:apiPatterns}
 
-\textcite{spillner17transformpython} describes an automated approach to transform monolithic Python code into modular FaaS units by partially automated decomposition. Doesn't really seem suitable for the web application migration process covered in this thesis but worth mentioning.
+Integrating with external systems.
+
+\subsection{API composition} \label{subsubsec:apiComposition}
+
+Hide multiple API calls under a single function.
+
+\subsection{API aggregation} \label{subsubsec:apiAggregation}
+
+Hide a sequential multi-step API call under a single function.
+
+\subsection{API async} \label{subsubsec:apiAsync}
+
+Turn a synchronized API into an async one.
+
+\subsection{Legacy API Proxy/Staged migration} \label{subsubsec:legacyApi}
+
+Replace a legacy API with a new one step by step, a.k.a. Strangler.
+
+\subsection{Separate FaaS handler from core logic} \label
+{subsubsec:separateHandler}
+
+Separate FaaS handler core logic in code level.
+
+\section{Data management/access patterns} \label{sec:dataManagementPatterns}
+
+Managing state and accessing external resources.
+
+\subsection{Externalized State} \label{subsubsec:externalizedState}
+
+Store function state in external storage.
+
+\subsection{Valet Key} \label{subsubsec:valetKey}
+
+Sign tokens for clients to directly access resources.
+
+\subsection{Least privilege IAM role} \label{subsubsec:LeastprivilegeIAMrole}
+
+Minimize attack surface by reducing function access roles to bare minimum.
+
+\section{Event patterns} \label{sec:eventPatterns}
+
+Asynchronous messaging/event patterns.
+
+\subsection{Event processing} \label{subsubsec:Eventprocessing}
+
+Trigger a function as a result of event occurrence.
+
+\subsection{Fan-out events} \label{subsubsec:FanoutEvents}
+
+Trigger multiple actions from a single event.
+
+\subsection{Fan-out/fan-in} \label{subsubsec:FanoutFanin}
+
+Split event handling into parallel functions.
+
+\subsection{Pipes and filters} \label{subsubsec:PipesAndFilters}
+
+Handle event stream with a pipeline of small functions.
+
+\section{Performance and scalability patterns} \label{sec:perfPatterns}
+
+Address FaaS performance issues.
+
+\subsection{Function warming} \label{subsubsec:FunctionWarming}
+
+Ping a function intermittently to avoid cold starts.
+
+\subsection{Oversized function} \label{subsubsec:OversizedFunction}
+
+Choose maximum memory allocation to access faster CPU resources and improve cold start latency.
+
+\subsection{Singleton} \label{subsubsec:Singleton}
+
+Take advantage of function execution context to avoid reinitializing function dependencies.
+
+\section{Resiliency and availability patterns} \label{sec:resiliencyPatterns}
+
+Maximize serverless system resiliency.
+
+\subsection{Bulkhead} \label{subsubsec:Bulkhead}
+
+Isolate high-latency code into separate functions to avoid resource contention.
+
+\subsection{Flow control/throttling} \label{subsubsec:Flow control/throttling}
+
+Throttle invocations to avoid DDoSing yourself.
+
+\subsection{Circuit breaker} \label{subsubsec:Circuit breaker}
+
+Keep track of component availability to avoid cascading failures.
+
