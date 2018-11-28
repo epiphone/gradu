@@ -10,24 +10,24 @@ FaaSification: \textcite{spillner17transformpython} describes an automated appro
 
 \section{Orchestration patterns} \label{sec:orchestrationPatterns}
 
-The following patterns concern serverless function orchestration, i.e. managing control flow to compose functions together into more extensive workflows. The patterns here constitute synchronous, sequential workflows, whereas asynchronous workflows are described in section \ref{sec:eventPatterns}.
+The following patterns concern serverless function orchestration, i.e. managing control flow to compose functions together into more extensive sequences or workflows.
 
 \subsection{Routing Function} \label{subsec:routingFunction}
 
-\textbf{Problem:} How do we branch out execution flow based on request payload?
+\textbf{Problem:} How to branch out execution flow based on request payload?
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.5\textwidth]{patterns/routing-function.png}
+  \includegraphics[width=0.4\textwidth]{patterns/routing-function.png}
   \caption{Routing Function}
   \label{fig:patternRoutingFunction}
 \end{figure}
 
 \textbf{Solution:} Use a central routing function to receive requests and forward them onwards to appropriate functions based on request payload.
 
-This pattern involves instantiating a routing function that contains all the necessary information to route requests to other functions. All function invocations are directed to the routing function, which in turn dispatches requests onwards according to request payload.
+This pattern involves instantiating a routing function that contains all the necessary information to route requests to other functions. All function invocations are directed to the routing function, which in turn invokes target functions according to request payload. Routing function passes target function return value over to the client.
 
-It's notable that FaaS platforms commonly provide API gateways and other tools for routing, for example Amazon API Gateway \parencite{awslambda0218}. These tools are however mostly limited to path-based routing, whereas a routing function can be implemented to support more dynamic use cases. Also interestingly, according to an industry survey \parencite{leitner18industrialpractice}, some practicioners opted for the Routing Function pattern over platform API gateway services as they found the latter cumbersome to manage. One advantage of the pattern is that the routing function can be used to supplement request payload with additional context or metadata. A centralized routing function also means that all routing configuration is found in one place, and that public-facing API routes only need to be configured for one function, not all of them \parencite{leitner18industrialpractice}.
+It's notable that FaaS platforms commonly provide API gateways and other tools for routing, for example the Amazon API Gateway \parencite{awslambda0218}. These tools are however mostly limited to path-based routing, whereas a routing function can be implemented to support more dynamic use cases. Also interestingly, according to an industry survey \parencite{leitner18industrialpractice}, some practicioners opted for the Routing Function pattern over platform API gateway services as they found the latter cumbersome to manage. One advantage of the pattern is that the routing function can be used to supplement request payload with additional context or metadata. A centralized routing function also means that all routing configuration is found in one place, and that public-facing API routes only need to be configured for one function, not all of them \parencite{leitner18industrialpractice}.
 
 The pattern's major disadvantage is double billing, as the routing function essentially has to block and wait until the target function finishes execution. Strong coupling between the routing and target functions is another concern. Finally, as routing is implemented in function code level, routing information gets hidden in implementation rather than being accessible from configuration \parencite{leitner18industrialpractice}.
 
@@ -35,12 +35,37 @@ The Routing Function pattern is related to the OOP Command pattern, which aims t
 
 \subsection{Function Chain} \label{subsec:functionChain}
 
-Chain functions to avoid timeouts.
+\textbf{Problem:} Task exceeds maximum function execution duration, resulting in a timeout.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.5\textwidth]{patterns/function-chain.png}
+  \caption{Function Chain}
+  \label{fig:patternFunctionChain}
+\end{figure}
+
+\textbf{Solution:} Split the task into separate functions that are chained together sequentially.
+
+The Function Chain pattern comprises of an initial function and any number of subsequent functions. The initial function begins computation while keeping track of remaining execution time. In AWS Lambda for example the execution context contains information on how many milliseconds are left before termination \parencite{awslambda0218}. Upon reaching its duration limit, the initial function invokes another function asynchronously, passing along as parameters any state necessary to continue task computation. Since the intermediary invocation is asynchronous (``fire-and-forget''), the initial function can terminate without affecting the next function in chain.
+
+The Function Chain pattern is in effect a workaround over the duration limit that FaaS platforms place on function execution \parencite{leitner18industrialpractice}. The pattern was reported to be used at least occasionally in an industry study by \textcite{leitner18industrialpractice}. Its disadvantages include strong coupling between chained functions, increase in the number of deployment units and the overhead of transferring intermediate execution state and parameters between each chained function. \textcite{leitner18industrialpractice} also note that splitting some types of tasks into multiple functions can be difficult. Finally, as the pattern relies on asynchronous invocation, the last function in chain has to persist computation result into an external storage for the client to access it, which brings in further dependencies.
 
 \subsection{State Machine} \label{subsec:stateMachine}
 
-AWS Step Functions etc. Caveat that (at least in AWS) step functions cannot be synchronously executed and are thus not composable functions themselves, i.e. a state machine cannot contain a state machine \parencite{lopez18orchestration}; \textcite{daly18blogPatterns} wraps step function in a function for this reason.
-A more recent FaaS platform feature is function workflow or graph that enables composing functions together into more complex sequences akin to a state machine.
+\textbf{Problem:} How to coordinate complex, stateful procedures with branching steps?
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.6\textwidth]{patterns/state-machine.png}
+  \caption{State Machine}
+  \label{fig:patternStateMachine}
+\end{figure}
+
+\textbf{Solution:} Split a task into a number of discrete functions and coordinate its execution with an orchestration tool.
+
+\textcite{hong18securingviaserverlesspatterns} describe the State Machine pattern as ``building a complex, stateful procedure by coordinating a collection of discrete Lambda functions using a tool such as AWS Step Functions''. These orchestration tools consist of a collection of workflow states and transitions between them, with each state having its associated function and event sources -- essentially a serverless a state machine \parencite{cncf18serverlessWG}. Figure \ref{fig:patternStateMachine} could for example represent a workflow where the first function attempts a database insert, the second function checks whether the operation succeeded, and depending on the result either the operation is retried or execution is finished. The advantage of using provider tooling for workflow execution is that there's no need for external state storage as the orchestrator keeps track of workflow state. Downsides on the other hand include extra cost arising from orchestration tooling as well as the overhead of managing workflow descriptions.
+
+\textcite{lopez18orchestration} provide a comparison of three major FaaS orchestration systems: AWS Step Functions, IBM Composer and Azure Durable Functions. The compared systems typically support function chaining, conditional branching, retries and parallel execution, with workflows defined either in a Domain-Specific Language or directly in code. One restriction in Amazon's orchestrator implementation is that a composition cannot be synchronously invoked and is thus not composable in itself: a state machine cannot contain another state machine. AWS Step Functions was also the least programmable among the compared systems, but on the other hand the most mature and performant. Finally, the authors observe that none of the provider-managed orchestration systems are prepared for parallel programming, with considerable overheads in concurrent invocations.
 
 \subsection{Fat Client} \label{subsec:fatClient}
 
