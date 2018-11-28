@@ -27,7 +27,7 @@ The following patterns concern serverless function orchestration, i.e. managing 
 
 This pattern involves instantiating a routing function that contains all the necessary information to route requests to other functions. All function invocations are directed to the routing function, which in turn invokes target functions according to request payload. The routing function finally passes target function return value over to the client.
 
-It's notable that FaaS platforms commonly provide API gateways and other tools for routing, for example the Amazon API Gateway \parencite{awslambda0218}. These tools are however mostly limited to path-based routing, whereas a routing function can be implemented to support more dynamic use cases. Also interestingly, according to an industry survey \parencite{leitner18industrialpractice}, some practicioners opted for the Routing Function pattern over platform API gateway services as they found the latter cumbersome to manage. \textcite{sbarski2017serverless} similarly postulates that the pattern ``can simplify the API Gateway implementation, because you
+It's notable that FaaS platforms commonly provide API gateways and other tools for routing, for example the Amazon API Gateway \parencite{awslambda0218}. These tools are however mostly limited to path-based routing, whereas a routing function can be implemented to support more dynamic use cases. Also interestingly, according to an industry survey \parencite{leitner18industrialpractice}, some practicioners opted for the Routing Function pattern over platform API gateway services as they found the latter cumbersome to manage. \textcite{sbarski2017serverless} similarly postulate that the pattern ``can simplify the API Gateway implementation, because you
 may not want or need to create a RESTful URI for every type of request''. One advantage of the pattern is that the routing function can be used to supplement request payload with additional context or metadata. A centralized routing function also means that all routing configuration is found in one place, and that public-facing API routes only need to be configured for one function, not all of them \parencite{leitner18industrialpractice}.
 
 The pattern's major disadvantage is double billing, as the routing function essentially has to block and wait until the target function finishes execution. Additionally, as routing is implemented in function code level, information about function control flow gets hidden in implementation rather than being accessible from configuration \parencite{leitner18industrialpractice}.
@@ -70,25 +70,24 @@ The Function Chain pattern is in effect a workaround over the duration limit tha
 
 \subsection{Thick Client} \label{subsec:thickClient}
 
-% \textbf{Problem:} How to avoid extra costs while accessing third party cloud services?
 \textbf{Problem:} How to coordinate access to third party cloud services while avoiding extra costs?
 
-% \begin{figure}[h]
-%   \centering
-%   \includegraphics[width=0.6\textwidth]{patterns/thick-client.png}
-%   \caption{Thick Client}
-%   \label{fig:patternThickClient}
-% \end{figure}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.5\textwidth]{patterns/thick-client.png}
+  \caption{Thick Client}
+  \label{fig:patternThickClient}
+\end{figure}
 
 \textbf{Solution:} Create thicker, more powerful clients.
 
-Serverless applications, as described in chapter \ref{cha:serverless}, typically consist of a mixture of third party cloud services (BaaS) and custom logic implemented as serverless functions (FaaS). However, applying serverless functions in the manner of a traditional layered web application backend, as a gateway between the client and external resources, has a few drawbacks. First of all, using FaaS as middle layer in front of cloud resources directly translates into extra costs: on top of paying for the service call, one has to pay for the function invocation, function execution for the duration of the network call as well as the data transfer between the service and the FaaS provider. Secondly, a middle layer of FaaS results into extra network hops, thus increasing latency and reducing user experience. \parencite{sbarski2017serverless}
+Serverless applications, as described in chapter \ref{cha:serverless}, typically rely heavily on third party cloud services (BaaS) interspersed with custom logic in form of serverless functions. In a traditional layered web application architecture, as described by \textcite{robert2016serverlessarchitectures}, interaction with these external services would be handled by a server application that sits between the client and the service layers. Following this model, the client can be limited in functionality whereas the server application plays a larger role. \textcite{sbarski2017serverless} point out that the model of the backend as a gateway between client and services doesn't match well with the serverless paradigm. First of all, using FaaS as a middle layer in front of cloud resources directly translates into extra costs: on top of paying for the cloud service call, one has to pay for function invocation and execution for the duration of the network call as well as data transfer between the service and the FaaS provider. Secondly, a middle layer of FaaS results into extra network hops, thus increasing latency and reducing user experience. \textcite{sbarski2017serverless} thus advise against routing everything through a FaaS layer, and advocates building thick clients that communicate directly with cloud services and orchestrate workflows between them.
 
-Let the client orchestrate workflows.
+In addition to the cost benefit, a thicker client has the advantage of improved changeability and separation of concerns, as the single monolithic backend application is replaced by more isolated and self-contained components. Doing away with the central arbiter of a server application does come with its trade-offs, such as a need for distributed monitoring and further reliance on the security of the cloud services. Importantly not all functionality can or should be moved to the client: security, performance or consistency requirements among others can necessitate a server-side implementation. \parencite{robert2016serverlessarchitectures}.
 
-so pushing the workflow coordination to the client significantly reduces hosting costs \parencite{adzic2017serverless}
+The Thick Client pattern depends on fine-grained, distributed, request-level authentication in lieu of a gatekeeper server application. This follows naturally from the way serverless functions operate: being stateless and continuously scaling up and down, maintaining a session between the backend and the cloud services is infeasible. Instead of automatically trusting all requests originating from the backend, each cloud service request has to be individually authorized. Hence from the cloud service's point of view, requests originating from a serverless function or directly from the client are both equally untrusted, so one might as well skip the middleman. \parencite{adzic2017serverless}
 
-Closely related to the Valet Key pattern described in \ref{subsec:valetKey}.
+The Valet Key pattern described in section \ref{subsec:valetKey} is one example of a request-level authentication mechanism enabling thick clients.
 
 \section{Event patterns} \label{sec:eventPatterns}
 
