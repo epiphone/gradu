@@ -23,15 +23,16 @@ The following patterns concern serverless function orchestration, i.e. managing 
   \label{fig:patternRoutingFunction}
 \end{figure}
 
-\textbf{Solution:} Use a central routing function to receive requests and forward them onwards to appropriate functions based on request payload.
+\textbf{Solution:} Use a central routing function to receive requests and invoke appropriate functions based on request payload.
 
-This pattern involves instantiating a routing function that contains all the necessary information to route requests to other functions. All function invocations are directed to the routing function, which in turn invokes target functions according to request payload. Routing function passes target function return value over to the client.
+This pattern involves instantiating a routing function that contains all the necessary information to route requests to other functions. All function invocations are directed to the routing function, which in turn invokes target functions according to request payload. The routing function finally passes target function return value over to the client.
 
-It's notable that FaaS platforms commonly provide API gateways and other tools for routing, for example the Amazon API Gateway \parencite{awslambda0218}. These tools are however mostly limited to path-based routing, whereas a routing function can be implemented to support more dynamic use cases. Also interestingly, according to an industry survey \parencite{leitner18industrialpractice}, some practicioners opted for the Routing Function pattern over platform API gateway services as they found the latter cumbersome to manage. One advantage of the pattern is that the routing function can be used to supplement request payload with additional context or metadata. A centralized routing function also means that all routing configuration is found in one place, and that public-facing API routes only need to be configured for one function, not all of them \parencite{leitner18industrialpractice}.
+It's notable that FaaS platforms commonly provide API gateways and other tools for routing, for example the Amazon API Gateway \parencite{awslambda0218}. These tools are however mostly limited to path-based routing, whereas a routing function can be implemented to support more dynamic use cases. Also interestingly, according to an industry survey \parencite{leitner18industrialpractice}, some practicioners opted for the Routing Function pattern over platform API gateway services as they found the latter cumbersome to manage. \textcite{sbarski2017serverless} similarly postulates that the pattern ``can simplify the API Gateway implementation, because you
+may not want or need to create a RESTful URI for every type of request''. One advantage of the pattern is that the routing function can be used to supplement request payload with additional context or metadata. A centralized routing function also means that all routing configuration is found in one place, and that public-facing API routes only need to be configured for one function, not all of them \parencite{leitner18industrialpractice}.
 
-The pattern's major disadvantage is double billing, as the routing function essentially has to block and wait until the target function finishes execution. Strong coupling between the routing and target functions is another concern. Finally, as routing is implemented in function code level, routing information gets hidden in implementation rather than being accessible from configuration \parencite{leitner18industrialpractice}.
+The pattern's major disadvantage is double billing, as the routing function essentially has to block and wait until the target function finishes execution. Additionally, as routing is implemented in function code level, information about function control flow gets hidden in implementation rather than being accessible from configuration \parencite{leitner18industrialpractice}.
 
-The Routing Function pattern is related to the OOP Command pattern, which aims to decouple clients from receivers via an intermediary command object \parencite{gamma94designPatterns}. A related enterprise integration pattern is Content-Based Router, which ``examines the message content and routes the message onto a different channel based on data contained in the message'' \parencite{hohpe2004enterprise}. \textcite{hohpe2004enterprise} caution that the router should be made easy to maintain as it can become a point of frequent configuration.
+The Routing Function pattern is related to the OOP Command pattern, which is used to decouple the caller of the operation from the entity that carries out the processing via an intermediary command object \parencite{gamma94designPatterns}. A related enterprise integration pattern is Content-Based Router, which ``examines the message content and routes the message onto a different channel based on data contained in the message'' \parencite{hohpe2004enterprise}. \textcite{hohpe2004enterprise} caution that the router should be made easy to maintain as it can become a point of frequent configuration.
 
 \subsection{Function Chain} \label{subsec:functionChain}
 
@@ -67,9 +68,27 @@ The Function Chain pattern is in effect a workaround over the duration limit tha
 
 \textcite{lopez18orchestration} provide a comparison of three major FaaS orchestration systems: AWS Step Functions, IBM Composer and Azure Durable Functions. The compared systems typically support function chaining, conditional branching, retries and parallel execution, with workflows defined either in a Domain-Specific Language or directly in code. One restriction in Amazon's orchestrator implementation is that a composition cannot be synchronously invoked and is thus not composable in itself: a state machine cannot contain another state machine. AWS Step Functions was also the least programmable among the compared systems, but on the other hand the most mature and performant. Finally, the authors observe that none of the provider-managed orchestration systems are prepared for parallel programming, with considerable overheads in concurrent invocations.
 
-\subsection{Fat Client} \label{subsec:fatClient}
+\subsection{Thick Client} \label{subsec:thickClient}
 
-Let client orchestrate workflows.
+% \textbf{Problem:} How to avoid extra costs while accessing third party cloud services?
+\textbf{Problem:} How to coordinate access to third party cloud services while avoiding extra costs?
+
+% \begin{figure}[h]
+%   \centering
+%   \includegraphics[width=0.6\textwidth]{patterns/thick-client.png}
+%   \caption{Thick Client}
+%   \label{fig:patternThickClient}
+% \end{figure}
+
+\textbf{Solution:} Create thicker, more powerful clients.
+
+Serverless applications, as described in chapter \ref{cha:serverless}, typically consist of a mixture of third party cloud services (BaaS) and custom logic implemented as serverless functions (FaaS). However, applying serverless functions in the manner of a traditional layered web application backend, as a gateway between the client and external resources, has a few drawbacks. First of all, using FaaS as middle layer in front of cloud resources directly translates into extra costs: on top of paying for the service call, one has to pay for the function invocation, function execution for the duration of the network call as well as the data transfer between the service and the FaaS provider. Secondly, a middle layer of FaaS results into extra network hops, thus increasing latency and reducing user experience. \parencite{sbarski2017serverless}
+
+Let the client orchestrate workflows.
+
+so pushing the workflow coordination to the client significantly reduces hosting costs \parencite{adzic2017serverless}
+
+Closely related to the Valet Key pattern described in \ref{subsec:valetKey}.
 
 \section{Event patterns} \label{sec:eventPatterns}
 
