@@ -83,37 +83,35 @@ The Function Chain pattern is in effect a workaround over the duration limit tha
 
 Serverless applications, as described in chapter \ref{cha:serverless}, typically rely heavily on third party cloud services (BaaS) interspersed with custom logic in form of serverless functions. In a traditional layered web application architecture, as described by \textcite{robert2016serverlessarchitectures}, interaction with these external services would be handled by a server application that sits between the client and the service layers. Following this model, the client can be limited in functionality whereas the server application plays a larger role. \textcite{sbarski2017serverless} point out that the model of the backend as a gateway between client and services doesn't match well with the serverless paradigm. First of all, using FaaS as a middle layer in front of cloud resources directly translates into extra costs: on top of paying for the cloud service call, one has to pay for function invocation and execution for the duration of the network call as well as data transfer between the service and the FaaS provider. Secondly, a middle layer of FaaS results into extra network hops, thus increasing latency and reducing user experience. \textcite{sbarski2017serverless} thus advise against routing everything through a FaaS layer, and advocates building thick clients that communicate directly with cloud services and orchestrate workflows between them.
 
-In addition to the cost benefit, a thicker client has the advantage of improved changeability and separation of concerns, as the single monolithic backend application is replaced by more isolated and self-contained components. Doing away with the central arbiter of a server application does come with its trade-offs, such as a need for distributed monitoring and further reliance on the security of the cloud services. Importantly not all functionality can or should be moved to the client: security, performance or consistency requirements among others can necessitate a server-side implementation. \parencite{robert2016serverlessarchitectures}.
+In addition to the cost benefit, a thicker client has the advantage of improved changeability and separation of concerns, as the single monolithic backend application is replaced by isolated and self-contained components. Doing away with the central arbiter of a server application does come with its trade-offs, including a need for distributed monitoring and further reliance on the security of the cloud services. Importantly not all functionality can or should be moved to the client: security, performance or consistency requirements among others can necessitate a server-side implementation. \parencite{robert2016serverlessarchitectures}.
 
-The Thick Client pattern depends on fine-grained, distributed, request-level authentication in lieu of a gatekeeper server application. This follows naturally from the way serverless functions operate: being stateless and continuously scaling up and down, maintaining a session between the backend and the cloud services is infeasible. Instead of automatically trusting all requests originating from the backend, each cloud service request has to be individually authorized. Hence from the cloud service's point of view, requests originating from a serverless function or directly from the client are both equally untrusted, so one might as well skip the middleman. \parencite{adzic2017serverless}
-
-The Valet Key pattern described in section \ref{subsec:valetKey} is one example of a request-level authentication mechanism enabling thick clients.
+The Thick Client pattern depends on fine-grained, distributed, request-level authentication in lieu of a gatekeeper server application. This follows naturally from the way serverless functions operate: being stateless and continuously scaling up and down, maintaining a session between the backend and the cloud services is infeasible. Instead of automatically trusting all requests originating from the backend, each cloud service request has to be individually authorized. From a cloud service's point of view, requests originating from a serverless function or directly from the client are both equally untrusted. Hence in serverless architectures, skipping the backend layer is preferable whenever a direct connection between client and services is possible. The Valet Key pattern in section \ref{subsec:valetKey} describes one example of a request-level authentication mechanism. \parencite{adzic2017serverless}
 
 \section{Event patterns} \label{sec:eventPatterns}
 
-Asynchronous messaging/event patterns.
+Event patterns concern asynchronous messaging workflows.
 
-\subsection{Event processing} \label{subsec:Eventprocessing}
+\subsection{Event Processor} \label{subsec:Eventprocessing}
 
 Trigger a function as a result of event occurrence.
 
-\subsection{Periodic invocation} \label{subsec:periodicInvocation}
+\subsection{Periodic Invocation} \label{subsec:periodicInvocation}
 
 Schedule function invocations using cron-like systems.
 
-\subsection{Fan-out events} \label{subsec:FanoutEvents}
+\subsection{Fan-out Events} \label{subsec:FanoutEvents}
 
 Trigger multiple actions from a single event.
 
-\subsection{Fan-out/fan-in} \label{subsec:FanoutFanin}
+\subsection{Fan-out/Fan-in} \label{subsec:FanoutFanin}
 
 Split event handling into parallel functions.
 
-\subsection{Pipes and filters} \label{subsec:PipesAndFilters}
+\subsection{Pipes and Filters} \label{subsec:PipesAndFilters}
 
 Handle event stream with a pipeline of small functions.
 
-\section{API/Integration patterns} \label{sec:apiPatterns}
+\section{API patterns} \label{sec:apiPatterns}
 
 Integrating with external systems.
 
