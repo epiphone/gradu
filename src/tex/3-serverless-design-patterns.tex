@@ -64,7 +64,7 @@ The Function Chain pattern is in effect a workaround over the duration limit tha
 
 \textbf{Solution:} Split a task into a number of discrete functions and coordinate its execution with an orchestration tool.
 
-\textcite{hong18securingviaserverlesspatterns} describe the State Machine pattern as ``building a complex, stateful procedure by coordinating a collection of discrete Lambda functions using a tool such as AWS Step Functions''. These orchestration tools consist of a collection of workflow states and transitions between them, with each state having its associated function and event sources -- essentially a serverless a state machine \parencite{cncf18serverlessWG}. Figure \ref{fig:patternStateMachine} could for example represent a workflow where the first function attempts a database insert, the second function checks whether the operation succeeded, and depending on the result either the operation is retried or execution is finished. The advantage of using provider tooling for workflow execution is that there's no need for external state storage as the orchestrator keeps track of workflow state. Downsides on the other hand include extra cost arising from orchestration tooling as well as the overhead of managing workflow descriptions.
+\textcite{hong18securingviaserverlesspatterns} describe the State Machine pattern as ``building a complex, stateful procedure by coordinating a collection of discrete Lambda functions using a tool such as AWS Step Functions''. These orchestration tools consist of a collection of workflow states and transitions between them, with each state having its associated function and event sources -- essentially a serverless a state machine \parencite{cncf18serverlessWG}. Figure \ref{fig:patternStateMachine} could for example represent a workflow where the first function attempts a database insert, the second function checks whether the operation succeeded, and depending on the result either the operation is retried or execution is finished. The advantage of using provider tooling for workflow execution is that there's no need for external storage as the orchestrator keeps track of workflow state. Downsides on the other hand include extra cost arising from orchestration tooling as well as the overhead of managing workflow descriptions.
 
 \textcite{lopez18orchestration} provide a comparison of three major FaaS orchestration systems: AWS Step Functions, IBM Composer and Azure Durable Functions. The compared systems typically support function chaining, conditional branching, retries and parallel execution, with workflows defined either in a Domain-Specific Language or directly in code. One restriction in Amazon's orchestrator implementation is that a composition cannot be synchronously invoked and is thus not composable in itself: a state machine cannot contain another state machine. AWS Step Functions was also the least programmable among the compared systems, but on the other hand the most mature and performant. Finally, the authors observe that none of the provider-managed orchestration systems are prepared for parallel programming, with considerable overheads in concurrent invocations.
 
@@ -93,11 +93,31 @@ Event patterns concern asynchronous messaging workflows.
 
 \subsection{Event Processor} \label{subsec:Eventprocessing}
 
-Trigger a function as a result of event occurrence.
+\textbf{Problem:} How to execute a piece of code on-demand as a result of an event occurrence?
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.45\textwidth]{patterns/event-processor.png}
+  \caption{Event Processor}
+  \label{fig:patternEventProcessor}
+\end{figure}
+
+\textbf{Solution:} Subscribe a serverless function to a cloud event source.
+
+The pattern minimizes costs by invoking functions only when events occur, and enables scalability by automatically invoking functions based on the number of events \parencite{hong18securingviaserverlesspatterns}.
 
 \subsection{Periodic Invocation} \label{subsec:periodicInvocation}
 
-Schedule function invocations using cron-like systems.
+\textbf{Problem:} How to execute a piece of code periodically?
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.4\textwidth]{patterns/periodic-invocation.png}
+  \caption{Periodic Invocation}
+  \label{fig:patternPeriodicInvocation}
+\end{figure}
+
+\textbf{Solution:} Trigger function invocations in regular intervals using a scheduler.
 
 \subsection{Fan-out Events} \label{subsec:FanoutEvents}
 
