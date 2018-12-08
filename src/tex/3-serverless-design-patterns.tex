@@ -8,9 +8,9 @@ SOA patterns: FaaS functions are self-contained nanoservices these might have so
 
 FaaSification: \textcite{spillner17transformpython} describes an automated approach to transform monolithic Python code into modular FaaS units by partially automated decomposition. Doesn't really seem suitable for the web application migration process covered in this thesis but worth mentioning.
 
-\section{Orchestration patterns} \label{sec:orchestrationPatterns}
+\section{Composition patterns} \label{sec:compositionPatterns}
 
-The following patterns concern serverless function orchestration, i.e. managing control flow to compose functions together into more extensive sequences or workflows.
+The following patterns concern serverless function composition: how to compose and orchestrate serverless functions together into more extensive sequences or workflows?
 
 \subsection{Routing Function} \label{subsec:routingFunction}
 
@@ -81,7 +81,7 @@ The Function Chain pattern is in effect a workaround over the duration limit tha
 
 \textbf{Solution:} Create thicker, more powerful clients.
 
-Serverless applications, as described in chapter \ref{cha:serverless}, typically rely heavily on third party cloud services (BaaS) interspersed with custom logic in form of serverless functions. In a traditional layered web application architecture, as described by \textcite{robert2016serverlessarchitectures}, interaction with these external services would be handled by a server application that sits between the client and the service layers. Following this model, the client can be limited in functionality whereas the server application plays a larger role. \textcite{sbarski2017serverless} point out that the model of the backend as a gateway between client and services doesn't match well with the serverless paradigm. First of all, using FaaS as a middle layer in front of cloud resources directly translates into extra costs: on top of paying for the cloud service call, one has to pay for function invocation and execution for the duration of the network call as well as data transfer between the service and the FaaS provider. Secondly, a middle layer of FaaS results into extra network hops, thus increasing latency and reducing user experience. \textcite{sbarski2017serverless} thus advise against routing everything through a FaaS layer, and advocates building thick clients that communicate directly with cloud services and orchestrate workflows between them.
+Serverless applications, as described in chapter \ref{cha:serverless}, typically rely heavily on third party cloud services (BaaS) interspersed with custom logic in form of serverless functions. In a traditional three-tier web application architecture interaction with these external services would be handled by a server application that sits between the client and the service layers \parencite{robert2016serverlessarchitectures}. Following this model, the client can be limited in functionality whereas the server application plays a larger role. \textcite{sbarski2017serverless} point out that the model of the backend as a gatekeeper between client and services is in conflict with the serverless paradigm. First of all, using FaaS as a middle layer in front of cloud resources directly translates into extra costs: on top of paying for the cloud service call, one has to pay for function invocation and execution for the duration of the network call as well as data transfer between the service and the FaaS provider. Secondly, a middle layer of FaaS results into extra network hops which increases latency and reduces user experience. \textcite{sbarski2017serverless} thus advise against routing everything through a FaaS layer, and advocate building thick clients that communicate directly with cloud services and orchestrate workflows between them.
 
 In addition to the cost benefit, a thicker client has the advantage of improved changeability and separation of concerns, as the single monolithic backend application is replaced by isolated and self-contained components. Doing away with the central arbiter of a server application does come with its trade-offs, including a need for distributed monitoring and further reliance on the security of the cloud services. Importantly not all functionality can or should be moved to the client: security, performance or consistency requirements among others can necessitate a server-side implementation. \parencite{robert2016serverlessarchitectures}.
 
@@ -89,11 +89,11 @@ The Thick Client pattern depends on fine-grained, distributed, request-level aut
 
 \section{Event patterns} \label{sec:eventPatterns}
 
-Event patterns concern asynchronous messaging workflows.
+Event patterns deal with workflows that are triggered by external events and processed on-demand and asynchronously. FaaS platforms are a good fit for event-driven workflows as they offer integrations to a wide range of event sources as well as non-blocking invocation methods.
 
 \subsection{Event Processor} \label{subsec:Eventprocessing}
 
-\textbf{Problem:} How to execute a piece of code on-demand as a result of an event occurrence?
+\textbf{Problem:} How to execute a piece of business logic on-demand as a result of an event occurrence?
 
 \begin{figure}[h]
   \centering
@@ -102,9 +102,13 @@ Event patterns concern asynchronous messaging workflows.
   \label{fig:patternEventProcessor}
 \end{figure}
 
-\textbf{Solution:} Subscribe a serverless function to a cloud event source.
+\textbf{Solution:} Subscribe a serverless function to a cloud event such as a file upload or database change.
 
-The pattern minimizes costs by invoking functions only when events occur, and enables scalability by automatically invoking functions based on the number of events \parencite{hong18securingviaserverlesspatterns}.
+The Event Processor pattern consists of one or more serverless functions subscribing to an event from a cloud resource in a way that when the event occurs, the subscribed function is triggered and passed the event context as parameters \parencite{hong18securingviaserverlesspatterns}. Serverless platforms typically offer a number of integration points to events originating from other platform services. For example AWS Lambda functions can be triggered by file uploads, database change events, message queue and notification services, IoT events and many others \parencite{awslambda0218}.
+
+\textcite{baldini17currentTrends} mention thumbnail generation triggered by image upload as an exemplary use case of serverless event processing: a bursty, compute-intensive task triggered on-demand by a cloud event. A traditional approach would be to implement a poller system that regularly checks for new images and generates thumbnails as images are detected. Such a system would require constant operation, and depending on polling interval the design leads to either extra network traffic or potentially long delay between event occurrence and processing. The design is especially wasteful in cases where new images come in infrequently. The serverless event processing pattern, in turn, can bring considerable cost benefit in case of infrequent or irregular workflows as computation is only ran when necessary \parencite{hong18securingviaserverlesspatterns}. Another advantage is scalability, as functions are automatically invoked as per the number of events: a large number of events occurring at once leads to a similarly large number of serverless functions executing in parallel \parencite{hong18securingviaserverlesspatterns}.
+
+One point to keep in mind when implementing serverless event processors is that some cloud event sources operate in at-least-once message delivery semantics: due to the highly distributed and eventually consistent nature of cloud platforms, events are guaranteed to be triggered at least once, not exactly once \parencite{awslambda0218}. This means that the triggered serverless function should in effect act idempotently, meaning that multiple executions with the same context result in the same side effects.
 
 \subsection{Periodic Invocation} \label{subsec:periodicInvocation}
 
