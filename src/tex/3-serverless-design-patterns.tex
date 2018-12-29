@@ -126,7 +126,7 @@ Another point to keep in mind when implementing the Event Processor pattern is t
 
 This pattern represents an arrangement where a serverless function is invoked periodically by a scheduler, akin to a cron task in Unix-based systems. First, the scheduler invokes the subscribed function according to its configuration. Second, the function carries out its task. Finally, after execution the function can report execution result out to a notification channel, store it in database or shut down if we're not interested in the outcome. The pattern is both conceptually simple and easy to implement, as all the major serverless providers offer integration to a cloud-based scheduler such as AWS CloudWatch Events \parencite{awslambda0218}. Potential use cases include periodical backups, compliance checks, service status or health checks and database cleanup tasks, to name a few. \parencite{hong18securingviaserverlesspatterns}
 
-execution of background jobs that are not tied to any specific event, not latency-critical
+% execution of background jobs that are not tied to any specific event, not latency-critical
 
 \subsection{Polling Event Processor} \label{subsec:PollingEventProcessor}
 
@@ -134,8 +134,8 @@ execution of background jobs that are not tied to any specific event, not latenc
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.4\textwidth]{patterns/periodic-invocation.png}
-  \caption{Polling Event Processor TODO fix image}
+  \includegraphics[width=0.4\textwidth]{patterns/polling-event-processor.png}
+  \caption{Polling Event Processor}
   \label{fig:PollingEventProcessor}
 \end{figure}
 
