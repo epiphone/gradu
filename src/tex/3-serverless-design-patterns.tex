@@ -4,11 +4,9 @@ In this chapter we take a look at serverless design patterns. Design patterns de
 
 Enterprise integration patterns, as serverless is all about integrations. \textcite{hohpe2004enterprise} present a number of asynchronous messaging architectures in the seminal book on EIP. While predating the whole serverless phenomenon the patterns are still relevant. Hohpe even demonstrated implementing one of his patterns on top of Google's serverless platform \href{http://www.enterpriseintegrationpatterns.com/ramblings/google_cloud_functions.html}{in a blog post}. E.g. patterns like Idempotent Receiver, Dead-letter Channel as well as the 4 more general integration styles of File Transfer, Shared Database, RPC and Messaging. Many patterns implemented internally by FaaS platforms already!
 
-SOA patterns: FaaS functions are self-contained nanoservices these might have some relevance. SOA patterns \parencite{rotem12soa} include Saga, Decoupled Invocation and others. As with EIP, some patterns are already implemented by the FaaS platform.
+SOA patterns: as FaaS functions are self-contained nanoservices these might have some relevance. SOA patterns \parencite{rotem12soa} include Saga, Decoupled Invocation and others. As with EIP, some patterns are already implemented by the FaaS platform.
 
 FaaSification: \textcite{spillner17transformpython} describes an automated approach to transform monolithic Python code into modular FaaS units by partially automated decomposition. Doesn't really seem suitable for the web application migration process covered in this thesis but worth mentioning.
-
-TODO: emerging application patterns \parencite{ritter17emergingPatterns}
 
 \section{Composition patterns} \label{sec:compositionPatterns}
 
@@ -29,12 +27,11 @@ The following patterns concern serverless function composition: how to compose a
 
 This pattern involves instantiating a routing function that contains all the necessary information to route requests to other functions. All function invocations are directed to the routing function, which in turn invokes target functions according to request payload. The routing function finally passes target function return value over to the client.
 
-It's notable that FaaS platforms commonly provide API gateways and other tools for routing, for example the Amazon API Gateway \parencite{awslambda0218}. These tools are however mostly limited to path-based routing, whereas a routing function can be implemented to support more dynamic use cases. Also interestingly, according to an industry survey \parencite{leitner18industrialpractice}, some practicioners opted for the Routing Function pattern over platform API gateway services as they found the latter cumbersome to manage. \textcite{sbarski2017serverless} similarly postulate that the pattern ``can simplify the API Gateway implementation, because you
-may not want or need to create a RESTful URI for every type of request''. One advantage of the pattern is that the routing function can be used to supplement request payload with additional context or metadata. A centralized routing function also means that all routing configuration is found in one place, and that public-facing API routes only need to be configured for one function, not all of them \parencite{leitner18industrialpractice}.
+It's notable that FaaS platforms commonly provide API gateways and other tools for routing, for example the Amazon API Gateway \parencite{awslambda0218}. These tools are however mostly limited to path-based routing, whereas a routing function can be implemented to support more dynamic use cases. Also interestingly, according to an industry survey \parencite{leitner18industrialpractice}, some practicioners opted for the Routing Function pattern over platform API gateway services as they found the latter cumbersome to manage. \textcite{sbarski2017serverless} similarly postulate that the pattern ``can simplify the API Gateway implementation, because you may not want or need to create a RESTful URI for every type of request''. One advantage of the pattern is that the routing function can be used to supplement request payload with additional context or metadata. A centralized routing function also means that all routing configuration is found in one place, and that public-facing API routes only need to be configured for one function, not all of them \parencite{leitner18industrialpractice}.
 
-The pattern's major disadvantage is double billing, as the routing function essentially has to block and wait until the target function finishes execution. Additionally, as routing is implemented in function code level, information about function control flow gets hidden in implementation rather than being accessible from configuration \parencite{leitner18industrialpractice}.
+The pattern's major disadvantage is double billing, as the routing function essentially has to block and wait until the target function finishes execution. Additionally, as routing is implemented at function code level, information about function control flow gets hidden in implementation rather than being accessible from configuration \parencite{leitner18industrialpractice}.
 
-The Routing Function pattern is related to the OOP Command pattern, which is used to decouple the caller of the operation from the entity that carries out the processing via an intermediary command object \parencite{gamma94designPatterns}. A related enterprise integration pattern is Content-Based Router, which ``examines the message content and routes the message onto a different channel based on data contained in the message'' \parencite{hohpe2004enterprise}. \textcite{hohpe2004enterprise} caution that the router should be made easy to maintain as it can become a point of frequent configuration.
+The Routing Function pattern is related to the OOP Command pattern, which is used to decouple caller of the operation from the entity that carries out the processing via an intermediary command object \parencite{gamma94designPatterns}. A related enterprise integration pattern is Content-Based Router, which ``examines the message content and routes the message onto a different channel based on data contained in the message'' \parencite{hohpe2004enterprise}. \textcite{hohpe2004enterprise} caution that the router should be made easy to maintain as it can become a point of frequent configuration.
 
 \subsection{Function Chain} \label{subsec:functionChain}
 
@@ -95,7 +92,7 @@ Event patterns deal with workflows that are triggered by external events and pro
 
 \subsection{Event Processor} \label{subsec:Eventprocessing}
 
-\textbf{Problem:} How to execute a piece of business logic on-demand as a result of an event occurrence?
+\textbf{Problem:} How to execute a task on-demand as a result of event occurrence?
 
 \begin{figure}[h]
   \centering
@@ -104,26 +101,49 @@ Event patterns deal with workflows that are triggered by external events and pro
   \label{fig:patternEventProcessor}
 \end{figure}
 
-\textbf{Solution:} Subscribe a serverless function to a cloud event such as a file upload or database change.
+\textbf{Solution:} Subscribe a serverless function to a cloud event such as file upload or database change.
 
-The Event Processor pattern consists of one or more serverless functions subscribing to an event from a cloud resource in a way that when the event occurs, the subscribed function is triggered and passed the event context as parameters \parencite{hong18securingviaserverlesspatterns}. Serverless platforms typically offer a number of integration points to events originating from other platform services. For example AWS Lambda functions can be triggered by file uploads, database change events, message queue and notification services, IoT events and many others \parencite{awslambda0218}.
+The Event Processor pattern consists of one or more serverless functions subscribing to an event from a cloud resource in a way that when the event occurs, the subscribed function is triggered and passed the event context as a parameter \parencite{hong18securingviaserverlesspatterns}. Serverless platforms typically offer a number of integration points to events originating from other platform services. For example AWS Lambda functions can be triggered by file uploads, database change events, message queue and notification services, IoT events and others \parencite{awslambda0218}.
 
 \textcite{baldini17currentTrends} mention thumbnail generation triggered by image upload as an exemplary use case of serverless event processing: a bursty, compute-intensive task triggered on-demand by a cloud event. A traditional approach would be to implement a poller system that regularly checks for new images and generates thumbnails as images are detected. Such a system would require constant operation, and depending on polling interval the design leads to either extra network traffic or potentially long delay between event occurrence and processing. The design is especially wasteful in cases where new images come in infrequently. The serverless event processing pattern, in turn, can bring considerable cost benefit in case of infrequent or irregular workflows as computation is only ran when necessary \parencite{hong18securingviaserverlesspatterns}. Another advantage is scalability, as functions are automatically invoked as per the number of events: a large number of events occurring at once leads to a similarly large number of serverless functions executing in parallel \parencite{hong18securingviaserverlesspatterns}.
 
-One point to keep in mind when implementing serverless event processors is that some cloud event sources operate in at-least-once message delivery semantics: due to the highly distributed and eventually consistent nature of cloud platforms, events are guaranteed to be triggered at least once, not exactly once \parencite{awslambda0218}. This means that the triggered serverless function should in effect act idempotently, meaning that multiple executions with the same context result in the same side effects.
+The Event Processor can be seen as a serverless form of the Event-Driven Consumer enterprise integration pattern: a message consumer that sits dormant with no active threads until invoked by the messaging system. In essence, the pattern bridges the gap between external events and application-specific callbacks. A notable feature of an Event-Driven Consumer is that it automatically consume messages as soon as they become available. This in effect means that the consumer has no control on the consumption rate: see Polling Event Processor in section \ref{subsec:PollingEventProcessor} for an alternative. \parencite{hohpe2004enterprise}
 
-\subsection{Periodic Invocation} \label{subsec:periodicInvocation}
+Another point to keep in mind when implementing the Event Processor pattern is that some cloud event sources operate in at-least-once message delivery semantics: due to the highly distributed and eventually consistent nature of cloud platforms, events are guaranteed to be triggered at least once, not exactly once \parencite{awslambda0218}. This means that the triggered serverless function should in effect act idempotently, meaning that multiple executions with the same context result in the same side effects.
 
-\textbf{Problem:} How to execute a piece of code periodically?
+\subsection{Periodic Invoker} \label{subsec:periodicInvocation}
+
+\textbf{Problem:} How to execute a task periodically in predefined intervals?
 
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.4\textwidth]{patterns/periodic-invocation.png}
-  \caption{Periodic Invocation}
+  \caption{Periodic Invoker}
   \label{fig:patternPeriodicInvocation}
 \end{figure}
 
-\textbf{Solution:} Trigger function invocations in regular intervals using a scheduler.
+\textbf{Solution:} Subscribe a serverless function to a scheduler.
+
+This pattern represents an arrangement where a serverless function is invoked periodically by a scheduler, akin to a cron task in Unix-based systems. First, the scheduler invokes the subscribed function according to its configuration. Second, the function carries out its task. Finally, after execution the function can report execution result out to a notification channel, store it in database or shut down if we're not interested in the outcome. The pattern is both conceptually simple and easy to implement, as all the major serverless providers offer integration to a cloud-based scheduler such as AWS CloudWatch Events \parencite{awslambda0218}. Potential use cases include periodical backups, compliance checks, service status or health checks and database cleanup tasks, to name a few. \parencite{hong18securingviaserverlesspatterns}
+
+execution of background jobs that are not tied to any specific event, not latency-critical
+
+\subsection{Polling Event Processor} \label{subsec:PollingEventProcessor}
+
+\textbf{Problem:} How to react to a state change in an external service that doesn't offer an actual event source?
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.4\textwidth]{patterns/periodic-invocation.png}
+  \caption{Polling Event Processor TODO fix image}
+  \label{fig:PollingEventProcessor}
+\end{figure}
+
+\textbf{Solution:} Use the Periodic Invoker pattern to create a synchronous event processor.
+
+The Event Processor pattern (section \ref{subsec:Eventprocessing}) is used to perform a task in reaction to some state change in another system. The pattern depends on the external system to actively invoke the subscribed function when said state change occurs. Not all systems however are capable of performing such callbacks on state changes, which renders the pattern infeasible in some cases. To work around this limitation we can combine the Event Processor and Periodic Invoker patterns (section \ref{subsec:periodicInvocation}) to essentially implement an event-driven integration point in front of a service where no such event source originally exists. The Polling Event Consumer pattern consists of a Periodic Invoker that repeatedly checks the state of another service and performs a task when found state matches some condition. The task performed can be either implemented in the polling function itself or separated to another function that the poller invokes.
+
+The Polling Event Processor is equivalent to the enterprise integration pattern of Polling Consumer, where a receiver synchronously polls for a message, processes it and then polls for another. As well as offering eventful integration to non-eventful services, the pattern has the advantage of controlling its consumption rate. Whereas the Event Processor executes tasks as soon as events occur, the Polling Event Processor explicitly polls for new events when it is ready for them. The polling interval can also be configured to implement batching. As a downside, a sparse polling interval leads to increased latency between event occurrence and task execution. On the other hand a more fine-grained polling interval results in wasted resources when there are no events to consume. In short, ``polling enables the client to control the rate of consumption, but wastes resources when there’s nothing to consume.'' \parencite{hohpe2004enterprise}
 
 \subsection{Fan-out Events} \label{subsec:FanoutEvents}
 
