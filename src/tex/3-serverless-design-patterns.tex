@@ -46,9 +46,30 @@ The Routing Function pattern is related to the OOP Command pattern, which is use
 
 \textbf{Solution:} Split the task into separate functions that are chained together sequentially.
 
-The Function Chain pattern comprises of an initial function and any number of subsequent functions. The initial function begins computation while keeping track of remaining execution time. In AWS Lambda for example the execution context contains information on how many milliseconds are left before termination \parencite{awslambda0218}. Upon reaching its duration limit, the initial function invokes another function asynchronously, passing along as parameters any state necessary to continue task computation. Since the intermediary invocation is asynchronous (``fire-and-forget''), the initial function can terminate without affecting the next function in chain.
+The Function Chain comprises of an initial function and any number of subsequent functions. The initial function begins computation while keeping track of remaining execution time. Foe example in AWS Lambda the execution context contains information on how many milliseconds are left before termination \parencite{awslambda0218}. Upon reaching its duration limit, the initial function invokes another function asynchronously, passing along as parameters any state necessary to continue task computation. Since the intermediary invocation is asynchronous (``fire-and-forget''), the initial function can terminate without affecting the next function in chain.
 
 The Function Chain pattern is in effect a workaround over the duration limit that FaaS platforms place on function execution \parencite{leitner18industrialpractice}. The pattern was reported to be used at least occasionally in an industry study by \textcite{leitner18industrialpractice}. Its disadvantages include strong coupling between chained functions, increase in the number of deployment units and the overhead of transferring intermediate execution state and parameters between each chained function. \textcite{leitner18industrialpractice} also note that splitting some types of tasks into multiple functions can be difficult. Finally, as the pattern relies on asynchronous invocation, the last function in chain has to persist computation result into an external storage for the client to access it, which brings in further dependencies.
+
+\subsection{Fan-out/Fan-in} \label{subsec:FanoutFanin}
+
+\textbf{Problem:} How to execute operations that exceed serverless resource limits?
+
+% TODO visualize
+% \begin{figure}[h]
+%   \centering
+%   \includegraphics[width=0.4\textwidth]{patterns/fan-out-fan-in.png}
+%   \caption{Fan-out/Fan-in}
+%   \label{fig:fantOutFanIn}
+% \end{figure}
+
+\textbf{Solution:} Subscribe multiple functions to a notification service, publish notification on event occurrence.
+
+
+Split event handling into parallel functions.
+A function distributes task among parallel worker functions. Workers can optionally "fan in" to a persistence layer where result is further aggregated
+
+Composed Message Processor or Aggregator in \textcite{hohpe2004enterprise}.
+workaround over 15 minute limit
 
 \subsection{State Machine} \label{subsec:stateMachine}
 
@@ -143,29 +164,27 @@ The Event Processor pattern (section \ref{subsec:Eventprocessing}) is used to pe
 
 The Polling Event Processor is equivalent to the EIP pattern of Polling Consumer, where a receiver synchronously polls for a message, processes it and then polls for another. As well as offering eventful integration to non-eventful services, the pattern has the advantage of controlling its consumption rate. Whereas the Event Processor executes tasks as soon as events occur, the Polling Event Processor explicitly polls for new events when it is ready for them. The polling interval can also be configured to implement batching. As a downside, a sparse polling interval leads to increased latency between event occurrence and task execution. On the other hand a more fine-grained polling interval results in wasted resources when there are no events to consume. In short, ``polling enables the client to control the rate of consumption, but wastes resources when there’s nothing to consume.'' \parencite{hohpe2004enterprise}
 
-\subsection{Event Fan-out} \label{subsec:FanoutEvents}
+\subsection{Event Broadcast} \label{subsec:EventBroadcast}
 
 \textbf{Problem:} How to invoke multiple parallel functions as a result of a single event occurrence?
 
 % TODO visualize
 % \begin{figure}[h]
 %   \centering
-%   \includegraphics[width=0.4\textwidth]{patterns/event-fan-out.png}
-%   \caption{Event Fan-out}
-%   \label{fig:eventFanOut}
+%   \includegraphics[width=0.4\textwidth]{patterns/event-broadcast.png}
+%   \caption{Event Broadcast}
+%   \label{fig:eventBroadcast}
 % \end{figure}
 
 \textbf{Solution:} Subscribe multiple functions to a notification service, publish notification on event occurrence.
 
-The Event Processor pattern \ref{subsec:Eventprocessing} is applicable within cases of a 1-to-1 relationship between events and tasks, as exemplified above with image upload triggering thumbnail generation. In other cases, however, a single event can result in multiple independent tasks. For example the image upload event could as well trigger a database update and a notification email, adding up to three self-contained and parallel tasks. Most event sources however only support invoking one function per event, which leaves us with a couple of options. First, we could subscribe the image upload event to a new function that in turn asynchronously invokes any number of processor functions: a sort of a parallel Sorting Function \label{subsec:routingFunction}. This approach comes with the operational overhead of needing to set up and maintain an additional function per each event fan-out. An alternative solution is take advantage of the platform services and use a cloud-based messaging service that supports multiple subscribers per channel, such as the AWS Simple Notification Service \parencite{awslambda0218}. Now instead of subscribing a function directly to an event source, functions subscribe to a message channel that the event source publishes a message to upon event occurrence. In addition to achieving parallel fan-out to multiple functions, the pattern has the added benefit of loosed coupling between event sources and handler functions. \parencite{sbarski2017serverless}
+The Event Processor pattern \ref{subsec:Eventprocessing} is applicable within cases of a 1-to-1 relationship between events and tasks, as exemplified above with image upload triggering thumbnail generation. However in other cases a single event can result in multiple independent tasks. For example the image upload event could as well trigger a database update and a notification email, adding up to three self-contained and parallel tasks. Most event sources only support invoking one function per event which leaves us with a couple of options. First, we could set up a new function that subscribes to the image upload event and in turn asynchronously invokes any number of processor functions, as a sort of a parallel Routing Function \label{subsec:routingFunction}. This approach comes with the operational overhead of needing to set up and maintain an additional function per each event broadcast. An alternative solution is to utilize a publish-subscribe channel such as the AWS Simple Notification Service \parencite{awslambda0218}. The key feature of a publish-subscribe channel is that any number of listeners can subscribe to a single channel, which can be used to overcome the 1-to-1 relationship between event sources and functions. Now instead of subscribing a function directly to an event source, functions subscribe to a message channel that the event source publishes a message to upon event occurrence. In addition to achieving parallel fan-out to multiple functions, the pattern has the added benefit of loosed coupling between event sources and handler functions. \parencite{sbarski2017serverless}
 
-\subsection{Fan-out/Fan-in} \label{subsec:FanoutFanin}
+The Event Broadcast is derived from the Publish-Subscribe Channel EIP pattern \parencite{hohpe2004enterprise} and the Observer OOP pattern \parencite{gamma94designPatterns}.
 
-Split event handling into parallel functions.
+% \subsection{Pipes and Filters} \label{subsec:PipesAndFilters}
 
-\subsection{Pipes and Filters} \label{subsec:PipesAndFilters}
-
-Handle event stream with a pipeline of small functions.
+% Handle event stream with a pipeline of small functions.
 
 \section{API patterns} \label{sec:apiPatterns}
 
@@ -212,7 +231,7 @@ Minimize attack surface by reducing function access roles to bare minimum.
 
 Address FaaS performance issues.
 
-\subsection{Function warming} \label{subsec:FunctionWarming}
+\subsection{Function Warmer} \label{subsec:FunctionWarmer}
 
 Ping a function intermittently to avoid cold starts.
 
