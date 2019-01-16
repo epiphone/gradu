@@ -1,6 +1,6 @@
 \chapter{Serverless design patterns} \label{cha:patterns}
 
-In this chapter we take a look at serverless design patterns. Design patterns describe commonly accepted, reusable solutions to recurring problems \parencite{hohpe2004enterprise}. A design pattern is not a one-size-fits-all solution directly translatable into software code, but rather a formalized best practice that presents a common problem in its context along a general arrangement of elements that solves it \parencite{gamma94designPatterns}. The patterns in this chapter are sourced from scientific literature on serverless computing as well as cloud provider documentation. Literature on object-oriented patterns (OOP) \parencite{gamma94designPatterns}, SOA patterns \parencite{rotem12soa} and enterprise integration patterns (EIP) \parencite{hohpe2004enterprise} was also reviewed for applicable practices.
+In this chapter we take a look at serverless design patterns. Design patterns describe commonly accepted, reusable solutions to recurring problems \parencite{hohpe2004enterprise}. A design pattern is not a one-size-fits-all solution directly translatable into software code, but rather a formalized best practice that presents a common problem in its context along a general arrangement of elements that solves it \parencite{gamma94designPatterns}. The patterns in this chapter are sourced from scientific literature on serverless computing as well as cloud provider documentation \parencite{aws18serverlessLens}. Literature on object-oriented patterns (OOP) \parencite{gamma94designPatterns}, SOA patterns \parencite{rotem12soa} and enterprise integration patterns (EIP) \parencite{hohpe2004enterprise} was also reviewed for applicable practices.
 
 Enterprise integration patterns (EIP), as serverless is all about integrations. \textcite{hohpe2004enterprise} present a number of asynchronous messaging architectures in the seminal book on EIP. While predating the whole serverless phenomenon the patterns are still relevant. Hohpe even demonstrated implementing one of his patterns on top of Google's serverless platform \href{http://www.enterpriseintegrationpatterns.com/ramblings/google_cloud_functions.html}{in a blog post}. E.g. patterns like Idempotent Receiver, Dead-letter Channel as well as the 4 more general integration styles of File Transfer, Shared Database, RPC and Messaging. Many patterns implemented internally by FaaS platforms already!
 
@@ -86,6 +86,8 @@ The Fan-out/Fan-in pattern lends itself well to tasks that are easily divisible 
 \textcite{hong18securingviaserverlesspatterns} describe the State Machine pattern as ``building a complex, stateful procedure by coordinating a collection of discrete Lambda functions using a tool such as AWS Step Functions''. These orchestration tools consist of a collection of workflow states and transitions between them, with each state having its associated function and event sources -- essentially a serverless a state machine \parencite{cncf18serverlessWG}. Figure \ref{fig:patternStateMachine} could for example represent a workflow where the first function attempts a database insert, the second function checks whether the operation succeeded, and depending on the result either the operation is retried or execution is finished. The advantage of using provider tooling for workflow execution is that there's no need for external storage as the orchestrator keeps track of workflow state. Downsides on the other hand include extra cost arising from orchestration tooling as well as the overhead of managing workflow descriptions.
 
 \textcite{lopez18orchestration} provide a comparison of three major FaaS orchestration systems: AWS Step Functions, IBM Composer and Azure Durable Functions. The compared systems typically support function chaining, conditional branching, retries and parallel execution, with workflows defined either in a Domain-Specific Language or directly in code. One restriction in Amazon's orchestrator implementation is that a composition cannot be synchronously invoked and is thus not composable in itself: a state machine cannot contain another state machine. AWS Step Functions was also the least programmable among the compared systems, but on the other hand the most mature and performant. Finally, the authors observe that none of the provider-managed orchestration systems are prepared for parallel programming, with considerable overheads in concurrent invocations.
+
+TODO Saga pattern in SOA \parencite{rotem12soa}.
 
 \subsection{Thick Client} \label{subsec:thickClient}
 
@@ -181,29 +183,25 @@ The Event Processor pattern \ref{subsec:Eventprocessing} is applicable within ca
 
 The Event Broadcast is derived from the Publish-Subscribe Channel EIP pattern \parencite{hohpe2004enterprise} and the Observer OOP pattern \parencite{gamma94designPatterns}.
 
-% \subsection{Pipes and Filters} \label{subsec:PipesAndFilters}
-
-% Handle event stream with a pipeline of small functions.
-
 \section{API patterns} \label{sec:apiPatterns}
 
 Integrating with external systems.
 
-\subsection{API composition} \label{subsec:apiComposition}
+\subsection{API Composition} \label{subsec:apiComposition}
 
 Hide multiple API calls under a single function.
 
-\subsection{API aggregation} \label{subsec:apiAggregation}
+\subsection{API Aggregation} \label{subsec:apiAggregation}
 
 Hide a sequential multi-step API call under a single function.
 
-\subsection{API async} \label{subsec:apiAsync}
+\subsection{API Async} \label{subsec:apiAsync}
 
 Turn a synchronized API into an async one.
 
 \subsection{Legacy API Proxy/Staged migration} \label{subsec:legacyApi}
 
-Replace a legacy API with a new one step by step, a.k.a. Strangler.
+Replace a legacy API with a new one step by step, a.k.a. Strangler \parencite{microsoft18cloudPatterns}.
 
 \subsection{Separate FaaS handler from core logic} \label
 {subsec:separateHandler}
