@@ -81,13 +81,13 @@ The Fan-out/Fan-in pattern lends itself well to tasks that are easily divisible 
   \label{fig:patternStateMachine}
 \end{figure}
 
-\textbf{Solution:} Split a task into a number of discrete functions and coordinate its execution with an orchestration tool.
+\textbf{Solution:} Split a task into a number of discrete functions and coordinate their execution with an orchestration tool.
 
 \textcite{hong18securingviaserverlesspatterns} describe the State Machine pattern as ``building a complex, stateful procedure by coordinating a collection of discrete Lambda functions using a tool such as AWS Step Functions''. These orchestration tools consist of a collection of workflow states and transitions between them, with each state having its associated function and event sources -- essentially a serverless a state machine \parencite{cncf18serverlessWG}. Figure \ref{fig:patternStateMachine} could for example represent a workflow where the first function attempts a database insert, the second function checks whether the operation succeeded, and depending on the result either the operation is retried or execution is finished. The advantage of using provider tooling for workflow execution is that there's no need for external storage as the orchestrator keeps track of workflow state. Downsides on the other hand include extra cost arising from orchestration tooling as well as the overhead of managing workflow descriptions.
 
-\textcite{lopez18orchestration} provide a comparison of three major FaaS orchestration systems: AWS Step Functions, IBM Composer and Azure Durable Functions. The compared systems typically support function chaining, conditional branching, retries and parallel execution, with workflows defined either in a Domain-Specific Language or directly in code. One restriction in Amazon's orchestrator implementation is that a composition cannot be synchronously invoked and is thus not composable in itself: a state machine cannot contain another state machine. AWS Step Functions was also the least programmable among the compared systems, but on the other hand the most mature and performant. Finally, the authors observe that none of the provider-managed orchestration systems are prepared for parallel programming, with considerable overheads in concurrent invocations.
+\textcite{lopez18orchestration} compare three major FaaS orchestration systems: AWS Step Functions, IBM Composer and Azure Durable Functions. The compared systems typically support function chaining, conditional branching, retries and parallel execution, with workflows defined either in a Domain-Specific Language or directly in code. One restriction in Amazon's orchestrator is that a composition cannot be synchronously invoked and is thus not composable in itself: a state machine cannot contain another state machine. AWS Step Functions was also the least programmable among the compared systems, but on the other hand the most mature and performant. Finally, the authors observe that none of the provider-managed orchestration systems are prepared for parallel programming, with considerable overheads in concurrent invocation.
 
-TODO Saga pattern in SOA \parencite{rotem12soa}.
+A SOA pattern analogous to serverless orchestration tools is the Orchestrator, in which ``an external workflow engine activates a sequence (simple or compound) of services to provide a complete business service''. The Orchestrator aims to keep business processes agile and adaptable by externalizing them from service implementations: instead of hard-coding service interactions they are defined, edited and executed within a workflow engine. Used properly, the Orchestrator can add a lot of flexibility to the system. Difficulty however lies in implementing services as composable and reusable workflow steps while still keeping them useful as autonomous services. \parencite{rotem12soa}.
 
 \subsection{Thick Client} \label{subsec:thickClient}
 
@@ -192,6 +192,8 @@ Integrating with external systems.
 \subsection{API Composition} \label{subsec:apiComposition}
 
 Hide multiple API calls under a single function.
+
+TODO SOA Transactional Service \parencite{rotem12soa}. Possibly merge with API Aggregation?
 
 \subsection{API Aggregation} \label{subsec:apiAggregation}
 
