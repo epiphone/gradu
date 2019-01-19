@@ -228,7 +228,7 @@ Sign tokens for clients to directly access resources.
 
 \subsection{Least privilege IAM role} \label{subsec:LeastprivilegeIAMrole}
 
-Minimize attack surface by reducing function access roles to bare minimum.
+Minimize attack surface by reducing function access roles to bare minimum. Mentioned in \textcite{aws18serverlessLens}.
 
 \section{Performance and scalability patterns} \label{sec:perfPatterns}
 
@@ -244,7 +244,7 @@ Choose maximum memory allocation to access faster CPU resources and improve cold
 
 \subsection{Singleton} \label{subsec:Singleton}
 
-Take advantage of function execution context to avoid reinitializing function dependencies.
+Take advantage of function execution context to avoid reinitializing function dependencies. Check \textcite{aws18serverlessLens}.
 
 \section{Resiliency and availability patterns} \label{sec:resiliencyPatterns}
 
@@ -256,7 +256,7 @@ Isolate high-latency code into separate functions to avoid resource contention.
 
 \subsection{Flow control/throttling} \label{subsec:Flow control/throttling}
 
-Throttle invocations to avoid DDoSing yourself.
+Throttle invocations to avoid DDoSing yourself. Lambda concurrency limit \textcite{aws18serverlessLens}.
 
 \subsection{Circuit breaker} \label{subsec:Circuit breaker}
 
