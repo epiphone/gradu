@@ -183,11 +183,12 @@ The Polling Event Processor is equivalent to the EIP pattern of Polling Consumer
 
 The Event Processor pattern \ref{subsec:Eventprocessing} is applicable within cases of a 1-to-1 relationship between events and tasks, as exemplified above with image upload triggering thumbnail generation. However in other cases a single event can result in multiple independent tasks. For example the image upload event could as well trigger a database update and a notification email, adding up to three self-contained and parallel tasks. Most event sources only support invoking one function per event which leaves us with a couple of options. First, we could set up a new function that subscribes to the image upload event and in turn asynchronously invokes any number of processor functions, as a sort of a parallel Routing Function \label{subsec:routingFunction}. This approach comes with the operational overhead of needing to set up and maintain an additional function per each event broadcast. An alternative solution is to utilize a publish-subscribe channel such as the AWS Simple Notification Service \parencite{awslambda0218}. The key feature of a publish-subscribe channel is that any number of listeners can subscribe to a single channel, which can be used to overcome the 1-to-1 relationship between event sources and functions. Now instead of subscribing a function directly to an event source, functions subscribe to a message channel that the event source publishes a message to upon event occurrence. In addition to achieving parallel fan-out to multiple functions, the pattern has the added benefit of loosed coupling between event sources and handler functions. \parencite{sbarski2017serverless}
 
-The Event Broadcast is derived from the Publish-Subscribe Channel EIP pattern \parencite{hohpe2004enterprise} and the Observer OOP pattern \parencite{gamma94designPatterns}.
+The Event Broadcast is derived from the Publish-Subscribe Channel EIP pattern \parencite{hohpe2004enterprise} and the Observer OOP pattern \parencite{gamma94designPatterns}. % TODO expand on this
 
 \section{API patterns} \label{sec:apiPatterns}
 
 Integrating with external systems.
+% TODO expand, more fitting as integration patterns?
 
 \subsection{API Composition} \label{subsec:apiComposition}
 
