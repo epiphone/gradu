@@ -210,15 +210,45 @@ The Aggregator pattern consists of wrapping the required API calls into a single
 
 The Aggregator is largely equivalent to the Gateway Aggregation cloud design pattern \parencite{microsoft18cloudPatterns}. \textcite{baldini17currentTrends} in turn split the pattern into API composition and API aggregation, for combined and sequential request flows respectively. It's worth noting that the Aggregator doesn't rid us of the problem of network failure and incomplete requests, as the aggregating function might still encounter failed requests from downstream services. The pattern rather outsources the risk from service consumer to a backend service, working thus opposite to the Thick Client pattern (\ref{subsec:thickClient}) where service orchestration is driven by consumers. To ensure reliable operation when one of the API requests fails the Aggregator might internally implement the Compensating Transactions cloud design pattern, i.e. pairing each request with a compensating action that is performed in case of failure \parencite{microsoft18cloudPatterns}. The SOA patterns of Transactional Service and the more heavyweight Saga could also be used to enforce transactional guarantees inside the Aggregator \parencite{rotem12soa}.
 
-\subsection{API Async} \label{subsec:apiAsync}
+% \subsection{API Async} \label{subsec:apiAsync}
 
-Turn a synchronized API into an async one.
+% Turn a synchronized API into an async one.
 
-Request/Reaction SOA \parencite{rotem12soa}.
+% Request/Reaction SOA \parencite{rotem12soa}.
 
-\subsection{Legacy API Proxy/Staged migration} \label{subsec:legacyApi}
+\subsection{Proxy} \label{subsec:proxy}
 
-Replace a legacy API with a new one step by step, a.k.a. Strangler \parencite{microsoft18cloudPatterns}.
+\textbf{Problem:} How to make a legacy service easier to consume for modern clients?
+
+TODO visualize
+% \begin{figure}[h]
+%   \centering
+%   \includegraphics[width=0.4\textwidth]{patterns/proxy.png}
+%   \caption{Proxy}
+%   \label{fig:proxy}
+% \end{figure}
+
+\textbf{Solution:} Implement a serverless function as a proxy layer that translates requests between clients and the legacy service.
+
+Applications often need to integrate to a legacy system for some resource or functionality. This requirement might present itself when an outdated but crucial system is in the process of being migrated, or cannot be migrated at all due to reasons of complexity or cost. Legacy systems often suffer from quality issues and use older protocols or data formats, which makes interoperation with modern clients problematic. A client would have to implement support for the legacy technologies and semantics, which might adversely affect its design. \parencite{microsoft18cloudPatterns}
+
+The serverless Proxy pattern essentially ``makes legacy services easier to consume for modern clients that may not support older protocols and data formats'' \parencite{sbarski2017serverless}. The pattern consists of a serverless function that acts as a proxy in front of the legacy service, handling any necessary protocol or data format translation and performing sanity checks. Conversely for client applications, the Proxy offers a clean and modern API for easier consumption. The pattern is also referred to as the Anti-Corruption Layer, alluding to how it works to contain a system's quality issues: ``this layer translates communications between the two systems, allowing one system to remain unchanged while the other can avoid compromising its design and technological approach'' \parencite{microsoft18cloudPatterns}.
+
+\subsection{Strangler} \label{subsec:strangler}
+
+\textbf{Problem:} How to migrate to serverless in a controlled fashion?
+
+TODO visualize
+% \begin{figure}[h]
+%   \centering
+%   \includegraphics[width=0.4\textwidth]{patterns/strangler.png}
+%   \caption{Strangler}
+%   \label{fig:strangler}
+% \end{figure}
+
+\textbf{Solution:} Replace a legacy API with serverless functions step by step.
+
+Strangler \parencite{microsoft18cloudPatterns}.
 
 % \subsection{Separate FaaS handler from core logic} \label
 % {subsec:separateHandler}
@@ -237,9 +267,9 @@ Store function state in external storage.
 
 Sign tokens for clients to directly access resources.
 
-\subsection{Least privilege IAM role} \label{subsec:LeastprivilegeIAMrole}
+% \subsection{Least privilege IAM role} \label{subsec:LeastprivilegeIAMrole}
 
-Minimize attack surface by reducing function access roles to bare minimum. Mentioned in \textcite{aws18serverlessLens}.
+% Minimize attack surface by reducing function access roles to bare minimum. Mentioned in \textcite{aws18serverlessLens}.
 
 \section{Performance and scalability patterns} \label{sec:perfPatterns}
 
@@ -249,9 +279,9 @@ Address FaaS performance issues.
 
 Ping a function intermittently to avoid cold starts.
 
-\subsection{Oversized function} \label{subsec:OversizedFunction}
+% \subsection{Oversized function} \label{subsec:OversizedFunction}
 
-Choose maximum memory allocation to access faster CPU resources and improve cold start latency.
+% Choose maximum memory allocation to access faster CPU resources and improve cold start latency.
 
 \subsection{Singleton} \label{subsec:Singleton}
 
