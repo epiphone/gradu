@@ -230,13 +230,13 @@ TODO visualize
 
 \textbf{Solution:} Implement a serverless function as a proxy layer that translates requests between clients and the legacy service.
 
-Applications often need to integrate to a legacy system for some resource or functionality. This requirement might present itself when an outdated but crucial system is in the process of being migrated, or cannot be migrated at all due to reasons of complexity or cost. Legacy systems often suffer from quality issues and use older protocols or data formats, which makes interoperation with modern clients problematic. A client would have to implement support for the legacy technologies and semantics, which might adversely affect its design. \parencite{microsoft18cloudPatterns}
+Applications often need to integrate to a legacy system for some resource or functionality. This requirement might present itself when an outdated but crucial system is in the process of being migrated, or cannot be migrated at all due to reasons of complexity or cost. Legacy systems might suffer from quality issues and use older protocols or data formats, which makes interoperation with modern clients problematic. A client would have to implement support for legacy technologies and semantics, which might adversely affect its own design goals. \parencite{microsoft18cloudPatterns}
 
-The serverless Proxy pattern essentially ``makes legacy services easier to consume for modern clients that may not support older protocols and data formats'' \parencite{sbarski2017serverless}. The pattern consists of a serverless function that acts as a proxy in front of the legacy service, handling any necessary protocol or data format translation and performing sanity checks. Conversely for client applications, the Proxy offers a clean and modern API for easier consumption. The pattern is also referred to as the Anti-Corruption Layer, alluding to how it works to contain a system's quality issues: ``this layer translates communications between the two systems, allowing one system to remain unchanged while the other can avoid compromising its design and technological approach'' \parencite{microsoft18cloudPatterns}.
+The serverless Proxy pattern essentially ``makes legacy services easier to consume for modern clients that may not support older protocols and data formats'' \parencite{sbarski2017serverless}. The pattern consists of a serverless function that acts as a proxy in front of the legacy service, handling any necessary protocol or data format translation and sanity checks. Conversely for client applications, the Proxy offers a clean and modern API for easier consumption. \textcite{sbarski2017serverless} use the example of offering a JSON API in front of a SOAP service. The pattern is also referred to as the Anti-Corruption Layer, alluding to how it works to contain a system's quality issues: ``this layer translates communications between the two systems, allowing one system to remain unchanged while the other can avoid compromising its design and technological approach'' \parencite{microsoft18cloudPatterns}.
 
 \subsection{Strangler} \label{subsec:strangler}
 
-\textbf{Problem:} How to migrate to serverless in a controlled fashion?
+\textbf{Problem:} How to migrate an existing service to serverless architecture in a controlled fashion?
 
 TODO visualize
 % \begin{figure}[h]
@@ -246,9 +246,11 @@ TODO visualize
 %   \label{fig:strangler}
 % \end{figure}
 
-\textbf{Solution:} Replace a legacy API with serverless functions step by step.
+\textbf{Solution:} Create a façade in front of the legacy API and incrementally replace individual routes with serverless functions.
 
-Strangler \parencite{microsoft18cloudPatterns}.
+Migrating an extensive application to serverless in one go could be a lengthy endeavour and lead to service downtime. Instead, it's often safer to perform a gradual migration where parts of an API are replaced one by one with the old system still running in the background and serving the yet to be migrated features. The problem with running two versions of the same API, however, is that clients need to update their routing every time a single feature is migrated. \parencite{microsoft18cloudPatterns}
+
+The Strangler solves the problem of gradual migration by first wrapping the whole legacy API behind a simple façade that initially just proxies requests to the legacy API as before. Then, as individual features are migrated to serverless, the façade's internal routing is updated to point to the serverless function instead of the legacy API. Thus ``existing features can be migrated to the new system gradually, and consumers can continue using the same interface, unaware that any migration has taken place'' \parencite{microsoft18cloudPatterns}. Eventually when all features have completed migration, the old system can be phased out. \textcite{zambrano18patterns} proposes implementing the façade with an API gateway that matches and proxies all routes, but the Routing Function pattern (\ref{subsec:routingFunction}) is equally applicable here. The author also points out how the Strangler makes it easy to roll back a new implementation in case of any problems, and thus helps to reduce the risk in migration.
 
 % \subsection{Separate FaaS handler from core logic} \label
 % {subsec:separateHandler}
