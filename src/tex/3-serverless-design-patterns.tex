@@ -263,7 +263,21 @@ Managing state and accessing external resources.
 
 \subsection{Externalized State} \label{subsec:externalizedState}
 
-Store function state in external storage.
+\textbf{Problem:} How to store state in an inherently stateless serverless function?
+
+TODO visualize
+% \begin{figure}[h]
+%   \centering
+%   \includegraphics[width=0.4\textwidth]{patterns/externalizedState.png}
+%   \caption{Externalized State}
+%   \label{fig:externalizedState}
+% \end{figure}
+
+\textbf{Solution:} Store function state in external storage.
+
+Serverless functions are, as discussed, stateless by design. Function instances are spawned and terminated ephemerally so that a subsequent instance has no access to any previous instance state. Likewise any parallel instances have no knowledge of each other's state. Not all serverless use cases are purely stateless however, so being able to store and share state is a common requirement in serverless applications as well. This is evidenced by a survey on serverless adoption where two thirds of respondents reported at least sometimes applying the Externalized State pattern, making it by far the most common among the surveyed patterns \parencite{leitner18industrialpractice}.
+
+The Externalized State pattern is a fundamental pattern that simply refers to storing a function's internal state in external storage such as a database or a key-value store. The pattern is used to reliably persist state between sequential function invocations, and on the other hand sharing state between parallel invocations. Imposing state on a stateless paradigm doesn't come free though, as persisting state to external storage induces latency and extra programming effort as well as operational overhead of managing a storage component. \parencite{leitner18industrialpractice}
 
 \subsection{Valet Key} \label{subsec:valetKey}
 
