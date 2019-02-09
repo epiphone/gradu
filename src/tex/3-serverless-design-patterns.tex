@@ -104,7 +104,7 @@ A SOA pattern analogous to serverless orchestration tools is the Orchestrator, i
 
 Serverless applications, as described in chapter \ref{cha:serverless}, typically rely heavily on third party cloud services (BaaS) interspersed with custom logic in form of serverless functions. In a traditional three-tier web application architecture interaction with these external services would be handled by a server application that sits between the client and the service layers \parencite{robert2016serverlessarchitectures}. Following this model, the client can be limited in functionality whereas the server application plays a larger role. \textcite{sbarski2017serverless} point out that the model of the backend as a gatekeeper between client and services is in conflict with the serverless paradigm. First of all, using FaaS as a middle layer in front of cloud resources directly translates into extra costs: on top of paying for the cloud service call, one has to pay for function invocation and execution for the duration of the network call as well as data transfer between the service and the FaaS provider. Secondly, a middle layer of FaaS results into extra network hops which increases latency and reduces user experience. \textcite{sbarski2017serverless} thus advise against routing everything through a FaaS layer, and advocate building thick clients that communicate directly with cloud services and orchestrate workflows between them.
 
-In addition to the cost benefit, a thicker client has the advantage of improved changeability and separation of concerns, as the single monolithic backend application is replaced by isolated and self-contained components. Doing away with the central arbiter of a server application does come with its trade-offs, including a need for distributed monitoring and further reliance on the security of the cloud services. Importantly not all functionality can or should be moved to the client: security, performance or consistency requirements among others can necessitate a server-side implementation. \parencite{robert2016serverlessarchitectures}.
+In addition to the cost benefit, a Thick Client has the advantage of improved changeability and separation of concerns, as the single monolithic backend application is replaced by isolated and self-contained components. Doing away with the central arbiter of a server application does come with its trade-offs, including a need for distributed monitoring and further reliance on the security of the cloud services. Importantly not all functionality can or should be moved to the client: security, performance or consistency requirements among others can necessitate a server-side implementation. \parencite{robert2016serverlessarchitectures}.
 
 The Thick Client pattern depends on fine-grained, distributed, request-level authentication in lieu of a gatekeeper server application. This follows naturally from the way serverless functions operate: being stateless and continuously scaling up and down, maintaining a session between the backend and the cloud services is infeasible. Instead of automatically trusting all requests originating from the backend, each cloud service request has to be individually authorized. From a cloud service's point of view, requests originating from a serverless function or directly from the client are both equally untrusted. Hence in serverless architectures, skipping the backend layer is preferable whenever a direct connection between client and services is possible. The Valet Key pattern in section \ref{subsec:valetKey} describes one example of a request-level authentication mechanism. \parencite{adzic2017serverless}
 
@@ -263,7 +263,7 @@ Managing state and accessing external resources.
 
 \subsection{Externalized State} \label{subsec:externalizedState}
 
-\textbf{Problem:} How to store state in an inherently stateless serverless function?
+\textbf{Problem:} How to share state between sequential or parallel serverless function instances?
 
 TODO visualize
 % \begin{figure}[h]
@@ -275,13 +275,29 @@ TODO visualize
 
 \textbf{Solution:} Store function state in external storage.
 
-Serverless functions are, as discussed, stateless by design. Function instances are spawned and terminated ephemerally so that a subsequent instance has no access to any previous instance state. Likewise any parallel instances have no knowledge of each other's state. Not all serverless use cases are purely stateless however, so being able to store and share state is a common requirement in serverless applications as well. This is evidenced by a survey on serverless adoption where two thirds of respondents reported at least sometimes applying the Externalized State pattern, making it by far the most common among the surveyed patterns \parencite{leitner18industrialpractice}.
+Serverless functions are, as discussed, stateless by design. Function instances are spawned and terminated ephemerally in a way that a subsequent instance has no access to any previous instance state. Likewise any parallel instances have no knowledge of each other's state. Not all serverless use cases are purely stateless however, so being able to store and share state between function instances comes up as a common requirement. This is evidenced by a survey on serverless adoption in which two thirds of respondents reported at least sometimes applying the Externalized State pattern, making it by far the most common among the surveyed patterns \parencite{leitner18industrialpractice}.
 
-The Externalized State pattern is a fundamental pattern that simply refers to storing a function's internal state in external storage such as a database or a key-value store. The pattern is used to reliably persist state between sequential function invocations, and on the other hand sharing state between parallel invocations. Imposing state on a stateless paradigm doesn't come free though, as persisting state to external storage induces latency and extra programming effort as well as operational overhead of managing a storage component. \parencite{leitner18industrialpractice}
+The Externalized State pattern is a fundamental pattern that consists of storing a function's internal state in external storage such as a database or a key-value store. The pattern is used to reliably persist state between sequential function invocations, and on the other hand to share state between parallel invocations. Imposing state on a stateless paradigm doesn't come free though, as relying on external storage induces latency and extra programming effort as well as the operational overhead of managing a storage component. \parencite{leitner18industrialpractice}
 
 \subsection{Valet Key} \label{subsec:valetKey}
 
-Sign tokens for clients to directly access resources.
+The Thick Client pattern depends on fine-grained, distributed, request-level authentication in lieu of a gatekeeper server application. This follows naturally from the way serverless functions operate: being stateless and continuously scaling up and down, maintaining a session between the backend and the cloud services is infeasible. Instead of automatically trusting all requests originating from the backend, each cloud service request has to be individually authorized. From a cloud service's point of view, requests originating from a serverless function or directly from the client are both equally untrusted. Hence in serverless architectures, skipping the backend layer is preferable whenever a direct connection between client and services is possible. The Valet Key pattern in section \ref{subsec:valetKey} describes one example of a request-level authentication mechanism. \parencite{adzic2017serverless}
+
+\textbf{Problem:} How to authorize access to a backend resource without routing all traffic through a gatekeeper server process?
+
+avoid paying for transfer twice
+
+TODO visualize
+% \begin{figure}[h]
+%   \centering
+%   \includegraphics[width=0.4\textwidth]{patterns/valetKey.png}
+%   \caption{Valet Key}
+%   \label{fig:valetKey}
+% \end{figure}
+
+\textbf{Solution:} Let the client request an access token from an authorizer function, use the token to gain direct access to a specific resource.
+
+As put forth in section \ref{subsec:thickClient} (the Thick Client pattern), serverless functions -- being ephemeral -- tend not to form long-lived sessions with backend services so each service request has to be individually authorized. With this in mind, routing client-service requests through a serverless function brings us no security advantage, as both the client and the serverless function are equally untrusted from the service's point of view. On the contrary, having an extra server layer in the middle would only introduce additional latency and cost in data transfer. \parencite{adzic2017serverless}
 
 % \subsection{Least privilege IAM role} \label{subsec:LeastprivilegeIAMrole}
 
