@@ -281,11 +281,7 @@ The Externalized State pattern is a fundamental pattern that consists of storing
 
 \subsection{Valet Key} \label{subsec:valetKey}
 
-The Thick Client pattern depends on fine-grained, distributed, request-level authentication in lieu of a gatekeeper server application. This follows naturally from the way serverless functions operate: being stateless and continuously scaling up and down, maintaining a session between the backend and the cloud services is infeasible. Instead of automatically trusting all requests originating from the backend, each cloud service request has to be individually authorized. From a cloud service's point of view, requests originating from a serverless function or directly from the client are both equally untrusted. Hence in serverless architectures, skipping the backend layer is preferable whenever a direct connection between client and services is possible. The Valet Key pattern in section \ref{subsec:valetKey} describes one example of a request-level authentication mechanism. \parencite{adzic2017serverless}
-
 \textbf{Problem:} How to authorize access to a backend resource without routing all traffic through a gatekeeper server process?
-
-avoid paying for transfer twice
 
 TODO visualize
 % \begin{figure}[h]
@@ -295,9 +291,15 @@ TODO visualize
 %   \label{fig:valetKey}
 % \end{figure}
 
-\textbf{Solution:} Let the client request an access token from an authorizer function, use the token to gain direct access to a specific resource.
+\textbf{Solution:} Let the client request an access token from an authorizer function, use the token directly access a specific resource.
 
-As put forth in section \ref{subsec:thickClient} (the Thick Client pattern), serverless functions -- being ephemeral -- tend not to form long-lived sessions with backend services so each service request has to be individually authorized. With this in mind, routing client-service requests through a serverless function brings us no security advantage, as both the client and the serverless function are equally untrusted from the service's point of view. On the contrary, having an extra server layer in the middle would only introduce additional latency and cost in data transfer. \parencite{adzic2017serverless}
+As put forth in section \ref{subsec:thickClient} (the Thick Client pattern), serverless functions -- being ephemeral -- tend not to form long-lived sessions with backend services so each service request has to be individually authorized. With this in mind, routing client-service requests through a serverless function brings us no apparent security advantage, as both the client and the serverless function are equally untrusted from a service's point of view; on the contrary, having an extra server layer in the middle would only introduce additional latency and cost in data transfer \parencite{adzic2017serverless}. Storing service credentials in the client isn't feasible either for security reasons.
+The problem then becomes one of authorizing service access without creating another server layer and on the other hand
+
+
+
+avoid paying for transfer twice
+relies on fine-grained authorization models in cloud services
 
 % \subsection{Least privilege IAM role} \label{subsec:LeastprivilegeIAMrole}
 
