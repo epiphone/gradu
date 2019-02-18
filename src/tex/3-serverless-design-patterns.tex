@@ -275,13 +275,13 @@ TODO visualize
 
 \textbf{Solution:} Store function state in external storage.
 
-Serverless functions are, as discussed, stateless by design. Function instances are spawned and terminated ephemerally in a way that a subsequent instance has no access to any previous instance state. Likewise any parallel instances have no knowledge of each other's state. Not all serverless use cases are purely stateless however, so being able to store and share state between function instances comes up as a common requirement. This is evidenced by a survey on serverless adoption in which two thirds of respondents reported at least sometimes applying the Externalized State pattern, making it by far the most common among the surveyed patterns \parencite{leitner18industrialpractice}.
+Serverless functions are, as discussed, stateless by design. Function instances are spawned and terminated ephemerally in a way that an instance has no access to any preceding or parallel instance state. Not all serverless use cases are purely stateless however, so being able to store and share state between function instances comes up as a common requirement. This is evidenced by a survey on serverless adoption in which two thirds of respondents reported at least sometimes applying the Externalized State pattern, making it by far the most common among the surveyed patterns \parencite{leitner18industrialpractice}.
 
 The Externalized State pattern is a fundamental pattern that consists of storing a function's internal state in external storage such as a database or a key-value store. The pattern is used to reliably persist state between sequential function invocations, and on the other hand to share state between parallel invocations. Imposing state on a stateless paradigm doesn't come free though, as relying on external storage induces latency and extra programming effort as well as the operational overhead of managing a storage component. \parencite{leitner18industrialpractice}
 
 \subsection{Valet Key} \label{subsec:valetKey}
 
-\textbf{Problem:} How to authorize access to a backend resource without routing all traffic through a gatekeeper server process?
+\textbf{Problem:} How to authorize resource access without routing all traffic through a gatekeeper server process?
 
 TODO visualize
 % \begin{figure}[h]
@@ -291,11 +291,11 @@ TODO visualize
 %   \label{fig:valetKey}
 % \end{figure}
 
-\textbf{Solution:} Let the client request an access token from an authorizer function, use the token directly access a specific resource.
+\textbf{Solution:} Let the client request an access token from an authorizer function, use the token to directly access a specific resource.
 
-As put forth in section \ref{subsec:thickClient} (the Thick Client pattern), serverless functions -- being ephemeral -- tend not to form long-lived sessions with backend services so each service request has to be individually authorized. With this in mind, routing client-service requests through a serverless function brings us no apparent security advantage, as both the client and the serverless function are equally untrusted from a service's point of view; on the contrary, having an extra server layer in the middle would only introduce additional latency and cost in data transfer \parencite{adzic2017serverless}. Storing service credentials in the client isn't feasible either for security reasons.
-The problem then becomes one of authorizing service access without creating another server layer and on the other hand
+As put forth in section \ref{subsec:thickClient} (the Thick Client pattern), serverless function instances do not form long-lived sessions with backend services, which means that each service request must be individually authorized. With this in mind, routing client-service requests through a serverless function brings us no apparent security advantage, as both the client and the serverless function are equally untrusted from a service's point of view; on the contrary, having an extra server layer in the middle would only introduce additional latency and cost in data transfer \parencite{adzic2017serverless}. The problem then becomes one of authorizing client-service communication without storing service credentials in the client and thus losing control of service access, and on the other hand without routing each request through the backend and thus in effect paying twice for data transfer.
 
+The Valet Key represents one form of the fine-grained request-level authorization called for by the Thick Client pattern (\ref{fig:patternThickClient}).
 
 
 avoid paying for transfer twice
