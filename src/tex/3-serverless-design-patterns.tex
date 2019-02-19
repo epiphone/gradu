@@ -295,11 +295,7 @@ TODO visualize
 
 As put forth in section \ref{subsec:thickClient} (the Thick Client pattern), serverless function instances do not form long-lived sessions with backend services, which means that each service request must be individually authorized. With this in mind, routing client-service requests through a serverless function brings us no apparent security advantage, as both the client and the serverless function are equally untrusted from a service's point of view; on the contrary, having an extra server layer in the middle would only introduce additional latency and cost in data transfer \parencite{adzic2017serverless}. The problem then becomes one of authorizing client-service communication without storing service credentials in the client and thus losing control of service access, and on the other hand without routing each request through the backend and thus in effect paying twice for data transfer.
 
-The Valet Key represents one form of the fine-grained request-level authorization called for by the Thick Client pattern (\ref{fig:patternThickClient}).
-
-
-avoid paying for transfer twice
-relies on fine-grained authorization models in cloud services
+One authorization pattern that fits the above requirements is the Valet Key. In this pattern the client, when looking to access a resource, first requests access to said resource from a special authorizer serverless function. The authorizer function first checks whether the client has access to the resource and then signs and returns an access token that is both short-lived and tightly restricted to this specific resource. Now for any subsequent calls until token expiration, the client can request the resource directly without going through an any additional server layer. At the same time the pattern avoids leaking resource credentials outside the authorizer function; token signature is enough for the resource to validate request authenticity. It is to be observed that the pattern relies heavily on cloud services' fine-grained authorization models, as the access token may need to be restricted to a single file in file storage or a single key in a key/value store, for example.
 
 % \subsection{Least privilege IAM role} \label{subsec:LeastprivilegeIAMrole}
 
