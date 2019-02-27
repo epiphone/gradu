@@ -305,13 +305,35 @@ The Valet Key relies heavily on cloud services' fine-grained authorization model
 
 % Minimize attack surface by reducing function access roles to bare minimum. Mentioned in \textcite{aws18serverlessLens}.
 
-\section{Performance and scalability patterns} \label{sec:perfPatterns}
+\section{Performance patterns} \label{sec:perfPatterns}
 
-Address FaaS performance issues.
+The following patterns address the performance constraints of FaaS.
 
 \subsection{Function Warmer} \label{subsec:FunctionWarmer}
 
-Ping a function intermittently to avoid cold starts.
+\textbf{Problem:} The cold start phenomenon leads to high latency for infrequently invoked functions.
+
+TODO visualize
+% \begin{figure}[h]
+%   \centering
+%   \includegraphics[width=0.4\textwidth]{patterns/functionWarmer.png}
+%   \caption{Function Warmer}
+%   \label{fig:functionWarmer}
+% \end{figure}
+
+\textbf{Solution:} Ping a function periodically to retain infrastructure and keep the function ``warm''.
+
+Section \ref{sec:limitations} introduced cold starts as a major FaaS pain point. To reiterate, a cold start refers to an infrequently invoked function's start-up latency which results from its infrastructure allocation being deprovisioned after a certain period of inactivity. \textcite{lloydserverless} for example observed a 15x increase in startup delay for cold starts, as opposed to warm starts where existing infrastructure gets reused. While this problem is tied to limitations in current FaaS implementations and can be expected to be mitigated by advances in container technology, cold starts can hamper the implementation of latency-critical serverless applications.
+
+The Function Warmer works around the cold start problem by ``pinging'' (invoking) the function periodically with an artificial payload to prevent the FaaS platform from deprovisioning its infrastructure \parencite{leitner18industrialpractice}. In detail, the Function Warmer is implemented with a scheduled function (see the Periodic Invoker pattern \ref{subsec:periodicInvocation}) that invokes the target function in predefined intervals. Additionally, the target function's handler is instrumented with logic to handle warming invocations: the handler identifies the artificial payload and replies accordingly without running the whole function. If the aim is to keep several concurrent function instances warm, the Function Warmer should invoke the same function multiple times with delayed executions. Now with the function warmed up and its infrastructure retained, any subsequent invocations can be served with minimal latency.
+
+
+periodic pings induce unnecessary costs; additional code needs to be developed, tested, and maintained to manage pinging.
+can be seen as developers struggling with the inherent limitations of FaaS and working around them \parencite{leitner18industrialpractice}
+
+\textcite{bardsley18optimizationStrategies} note that ``whilst this approach somewhat defeats the purpose of a system which should dynamically scale in response to demand it is nevertheless a viable strategy in mitigating the effect of cold Lambdas on overall latency''.
+
+\textcite{lloydserverless} urge cloud providers to ``consider opportunistically retaining infrastructure for longer periods when there is idle capacity to help offset the performance costs of container initialization''.
 
 % \subsection{Oversized function} \label{subsec:OversizedFunction}
 
