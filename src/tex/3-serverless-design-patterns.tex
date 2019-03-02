@@ -311,7 +311,7 @@ The following patterns address the performance constraints of FaaS.
 
 \subsection{Function Warmer} \label{subsec:FunctionWarmer}
 
-\textbf{Problem:} The cold start phenomenon leads to high latency for infrequently invoked functions.
+\textbf{Problem:} The cold start phenomenon leads to high latency in infrequently invoked functions.
 
 TODO visualize
 % \begin{figure}[h]
@@ -337,7 +337,21 @@ A more fundamental issue with the Function Warmer pattern is its necessity in th
 
 \subsection{Singleton} \label{subsec:Singleton}
 
-Take advantage of function execution context to avoid reinitializing function dependencies. Check \textcite{aws18serverlessLens}.
+\textbf{Problem:} External dependencies like database connections are re-initialized upon each function invocation, leading to degraded performance.
+
+TODO visualize
+% \begin{figure}[h]
+%   \centering
+%   \includegraphics[width=0.4\textwidth]{patterns/singleton.png}
+%   \caption{Singleton}
+%   \label{fig:singleton}
+% \end{figure}
+
+\textbf{Solution:} Leverage global scope within your serverless function code to take advantage of container reuse.
+
+Web applications often perform some sort of initialization as a part of their start-up process. Typical examples include connecting to a database, importing library dependencies and reading configuration or other static objects into runtime memory. In a conventional web application the cost of this initialization phase is negligible as it happens only once in the beginning of a long-running server process. Serverless function instances on the other are continuously torn down and recreated, so any delay in initialization has a significant impact on overall performance.
+
+The way containers are reused by FaaS platforms enables us to mitigate the problem. As established earlier in section \ref{sec:limitations}, after a function instance terminates the platform retains its container for a while in case of another invocation. The next function instance, when reusing this ``warm'' container, has access to the runtime variables already initialized in the previous execution. In detail, a reused container retains all of the global or static variables defined outside the function handler (an example of which is presented in listing \ref{lst:handlerExample}). The serverless Singleton pattern consists of reusing these pre-established variables and thus saving us the trouble of costly re-initialization. For example, instead of reconnecting to a database in the beginning of each invocation, a single database connection can be shared by a number of subsequent instances. To implement the Singleton involves declaring such connections and other reusable objects in the global scope and having logic in place to check if a connection already exists before creating a new one. Much like its object-oriented namesake \parencite{gamma94designPatterns}, the pattern ensures a single global instance per given resource as well as its ``lazy initialization'' i.e. creation on first use. \parencite{aws18serverlessLens}
 
 \section{Resiliency and availability patterns} \label{sec:resiliencyPatterns}
 
