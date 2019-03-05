@@ -378,9 +378,27 @@ where the ``asymmetrical nature of the performance profile between the refresh a
 
 While the VM-level resource contention is only addressable by platform providers, the function-level one is mitigated by a finer function granularity. A serverless Bulkhead pattern then comes to mean splitting high-latency workflows from a single function into their own functions. In the customer data example above, for example, this required ``separating the request and refresh functionality into separate Lambdas to prevent high latency in one part of the system adversely affecting another'' \parencite{bardsley18optimizationStrategies}. As per \textcite{adzic2017serverless}, the serverless paradigm already does away with economic incentives for bundling applications together in larger deployment units; likewise AWS best practices guide towards ``smaller functions that perform scoped activities'' \parencite{aws18serverlessLens}. Maintaining a larger number of functions does still incur an operations overhead, however, and partitioning intra-function workflows might not be trivial.
 
-\subsection{Flow control/throttling} \label{subsec:Flow control/throttling}
+\subsection{Throttle} \label{subsec:throttle}
 
-Throttle invocations to avoid DDoSing yourself. Lambda concurrency limit \textcite{aws18serverlessLens}.
+\textbf{Problem:} Rapid scalability of FaaS function causes a downstream service to fail under load.
+
+TODO visualize
+% \begin{figure}[h]
+%   \centering
+%   \includegraphics[width=0.4\textwidth]{patterns/throttler.png}
+%   \caption{Throttler}
+%   \label{fig:throttler}
+% \end{figure}
+
+\textbf{Solution:} Throttle invocations to avoid DDoSing yourself.
+
+Lambda concurrency limit \textcite{aws18serverlessLens}.
+
+``Serverless function composition can be used to control the flow of data between two services. For example, imagine an application that allows users to submit feedback to the app developers in the form of annotated screenshots and text. In figure 8, the application submits this data to a backend consisting of a scalable database and an on-premise issue tracking system. The latter is mainly used by the development team and is not designed to accept high volume traffic. On the other hand, the former is capable of responding to high volume traffic. We design our system to stage all feedback records in the database using a serverless function which eliminates the need to standup a separate server to handle feedback requests but still allows us a level of indirection between the application and the backend database. Once we collect a sufficient number of updates, we can batch them together into a single update, which invokes a function to submit issues to the issue tracker in a controlled manner.'' \parencite{baldini17currentTrends}
+
+https://docs.microsoft.com/en-us/azure/architecture/patterns/queue-based-load-leveling \parencite{microsoft18cloudPatterns}
+
+Decoupled Invocation \parencite{rotem12soa}
 
 \subsection{Circuit breaker} \label{subsec:Circuit breaker}
 
