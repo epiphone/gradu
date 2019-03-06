@@ -392,6 +392,13 @@ TODO visualize
 
 \textbf{Solution:} Throttle invocations to avoid DDoSing yourself.
 
+Serverless functions scale out horizontally in response to increased demand. AWS Lambda for example is capable of up to a 1000 concurrent instances \parencite{awslambda0218}. This sort of configuration-free elasticity is a major benefit and selling point of the whole FaaS model and plays well together with similarly autoscaling BaaS services. These properties can also be a pitfall, however, when interacting with conventional non-scaling resources. In such hybrid architectures a rapidly scaling FaaS function can quickly overwhelm a more rigid component and render the whole system unavailable in the process. For example how would a conventional on-premise database with rigid connection limits fare with said 1000 concurrent instances?
+
+``Will my serverless platform overwhelm any other components such as a database? Can I manage or throttle back-pressure?'' \parencite{cncf18serverlessWG}
+
+Three options of either sticking to BaaS, limiting FaaS concurrency, and Throttler
+The problem leaves us with three alternative solutions. The first one is to just stick to elastic cloud and BaaS services instead of integrating with any non-scalable resources in the first place; that is, foregoing hybrid architectures altogether.
+
 Lambda concurrency limit \textcite{aws18serverlessLens}.
 
 ``Serverless function composition can be used to control the flow of data between two services. For example, imagine an application that allows users to submit feedback to the app developers in the form of annotated screenshots and text. In figure 8, the application submits this data to a backend consisting of a scalable database and an on-premise issue tracking system. The latter is mainly used by the development team and is not designed to accept high volume traffic. On the other hand, the former is capable of responding to high volume traffic. We design our system to stage all feedback records in the database using a serverless function which eliminates the need to standup a separate server to handle feedback requests but still allows us a level of indirection between the application and the backend database. Once we collect a sufficient number of updates, we can batch them together into a single update, which invokes a function to submit issues to the issue tracker in a controlled manner.'' \parencite{baldini17currentTrends}
