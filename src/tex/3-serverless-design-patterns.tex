@@ -380,7 +380,7 @@ While the VM-level resource contention is only addressable by platform providers
 
 \subsection{Throttle} \label{subsec:throttle}
 
-\textbf{Problem:} Rapid scalability of FaaS function causes a downstream service to fail under load.
+\textbf{Problem:} A rapidly scaling FaaS function overwhelms a downstream component such as a database.
 
 TODO visualize
 % \begin{figure}[h]
@@ -392,20 +392,17 @@ TODO visualize
 
 \textbf{Solution:} Throttle invocations to avoid DDoSing yourself.
 
-Serverless functions scale out horizontally in response to increased demand. AWS Lambda for example is capable of up to a 1000 concurrent instances \parencite{awslambda0218}. This sort of configuration-free elasticity is a major benefit and selling point of the whole FaaS model and plays well together with similarly autoscaling BaaS services. These properties can also be a pitfall, however, when interacting with conventional non-scaling resources. In such hybrid architectures a rapidly scaling FaaS function can quickly overwhelm a more rigid component and render the whole system unavailable in the process. For example how would a conventional on-premise database with rigid connection limits fare with said 1000 concurrent instances?
+Serverless platforms scale out horizontally in response to increased demand. AWS Lambda for example is capable of up to a 1000 concurrent function instances \parencite{awslambda0218}. This sort of configuration-free elasticity is a major benefit and selling point of the FaaS model and plays well together with similarly autoscaling BaaS services. Scalability can also be a pitfall, however, when interacting with conventional non-scaling resources. In such hybrid architectures a rapidly scaling FaaS function has the pontential to overwhelm components that lack similar scaling properties or are otherwise not designed to accept high-volume traffic \parencite{cncf18serverlessWG}. This can have the effect of rendering the whole system unavailable in an essentially self-inflicted Denial of Service-attack. For example, how would an on-premise database with strict connection limits fare with said 1000 concurrent instances? Ideally we would just stick to BaaS and cloud services in favour of non-scaling components, i.e. forego hybrid architectures altogether. Naturally this isn't always feasible as few systems have the luxury of not depending on any legacy components. Migrating these components into the cloud or deploying enough on-premise hardware to meet peak demand can also be prohibitively costly and organizationally difficult.
 
-``Will my serverless platform overwhelm any other components such as a database? Can I manage or throttle back-pressure?'' \parencite{cncf18serverlessWG}
+Addressing the problem then calls for some mechanism to protect downstream services from intermittent load spikes caused by concurrent FaaS instances. The simplest solution is to apply a limit on the number of concurrent function instances; a configuration option most FaaS platforms provide. An AWS architecture guide for example notes that ``concurrency controls are sometimes necessary to protect specific workloads against service failure as they may not scale as rapidly as Lambda'', particularly in case of ``sensitive backend or integrated systems that may have scaling limitations'' and ``database connection pool restrictions such as a relational database, which may impose concurrent limits'' \parencite{aws18serverlessLens}. While managing to ease the pressure on downstream services, this solution causes non-responsivity in consuming applications and arguably fails to take full advantage of the FaaS platform.
 
-Three options of either sticking to BaaS, limiting FaaS concurrency, and Throttler
-The problem leaves us with three alternative solutions. The first one is to just stick to elastic cloud and BaaS services instead of integrating with any non-scalable resources in the first place; that is, foregoing hybrid architectures altogether.
-
-Lambda concurrency limit \textcite{aws18serverlessLens}.
+The Throttler represents a more sophisticated approach based on buffering the concurrent requests originating from FaaS and resolving them asynchronously.
 
 ``Serverless function composition can be used to control the flow of data between two services. For example, imagine an application that allows users to submit feedback to the app developers in the form of annotated screenshots and text. In figure 8, the application submits this data to a backend consisting of a scalable database and an on-premise issue tracking system. The latter is mainly used by the development team and is not designed to accept high volume traffic. On the other hand, the former is capable of responding to high volume traffic. We design our system to stage all feedback records in the database using a serverless function which eliminates the need to standup a separate server to handle feedback requests but still allows us a level of indirection between the application and the backend database. Once we collect a sufficient number of updates, we can batch them together into a single update, which invokes a function to submit issues to the issue tracker in a controlled manner.'' \parencite{baldini17currentTrends}
 
 https://docs.microsoft.com/en-us/azure/architecture/patterns/queue-based-load-leveling \parencite{microsoft18cloudPatterns}
 
-Decoupled Invocation \parencite{rotem12soa}
+Decoupled Invocation \parencite{rotem12soa}: ``Utilize the Decoupled Invocation pattern and separate replies from requests: acknowledge receipt at the service edge, put the request on a reliable queue, and then load-balance and prioritize the handler components that read from the queue.''
 
 \subsection{Circuit breaker} \label{subsec:Circuit breaker}
 
