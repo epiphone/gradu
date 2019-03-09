@@ -398,9 +398,26 @@ Addressing the problem then calls for some mechanism to protect downstream servi
 
 The Throttler represents a more sophisticated approach, based on buffering the bursts of concurrent requests originating from FaaS and resolving them asynchronously in a more controlled pace. A serverless adaptation of the Queue-Based Load Leveling cloud design pattern \parencite{microsoft18cloudPatterns}, the Throttler adds a message queue between the function and the downstream service so that upon a new request, instead of immediately invoking the service and waiting for a reply, the function pushes the request into the queue and responds to the consumer with an acknowledgement of receipt. It's then the job of another function to consume the queue and resolve service requests. By adjusting queue consumption rate, request spikes can be resolved in a smoother thus avoiding service resource exhaustion and function timeouts. A persistent queue also provides a further level of robustness as requests are not lost even in case of service outage.
 
-\textcite{baldini17currentTrends} utilize the Throttler to ``control the flow of data between two services'' in a hypothetical issue tracking system, further improving on the queue consumer's network efficiency by implementing batching. \textcite{rotem12soa} in turn presents an equivalent SOA pattern, the Decoupled Invocation: ``acknowledge receipt at the service edge, put the request on a reliable queue, and then load-balance and prioritize the handler components that read from the queue''. The pattern helps with the coupling and performance bottleneck problems of request-reply communication but comes with the downside of latency. Also since message queues are a one-way communication mechanism, it may be necessary to utilize a pattern like the Event Broadcast (section \ref{subsec:EventBroadcast}) for the consumer to access the actual service response.
+\textcite{baldini17currentTrends} utilize the Throttler to ``control the flow of data between two services'' in a hypothetical issue tracking system, further improving on the queue consumer's network efficiency by implementing batching. \textcite{rotem12soa} in turn presents an equivalent SOA pattern, the Decoupled Invocation: ``acknowledge receipt at the service edge, put the request on a reliable queue, and then load-balance and prioritize the handler components that read from the queue''. The pattern helps with the coupling and performance bottleneck problems of request-reply communication but comes with the downside of latency. Also since message queues are a one-way communication mechanism, it may be necessary to utilize a pattern like the Event Broadcast (section \ref{subsec:EventBroadcast}) for the consumer to access the actual service response. Finally, the Throttler can be seen analogous to the Service Activator EIP pattern which consists of adding a messaging layer (the queue and its consumer function in our case) in front of a synchronous service to turn it into an asynchronous one \parencite{hohpe2004enterprise}.
 
-\subsection{Circuit breaker} \label{subsec:Circuit breaker}
+\subsection{Circuit Breaker} \label{subsec:circuitBreaker}
 
-Keep track of component availability to avoid cascading failures.
+\textbf{Problem:} A failing third-party service causes accumulating FaaS charges as a function times out during repeated retry attempts.
+
+TODO visualize
+% \begin{figure}[h]
+%   \centering
+%   \includegraphics[width=0.4\textwidth]{patterns/circuitBreaker.png}
+%   \caption{Circuit Breaker}
+%   \label{fig:circuitBreaker}
+% \end{figure}
+
+\textbf{Solution:} Keep track of service state to prevent a function from needlessly performing and waiting for requests that are likely to fail.
+
+\textcite{bardsley18optimizationStrategies}: ``Circuit breakers allow a call to an unresponsive system component to be aborted without needlessly consuming resources trying to repeatedly connect and retry. There will be occasions when components are unresponsive and the system should be able to handle this without cascading failure. It is in situations like this that retry is not beneficial and may well have harmful effects if it ends up spinning up many cold Lambdas. A circuit breaker is required that will identify when a system is in stress and will back off. If this is linked with the front-end it would become possible for the server to issue a 503 HTTP response and the front-end to silently retry after a predetermined back-off.''
+
+SOA Service Watchdog \parencite{rotem12soa}
+
+Implement either via the State Machine \ref{subsec:stateMachine} or the Externalized State \ref{subsec:externalizedState}.
+
 
