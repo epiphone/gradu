@@ -1,0 +1,57 @@
+digraph g{
+  newrank="true"
+
+  subgraph cluster_composition {
+    label="Composition"
+    "Routing Function";
+    "Function Chain";
+    "Fan-in/Fan-out";
+    "State Machine";
+    "Thick Client";
+  }
+  "Thick Client" -> "Valet Key" [label="uses"];
+  "State Machine" -> "Externalized State" [label="alternative",style=dashed dir=both];
+  "State Machine" -> "Function Chain" [label="alternative",style=dashed dir=both];
+
+  subgraph cluster_event {
+    label="Event"
+    "Event Processor";
+    "Periodic Invoker";
+    "Polling Event Processor";
+    "Event Broadcast";
+  }
+  "Polling Event Processor" -> "Periodic Invoker" [label="uses"];
+  "Event Broadcast" -> "Event Processor" [label="extends"];
+  "Event Processor" -> "Polling Event Processor" [label="alternative",style=dashed dir=both];
+
+  subgraph cluster_api {
+    label="API"
+    "Aggregator";
+    "Proxy";
+    "Strangler";
+  }
+  "Strangler" -> "Routing Function" [label="can use"];
+
+  subgraph cluster_data {
+    label="Data management"
+    "Externalized State";
+    "Valet Key";
+  }
+
+  subgraph cluster_performance {
+    label="Performance"
+    "Function Warmer";
+    "Singleton";
+  }
+  "Function Warmer" -> "Periodic Invoker" [label="uses"];
+
+  subgraph cluster_availability {
+    label="Availability"
+    "Bulkhead";
+    "Throttler";
+    "Circuit Breaker";
+  }
+  "Throttler" -> "Event Processor" [label="can use"];
+  "Circuit Breaker" -> "State Machine" [label="uses"];
+  "Circuit Breaker" -> "Externalized State" [label="uses"];
+}
