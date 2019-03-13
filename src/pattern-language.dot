@@ -11,7 +11,9 @@ digraph g{
     "State Machine";
     "Thick Client";
   }
-  "State Machine" -> "Externalized State" [label="can use"];
+  // "Routing Function" -> "Externalized State" [label="can store configuration in"];
+  // "Function Chain" -> "Externalized State" [label="stores result in"];
+  "Fan-in/Fan-out" -> "Externalized State" [label="uses"];
   "Thick Client" -> "Valet Key" [label="authorized by"];
 
   subgraph cluster_event {
@@ -22,6 +24,8 @@ digraph g{
     "Polling Event Processor";
     "Event Broadcast";
   }
+  "Periodic Invoker" -> "Externalized State" [label="can store result in"];
+  "Periodic Invoker" -> "Event Broadcast" [label="forwards result by"];
   "Polling Event Processor" -> "Periodic Invoker" [label="uses"];
   "Event Broadcast" -> "Event Processor" [label="extends"];
 
@@ -32,7 +36,9 @@ digraph g{
     "Proxy";
     "Strangler";
   }
-  "Strangler" -> "Routing Function" [label="implements"];
+  "Aggregator" -> "Proxy" [label="a form of"];
+  "Strangler" -> "Routing Function" [label="uses"];
+  "Strangler" -> "Proxy" [label="implements"];
 
   subgraph cluster_data {
     label="Data management patterns"
@@ -57,7 +63,8 @@ digraph g{
     "Circuit Breaker";
   }
   "Throttler" -> "Event Processor" [label="can use"];
+  "Throttler" -> "Proxy" [label="protects"];
   "Circuit Breaker" -> "State Machine" [label="uses"];
   "Circuit Breaker" -> "Externalized State" [label="uses"];
-  "Circuit Breaker" -> "Proxy" [label="can act as"];
+  "Circuit Breaker" -> "Proxy" [label="protects"];
 }
