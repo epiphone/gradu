@@ -54,4 +54,5 @@ digraph g{
   "Throttler" -> "Event Processor" [label="can use"];
   "Circuit Breaker" -> "State Machine" [label="uses"];
   "Circuit Breaker" -> "Externalized State" [label="uses"];
+  "Circuit Breaker" -> "Proxy" [label="extends"];
 }
