@@ -2,11 +2,16 @@
 
 In this chapter we take a look at serverless design patterns. Design patterns describe commonly accepted, reusable solutions to recurring problems \parencite{hohpe2004enterprise}. A design pattern is not a one-size-fits-all solution directly translatable into software code, but rather a formalized best practice that presents a common problem in its context along a general arrangement of elements that solves it \parencite{gamma94designPatterns}. The patterns in this chapter are sourced from scientific literature on serverless computing as well as cloud provider documentation \parencite[][]{aws18serverlessLens, microsoft18cloudPatterns}. Literature on object-oriented patterns (OOP) \parencite{gamma94designPatterns}, SOA patterns \parencite{rotem12soa} as well as enterprise integration patterns (EIP) \parencite{hohpe2004enterprise} was also reviewed for applicable practices.
 
-TODO Enterprise integration patterns (EIP), as serverless is all about integrations. \textcite{hohpe2004enterprise} present a number of asynchronous messaging architectures in the seminal book on EIP. While predating the whole serverless phenomenon the patterns are still relevant. Hohpe even demonstrated implementing one of his patterns on top of Google's serverless platform \href{http://www.enterpriseintegrationpatterns.com/ramblings/google_cloud_functions.html}{in a blog post}. E.g. patterns like Idempotent Receiver, Dead-letter Channel as well as the 4 more general integration styles of File Transfer, Shared Database, RPC and Messaging. Many patterns implemented internally by FaaS platforms already!
+The patterns are grouped into rough categories for better readability. Also the interrelation of the patterns is sketched out in figure \ref{fig:patternLanguage}. This figure forms a \textit{pattern language}, i.e. a structural organization of pattern relations \parencite{rotem12soa}.
 
-TODO SOA patterns: as FaaS functions are self-contained nanoservices these might have some relevance. SOA patterns \parencite{rotem12soa} include Saga, Decoupled Invocation and others. As with EIP, some patterns are already implemented by the FaaS platform.
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{pattern-language.png}
+  \caption{Pattern language}
+  \label{fig:patternLanguage}
+\end{figure}
 
-TODO FaaSification: \textcite{spillner17transformpython} describes an automated approach to transform monolithic Python code into modular FaaS units by partially automated decomposition. Doesn't really seem suitable for the web application migration process covered in this thesis but worth mentioning.
+% TODO flesh out each section intro
 
 \section{Composition patterns} \label{sec:compositionPatterns}
 
