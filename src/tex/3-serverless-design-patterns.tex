@@ -45,7 +45,7 @@ The Routing Function resembles the OOP Command pattern which is used to decouple
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.5\textwidth]{patterns/function-chain.png}
+  \includegraphics[width=0.7\textwidth]{patterns/function-chain.png}
   \caption{Function Chain}
   \label{fig:patternFunctionChain}
 \end{figure}
@@ -60,13 +60,12 @@ The Function Chain pattern is in effect a workaround over the duration limit tha
 
 \textbf{Problem:} Resource limits on a single function lead to reduced throughput.
 
-% TODO visualize
-% \begin{figure}[h]
-%   \centering
-%   \includegraphics[width=0.4\textwidth]{patterns/fan-out-fan-in.png}
-%   \caption{Fan-out/Fan-in}
-%   \label{fig:fantOutFanIn}
-% \end{figure}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.7\textwidth]{patterns/fan-out-fan-in.png}
+  \caption{Fan-out/Fan-in}
+  \label{fig:fantOutFanIn}
+\end{figure}
 
 \textbf{Solution:} Split task into multiple parallel invocations.
 
@@ -80,13 +79,12 @@ The Fan-out/Fan-in pattern lends itself well to tasks that are easily divisible 
 
 \textbf{Problem:} How to share state between sequential or parallel serverless function instances?
 
-TODO visualize
-% \begin{figure}[h]
-%   \centering
-%   \includegraphics[width=0.4\textwidth]{patterns/externalizedState.png}
-%   \caption{Externalized State}
-%   \label{fig:externalizedState}
-% \end{figure}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{patterns/externalized-state.png}
+  \caption{Externalized State}
+  \label{fig:externalizedState}
+\end{figure}
 
 \textbf{Solution:} Store function state in external storage.
 
@@ -119,12 +117,12 @@ A SOA pattern analogous to the State Machine is the Orchestrator, in which ``an 
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.5\textwidth]{patterns/thick-client.png}
+  \includegraphics[width=0.4\textwidth]{patterns/thick-client.png}
   \caption{Thick Client}
   \label{fig:patternThickClient}
 \end{figure}
 
-\textbf{Solution:} Create thicker, more powerful clients.
+\textbf{Solution:} Create thicker, more powerful clients that directly access resources and orchestrate workflows.
 
 Serverless applications, as described in chapter \ref{cha:serverless}, typically rely heavily on third-party cloud services (BaaS) interspersed with custom logic in form of FaaS functions. In a traditional three-tier web application architecture interaction with these external services would be handled by a server application that sits between client and service layers \parencite{robert2016serverlessarchitectures}. Following this model, the client can be limited in functionality whereas the server application plays a larger role. \textcite{sbarski2017serverless} point out that the model of the backend as a gatekeeper between client and services is in conflict with the serverless paradigm. First of all, using FaaS as a middle layer in front of cloud resources directly translates into extra costs: on top of paying for the cloud service call, one has to pay for function invocation and execution for the duration of the network call as well as data transfer between the service and the FaaS provider. Secondly, a middle layer of FaaS results in extra network hops which increases latency and reduces user experience. The authors thus advise against routing everything through a FaaS layer, and advocate building thick clients that communicate directly with cloud services and orchestrate workflows between them.
 
@@ -142,7 +140,7 @@ How to handle asynchronous workflows triggered by external events?
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.45\textwidth]{patterns/event-processor2.png}
+  \includegraphics[width=0.8\textwidth]{patterns/event-processor.png}
   \caption{Event Processor}
   \label{fig:patternEventProcessor}
 \end{figure}
@@ -180,7 +178,7 @@ The Periodic Invoker represents an arrangement where a serverless function is in
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.4\textwidth]{patterns/polling-event-processor.png}
+  \includegraphics[width=0.6\textwidth]{patterns/polling-event-processor.png}
   \caption{Polling Event Processor}
   \label{fig:PollingEventProcessor}
 \end{figure}
@@ -195,13 +193,12 @@ The Polling Event Processor is equivalent to the EIP pattern of Polling Consumer
 
 \textbf{Problem:} How to invoke multiple parallel functions as a result of a single event occurrence?
 
-% TODO visualize
-% \begin{figure}[h]
-%   \centering
-%   \includegraphics[width=0.4\textwidth]{patterns/event-broadcast.png}
-%   \caption{Event Broadcast}
-%   \label{fig:eventBroadcast}
-% \end{figure}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.7\textwidth]{patterns/event-broadcast.png}
+  \caption{Event Broadcast}
+  \label{fig:eventBroadcast}
+\end{figure}
 
 \textbf{Solution:} Subscribe multiple functions to a notification service, publish notification on event occurrence.
 
@@ -217,13 +214,12 @@ How to integrate to external -- including legacy -- systems?
 
 \textbf{Problem:} An operation consists of multiple API requests, resulting in extra network hops between client and service.
 
-TODO visualize
-% \begin{figure}[h]
-%   \centering
-%   \includegraphics[width=0.4\textwidth]{patterns/aggregator.png}
-%   \caption{Aggregator}
-%   \label{fig:aggregator}
-% \end{figure}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.5\textwidth]{patterns/aggregator.png}
+  \caption{Aggregator}
+  \label{fig:aggregator}
+\end{figure}
 
 \textbf{Solution:} Aggregate multiple API requests under a single serverless function.
 
@@ -237,13 +233,12 @@ The Aggregator is largely equivalent to the Gateway Aggregation cloud design pat
 
 \textbf{Problem:} How to make a legacy service easier to consume for modern clients?
 
-TODO visualize
-% \begin{figure}[h]
-%   \centering
-%   \includegraphics[width=0.4\textwidth]{patterns/proxy.png}
-%   \caption{Proxy}
-%   \label{fig:proxy}
-% \end{figure}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.5\textwidth]{patterns/proxy.png}
+  \caption{Proxy}
+  \label{fig:proxy}
+\end{figure}
 
 \textbf{Solution:} Implement a serverless function as a proxy layer that translates requests between clients and the legacy service.
 
@@ -255,13 +250,12 @@ The serverless Proxy pattern essentially ``makes legacy services easier to consu
 
 \textbf{Problem:} How to migrate an existing service to serverless architecture in a controlled fashion?
 
-TODO visualize
-% \begin{figure}[h]
-%   \centering
-%   \includegraphics[width=0.4\textwidth]{patterns/strangler.png}
-%   \caption{Strangler}
-%   \label{fig:strangler}
-% \end{figure}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.75\textwidth]{patterns/strangler.png}
+  \caption{Strangler}
+  \label{fig:strangler}
+\end{figure}
 
 \textbf{Solution:} Create a façade in front of the legacy API and incrementally replace individual routes with serverless functions.
 
@@ -273,13 +267,12 @@ The Strangler solves the problem of gradual migration by first wrapping the whol
 
 \textbf{Problem:} How to authorize resource access without routing all traffic through a gatekeeper server process?
 
-TODO visualize
-% \begin{figure}[h]
-%   \centering
-%   \includegraphics[width=0.4\textwidth]{patterns/valetKey.png}
-%   \caption{Valet Key}
-%   \label{fig:valetKey}
-% \end{figure}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.6\textwidth]{patterns/valet-key.png}
+  \caption{Valet Key}
+  \label{fig:valetKey}
+\end{figure}
 
 \textbf{Solution:} Let the client request an access token from an authorizer function, use the token to directly access a specific resource.
 
@@ -299,57 +292,50 @@ How to guarantee availability in serverless systems and deal with the platform's
 
 \textbf{Problem:} The cold start phenomenon leads to high latency in infrequently invoked functions.
 
-TODO visualize
-% \begin{figure}[h]
-%   \centering
-%   \includegraphics[width=0.4\textwidth]{patterns/functionWarmer.png}
-%   \caption{Function Warmer}
-%   \label{fig:functionWarmer}
-% \end{figure}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.7\textwidth]{patterns/function-warmer.png}
+  \caption{Function Warmer}
+  \label{fig:functionWarmer}
+\end{figure}
 
 \textbf{Solution:} Ping a function periodically to retain infrastructure and keep the function ``warm''.
 
 Section \ref{sec:limitations} introduced cold starts as a major FaaS pain point. To reiterate, a cold start refers to an infrequently invoked function's start-up latency which results from its infrastructure allocation being deprovisioned after a period of inactivity. \textcite{lloydserverless} for example observed a 15x increase in startup delay for cold starts as opposed to warm starts where existing infrastructure gets reused. While this problem is tied to limitations in current FaaS implementations and can be expected to be mitigated by advances in container technology, cold starts can hamper the adoption of FaaS technology in latency-critical applications.
 
-The Function Warmer presents a workaround to the cold start problem by ``pinging'' (invoking) a function periodically with an artificial payload to prevent the FaaS platform from deprovisioning its infrastructure \parencite{leitner18industrialpractice}. In detail, the pattern is implemented with a scheduled function (see the Periodic Invoker pattern \ref{subsec:periodicInvocation}) that invokes the target function in predefined intervals. Additionally, the target function's handler is instrumented with logic to handle warming invocations: the handler identifies the artificial payload and replies accordingly without running the whole function. If the aim is to keep several concurrent function instances warm, the Function Warmer should invoke the same function multiple times with delayed executions. Now with the function warmed up and its infrastructure retained, any subsequent invocations can be served with minimal latency.
+The Function Warmer tackles the cold start problem by ``pinging'' (invoking) a function periodically with an artificial payload to prevent the FaaS platform from deprovisioning its infrastructure \parencite{leitner18industrialpractice}. In detail, the pattern is implemented with a scheduled function (using the Periodic Invoker \ref{subsec:periodicInvocation} or the State Machine \ref{subsec:stateMachine}) that invokes the target function in predefined intervals. Additionally, the target function's handler is instrumented with logic to handle warming invocations: the handler identifies the artificial payload and replies accordingly without running the whole function. If the aim is to keep several concurrent function instances warm, the Function Warmer should invoke the same function multiple times with delayed executions. Now with the function warmed up and its infrastructure retained, any subsequent invocations can be served with minimal latency.
 
 \textcite{leitner18industrialpractice} note two drawbacks inherent to the pattern: the invocation cost induced by pinging and the extra code needed in functions to manage warming invocations. As for the first point, the cost induced depends on how long the platform retains idling containers for. Investigating infrastructure retention in AWS Lambda, \textcite{lloydserverless} find that host containers are reused when invoked again within 5 minutes; a pinging request in 5 minute intervals then comes down to 8640 invocations per month which is well beyond the free tier offered by most platforms. \textcite{bardsley18optimizationStrategies} likewise note that ``this approach will not significantly raise the cost of the deployment since calls to ping the relevant Lambdas would only have to be made infrequently''. The latter point is largely a matter of tooling, and indeed many of the FaaS frameworks reviewed by \textcite{kritikos18frameworks} are already equipped to handle pinging logic.
 
 A more fundamental issue with the Function Warmer pattern is its necessity in the first place, as ideally the problem of start-up latency would be done away with by the platform. \textcite{leitner18industrialpractice} note that patterns such as the Function Warmer ``can be seen as developers struggling with the inherent limitations of FaaS and working around them''. \textcite{lloydserverless} also point fingers to the platform side, urging cloud providers to ``consider opportunistically retaining infrastructure for longer periods when there is idle capacity to help offset the performance costs of container initialization''. The pattern represents, however, a practical solution to a real limitation that all FaaS platforms suffer from at least for the time being. \textcite{bardsley18optimizationStrategies} similarly conclude that ``whilst this approach somewhat defeats the purpose of a system which should dynamically scale in response to demand it is nevertheless a viable strategy in mitigating the effect of cold Lambdas on overall latency''.
 
-% \subsection{Oversized function} \label{subsec:OversizedFunction}
-
-% Choose maximum memory allocation to access faster CPU resources and improve cold start latency.
-
 \subsection{Singleton} \label{subsec:Singleton}
 
 \textbf{Problem:} External dependencies like database connections are re-initialized upon each function invocation, leading to degraded performance.
 
-TODO visualize
-% \begin{figure}[h]
-%   \centering
-%   \includegraphics[width=0.4\textwidth]{patterns/singleton.png}
-%   \caption{Singleton}
-%   \label{fig:singleton}
-% \end{figure}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.5\textwidth]{patterns/singleton.png}
+  \caption{Singleton}
+  \label{fig:singleton}
+\end{figure}
 
 \textbf{Solution:} Leverage global scope within your serverless function code to take advantage of container reuse.
 
 Web applications often perform some sort of initialization as a part of their start-up process. Typical examples include connecting to a database and reading configuration or other static objects into runtime memory. In a conventional web application the cost of this initialization phase is negligible as it happens only once in the beginning of a long-running server process. Serverless function instances on the other are continuously torn down and recreated, so any delay in initialization has a significant impact on overall performance.
 
-The way containers are reused by FaaS platforms enables us to mitigate the problem. As established earlier in section \ref{sec:limitations}, after a function instance terminates the platform retains its container for a while in case of another invocation. The next function instance, when reusing this ``warm'' container, has access to the runtime variables already initialized during the previous execution. In detail, a reused container retains all of the global or static variables defined outside the function handler (an example of which is presented in listing \ref{lst:handlerExample}). The serverless Singleton pattern consists of reusing these pre-established variables and thus saving us the cost of re-initialization. For example, instead of reconnecting to a database in the beginning of each invocation, a single database connection can be shared by a number of subsequent instances. To implement the Singleton involves declaring such connections and other reusable objects in the global scope and having logic in place to check if a connection already exists before creating a new one. Much like its object-oriented namesake \parencite{gamma94designPatterns}, the pattern ensures a single global instance per given resource as well as its ``lazy initialization'' i.e. creation on first use. \parencite{aws18serverlessLens}
+The way containers are reused by FaaS platforms enables us to mitigate the problem. As established earlier in section \ref{sec:limitations}, after a function instance terminates the platform retains its container for a while in case of another invocation. The next function instance, when reusing this ``warm'' container, has access to the runtime variables already initialized during the previous execution. In detail, a reused container retains all of the global or static variables defined outside the function handler (an example of which is presented in listing \ref{lst:handlerExample}). The serverless Singleton pattern consists of reusing these pre-established variables and thus saving us the cost of re-initialization. For example, instead of reconnecting to a database in the beginning of each invocation, a single database connection can be shared by a number of subsequent instances. To implement the Singleton involves declaring such connections and other reusable objects in the global scope and having logic in place to check if a connection already exists before creating a new one. Like its object-oriented namesake \parencite{gamma94designPatterns}, the pattern ensures a single global instance per given resource as well as its ``lazy initialization'' i.e. creation on first use. \parencite{aws18serverlessLens}
 
 \subsection{Bulkhead} \label{subsec:Bulkhead}
 
 \textbf{Problem:} Multiple workflows in a single function leads to a high-latency execution path degrading the others' performance.
 
-TODO visualize
-% \begin{figure}[h]
-%   \centering
-%   \includegraphics[width=0.4\textwidth]{patterns/bulkhead.png}
-%   \caption{Bulkhead}
-%   \label{fig:bulkhead}
-% \end{figure}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.3\textwidth]{patterns/bulkhead.png}
+  \caption{Bulkhead}
+  \label{fig:bulkhead}
+\end{figure}
 
 \textbf{Solution:} Isolate high-latency code into separate functions to avoid resource contention.
 
@@ -364,13 +350,12 @@ While the VM-level resource contention is only addressable by platform providers
 
 \textbf{Problem:} A rapidly scaling FaaS function overwhelms a non-scaling downstream service, resulting in function timeout.
 
-TODO visualize
-% \begin{figure}[h]
-%   \centering
-%   \includegraphics[width=0.4\textwidth]{patterns/throttler.png}
-%   \caption{Throttler}
-%   \label{fig:throttler}
-% \end{figure}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.7\textwidth]{patterns/throttler.png}
+  \caption{Throttler}
+  \label{fig:throttler}
+\end{figure}
 
 \textbf{Solution:} Add a message queue in front of the downstream service to throttle the bursts of concurrent requests originating from FaaS.
 
@@ -386,13 +371,12 @@ The Throttler represents a more sophisticated approach, based on buffering the b
 
 \textbf{Problem:} A non-responsive third-party service causes accumulating FaaS charges as a function needlessly performs and waits for requests that time out.
 
-TODO visualize
-% \begin{figure}[h]
-%   \centering
-%   \includegraphics[width=0.4\textwidth]{patterns/circuitBreaker.png}
-%   \caption{Circuit Breaker}
-%   \label{fig:circuitBreaker}
-% \end{figure}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.7\textwidth]{patterns/circuit-breaker.png}
+  \caption{Circuit Breaker}
+  \label{fig:circuitBreaker}
+\end{figure}
 
 \textbf{Solution:} Restrict service access in times of degraded operation to reduce service load and prevent performing operations that are likely to fail.
 
@@ -402,4 +386,4 @@ Instead of reexecution we're then looking to prevent calling an unresponsive ser
 
 As a stateful pattern, the Circuit Breaker needs to keep track of circuit mode, number of errors and elapsed timeout period. A serverless implementation can utilize either the Externalized State (section \ref{subsec:externalizedState}) or State Machine (section \ref{subsec:stateMachine}) pattern for managing this information. Additionally, the pattern can be implemented either alongside an existing consumer or as its own function between a consumer and a service similarly to the Proxy pattern (section \ref{subsec:proxy}). As to further implementation details, \textcite{nygard07releaseIt} notes it is important to choose the right error criteria for tripping the circuit and that ``changes in a circuit breaker’s state should always be logged, and the current state should be exposed for querying and monitoring''. Instead of returning a plain error message the open circuit can also implement a fallback strategy of returning some cached value or directing the request to another service. An open circuit could even record requests and replay them when the service regains operation \parencite{microsoft18cloudPatterns}.
 
-The Circuit Breaker is similar to the SOA pattern of Service Watchdog \parencite{rotem12soa} in that both implement self-healing by means of restricted service access. What distincts the two is the responsible party: the Service Watchdog depends on an integrated component inside the service to monitor its state whereas the Circuit Breaker only acts on the basis of failed requests, external to the service. This distinction makes the Circuit Breaker easier to deploy against third-party services outside our control.
+The Circuit Breaker is similar to the SOA pattern of Service Watchdog \parencite{rotem12soa} in the sense that both implement self-healing by means of restricted service access. What distincts the two is who's responsible: the Service Watchdog depends on an integrated component inside the service to monitor its state whereas the Circuit Breaker only acts external to the service, on the basis of failed requests. This distinction makes the Circuit Breaker easier to deploy against black-box components.

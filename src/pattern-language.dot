@@ -63,13 +63,15 @@ digraph g{
     "Throttler";
     "Circuit Breaker";
   }
-  "Function Warmer" -> "Periodic Invoker" [label="uses"];
+  joint5 [shape="none", label="uses either", width=0, height=0]
+  "Function Warmer" -> joint5; // [arrowhead="none"];
+  joint5 -> "State Machine";
+  joint5 -> "Periodic Invoker";
+
   "Throttler" -> "Event Processor" [label="can use"];
   "Throttler" -> "Proxy" [label="protects"];
   joint1 [shape="none", label="uses either", width=0, height=0]
   "Circuit Breaker" -> joint1; // [arrowhead="none"];
   joint1 -> "State Machine";
   joint1 -> "Externalized State";
-  // "Circuit Breaker" -> "State Machine" [label="uses"];
-  // "Circuit Breaker" -> "Externalized State" [label="uses"];
 }
