@@ -1,6 +1,7 @@
 digraph g{
   rankdir="LR"
   newrank="true"
+  // splines="polyline"
 
   subgraph cluster_composition {
     label="Composition patterns"
@@ -10,11 +11,20 @@ digraph g{
     "Fan-in/Fan-out";
     "State Machine";
     "Thick Client";
+    "Externalized State";
   }
-  // "Routing Function" -> "Externalized State" [label="can store configuration in"];
-  // "Function Chain" -> "Externalized State" [label="stores result in"];
-  "Fan-in/Fan-out" -> "Externalized State" [label="uses"];
+  joint3 [shape="none", label="stores result in", width=0, height=0]
+  "Function Chain" -> joint3; //[arrowhead="none"];
+  "Fan-in/Fan-out" -> joint3; // [arrowhead="none"];
+  joint3 -> "Externalized State";
+  // "Function Chain" -> "Externalized State" [label="uses"];
+  // "Fan-in/Fan-out" -> "Externalized State" [label="uses"];
   "Thick Client" -> "Valet Key" [label="authorized by"];
+  // "Thick Client" -> "Proxy" [label="uses"];
+  joint4 [shape="none", label="integrates to services via", width=0, height=0]
+  "Thick Client" -> joint4; //[arrowhead="none"];
+  joint4 -> "Aggregator";
+  joint4 -> "Proxy";
 
   subgraph cluster_event {
     label="Event patterns"
@@ -24,47 +34,42 @@ digraph g{
     "Polling Event Processor";
     "Event Broadcast";
   }
-  "Periodic Invoker" -> "Externalized State" [label="can store result in"];
-  "Periodic Invoker" -> "Event Broadcast" [label="forwards result by"];
+  joint2 [shape="none", label="forwards result via", width=0, height=0]
+  "Periodic Invoker" -> joint2; // [arrowhead="none"];
+  joint2 -> "Externalized State";
+  joint2 -> "Event Broadcast";
+  // "Periodic Invoker" -> "Externalized State" [label="can store result in"];
+  // "Periodic Invoker" -> "Event Broadcast" [label="can forward result via"];
   "Polling Event Processor" -> "Periodic Invoker" [label="uses"];
   "Event Broadcast" -> "Event Processor" [label="extends"];
 
   subgraph cluster_api {
-    label="API patterns"
+    label="Integration patterns"
     rank="same"
     "Aggregator";
     "Proxy";
     "Strangler";
-  }
-  "Aggregator" -> "Proxy" [label="a form of"];
-  "Strangler" -> "Routing Function" [label="uses"];
-  "Strangler" -> "Proxy" [label="implements"];
-
-  subgraph cluster_data {
-    label="Data management patterns"
-    rank="same"
-    "Externalized State";
     "Valet Key";
   }
-
-  subgraph cluster_performance {
-    label="Performance patterns"
-    rank="same"
-    "Function Warmer";
-    "Singleton";
-  }
-  "Function Warmer" -> "Periodic Invoker" [label="uses"];
+  "Strangler" -> "Routing Function" [label="uses"];
+  "Strangler" -> "Proxy" [label="implements"];
 
   subgraph cluster_availability {
     label="Availability patterns"
     rank="same"
+    "Function Warmer";
+    "Singleton";
     "Bulkhead";
     "Throttler";
     "Circuit Breaker";
   }
+  "Function Warmer" -> "Periodic Invoker" [label="uses"];
   "Throttler" -> "Event Processor" [label="can use"];
   "Throttler" -> "Proxy" [label="protects"];
-  "Circuit Breaker" -> "State Machine" [label="uses"];
-  "Circuit Breaker" -> "Externalized State" [label="uses"];
-  "Circuit Breaker" -> "Proxy" [label="protects"];
+  joint1 [shape="none", label="uses either", width=0, height=0]
+  "Circuit Breaker" -> joint1; // [arrowhead="none"];
+  joint1 -> "State Machine";
+  joint1 -> "Externalized State";
+  // "Circuit Breaker" -> "State Machine" [label="uses"];
+  // "Circuit Breaker" -> "Externalized State" [label="uses"];
 }
