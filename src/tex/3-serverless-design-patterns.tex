@@ -45,7 +45,7 @@ The Routing Function resembles the OOP Command pattern which is used to decouple
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.7\textwidth]{patterns/function-chain.png}
+  \includegraphics[width=0.6\textwidth]{patterns/function-chain.png}
   \caption{Function Chain}
   \label{fig:patternFunctionChain}
 \end{figure}
@@ -163,7 +163,7 @@ Another point to keep in mind when implementing the Event Processor pattern is t
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.4\textwidth]{patterns/periodic-invocation.png}
+  \includegraphics[width=0.37\textwidth]{patterns/periodic-invocation.png}
   \caption{Periodic Invoker}
   \label{fig:patternPeriodicInvocation}
 \end{figure}
@@ -178,7 +178,7 @@ The Periodic Invoker represents an arrangement where a serverless function is in
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.6\textwidth]{patterns/polling-event-processor.png}
+  \includegraphics[width=0.5\textwidth]{patterns/polling-event-processor.png}
   \caption{Polling Event Processor}
   \label{fig:PollingEventProcessor}
 \end{figure}
@@ -352,12 +352,12 @@ While the VM-level resource contention is only addressable by platform providers
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.7\textwidth]{patterns/throttler.png}
+  \includegraphics[width=0.6\textwidth]{patterns/throttler.png}
   \caption{Throttler}
   \label{fig:throttler}
 \end{figure}
 
-\textbf{Solution:} Add a message queue in front of the downstream service to throttle the bursts of concurrent requests originating from FaaS.
+\textbf{Solution:} Add a message queue in front of downstream service to throttle bursts of concurrent requests originating from FaaS.
 
 Serverless platforms scale out horizontally in response to increased demand -- up to a 1000 concurrent function instances in case of AWS Lambda \parencite{awslambda0218}. This configuration-free elasticity is a major FaaS selling point and plays well together with similarly autoscaling BaaS services. Scalability can turn into a pitfall, however, when interacting with conventional non-scaling resources, since a rapidly scaling FaaS function has the potential to overwhelm components that lack similar scaling properties or are otherwise not designed to accept high-volume traffic \parencite{cncf18serverlessWG}. This can have the effect of rendering the whole system unavailable by what is essentially a self-inflicted Denial of Service-attack. How would for example an on-premise database with strict connection limits fare with said 1000 concurrent instances? Avoiding non-scaling components in serverless architectures isn't feasible either as few systems have the luxury of not depending on any pre-existing components. Migrating these components into the cloud or deploying enough on-premise hardware to meet peak demand can also be prohibitively costly and organizationally difficult.
 
