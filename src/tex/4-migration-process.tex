@@ -1,26 +1,51 @@
 \chapter{Migration process}
 
-``Do the existing patterns have gaps or missing parts, and if so, can we come up with improvements or alternative solutions?''
+Work in progress!
 
-``The fourth chapter describes the process of migrating an existing web application to serverless architecture. The patterns discovered in the previous chapter are utilized to implemented various typical web application features on a serverless platform. In cases where existing patterns prove insufficient or unsuitable as per the target application's characteristics, modifications or new patterns are proposed.''
+% ``The fourth chapter describes the process of migrating an existing web application to serverless architecture. The patterns discovered in the previous chapter are utilized to implemented various typical web application features on a serverless platform. In cases where existing patterns prove insufficient or unsuitable as per the target application's characteristics, modifications or new patterns are proposed.''
 
-Implement a subset of the target app in a serverless style, utilizing the surveyed patterns and keeping log of the tricky parts. In case the patterns prove unsuitable for the given problem, try to come up with an alternative solution.
+The migrated application is a tool for manaing image assets. Similarly to SaaS offerings such as Cloudinary, the application takes user-uploaded images, does various forms of processing and then serves the processed images publicly to be consumed by other applications. In our case the processing needs are threefold: rendering a thumbnail, rendering a low quality image placeholder (LQIP), and automatic labelling using an external image analysis API. In addition the application does CAPTCHA-based authentication to protect the image upload endpoint from abuse.
 
-Describe the web application to migrate.
+Figure \ref{fig:imageManager} presents the pre-migration serverful architecture. In this implementation all image processing logic as well as the various service clients are contained inside a single server application that is then hosted on a VM. \ref{fig:serverlessImageManager} presents the migrated serverless architecture, where the same functionality is split into separate serverless functions and tied together in an event-driven flow. In both figures rectangular boxes represent the parts that are implemented by hand, whereas the rest are external services.
 
-Decide on the parts to migrate. Should demonstrate the features and limitations of serverless as outlined above. Possible features include
-\begin{itemize}
-  \item A REST API endpoint to showcase API Gateway and synchronous invocation. Shouldn't require any big changes to application code.
-  \item Interaction between multiple services to demonstrate distributed transactions.
-  \item A scheduled (cron) event.
-  \item Interacting with an external SaaS service like Twilio, Auth0. Demonstrate event-driven invocation.
-  \item others?
-\end{itemize}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.65\textwidth]{image-manager.png}
+  \caption{Serverful Image Manager}
+  \label{fig:imageManager}
+\end{figure}
 
-\section{Literature on serverless migration}[sec:migrationLiterature]
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{image-manager-serverless.png}
+  \caption{Serverless Image Manager}
+  \label{fig:serverlessImageManager}
+\end{figure}
 
-TODO Go through earlier papers on serverless migration.
+\section{New patterns} \label{sec:newPatterns}
 
-\textcite{lloyd18migration}: `` we present on a case study migration of the Precipitation Runoff Modeling System (PRMS), a Java-based environmental modeling application to the AWS Lambda serverless platform. We investigate performance and cost implications of memory reservation size, and evaluate scaling performance for increasing concurrent workloads. We then investigate the use of Keep-Alive workloads to preserve serverless infrastructure to minimize cold starts and ensure fast performance after idle periods for up to 100 concurrent client requests. We show how Keep-Alive workloads can be generated using cloud-based scheduled event triggers, enabling minimization of costs, to provide VM-like performance for applications hosted on serverless platforms for a fraction of the cost.''
+Here are some patterns to address problems I came across while sketching out the above serverless implementation:
 
-Two case studies by \textcite{adzic2017serverless} already mentioned in section \ref{sec:economics}.
+\subsection{Fetcher} \label{subsec:Fetcher}
+
+\textbf{Problem:} Scaling an IO-bound operation out to parallel function instances is inefficient since the instances compete of the same IO resources.
+
+\textbf{Solution:} Use local threading inside a single function instance to efficiently scale out operations like network requests.
+
+\subsection{Asynchronous Response} \label{subsec:AsyncResponse}
+
+\textbf{Problem:} The client doesn't get any feedback from the asynchronous tasks it triggers.
+
+\textbf{Solution:} Use a pub/sub channel to send a message to the client at the end of the task.
+
+\subsection{Task Manager} \label{subsec:taskManager}
+
+\textbf{Problem:} The client, after triggering an asynchronous task, has no way of tracking task progress or canceling it.
+
+\textbf{Solution:} Make each function instance subscribe to a pub/sub channel in the beginning of its execution in order to listen to client commands.
+
+\subsection{Throttled Recursion} \label{subsec:throttledRecursion}
+
+\textbf{Problem:} Recursive serverless functions can overwhelm downstream resources by scaling out quickly or result in an infinite loop.
+
+\textbf{Solution:} Pass recursive invokations through a message queue in order to control recursion speed.

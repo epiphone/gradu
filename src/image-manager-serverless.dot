@@ -1,0 +1,34 @@
+digraph g {
+  rankdir="LR"
+  newrank="true"
+  // splines="line" // ortho|line|polyline
+
+  client [shape="plaintext", label=< <b>Client</b><br/>>];
+  "Object Storage" [shape="cylinder"];
+  "Key-value Store" [shape="cylinder"];
+  "reCAPTCHA API";
+  "Cloud Vision API";
+
+  authorizer [shape="rect", label=< <b>λ</b> Authorizer<br/>>];
+  thumbnailer [shape="rect", label=< <b>λ</b> Thumbnailer<br/>>];
+  lqip [shape="rect", label=< <b>λ</b> LQIP<br/>>];
+  labeller [shape="rect", label=< <b>λ</b> Labeller<br/>>];
+
+  client -> authorizer;
+  client -> "Key-value Store";
+  authorizer -> "reCAPTCHA API";
+  authorizer -> "Object Storage";
+  client -> "Object Storage";
+
+  "Object Storage" -> thumbnailer;
+  thumbnailer -> "Object Storage";
+  "Object Storage" -> lqip;
+  lqip -> "Object Storage";
+  "Object Storage" -> labeller;
+  labeller -> "Object Storage";
+  labeller -> "Cloud Vision API";
+
+  lqip -> "Key-value Store";
+  labeller -> "Key-value Store";
+  thumbnailer -> "Key-value Store";
+}

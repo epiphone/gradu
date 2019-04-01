@@ -1,0 +1,16 @@
+digraph g {
+  rankdir="LR"
+  newrank="true"
+  // splines="line" // ortho|line|polyline
+
+  client [shape="plaintext", label=< <b>Client</b><br/>>];
+  "Image Manager" [shape="rect"];
+  "Object Storage" [shape="cylinder"];
+  "reCAPTCHA API";
+  "Cloud Vision API";
+
+  client -> "Image Manager";
+  "Image Manager" -> "Object Storage";
+  "Image Manager" -> "reCAPTCHA API";
+  "Image Manager" -> "Cloud Vision API";
+}
