@@ -1,0 +1,54 @@
+@startuml
+actor Client
+participant "Image Manager API" as API
+database "Cloud Storage" as Storage
+participant "reCAPTCHA API" as Captcha
+participant "Cloud Vision API" as Vision
+
+group 1: Authentication
+  Client -> Captcha : Solve CAPTCHA challenge
+  activate Captcha
+  return Return token
+
+  Client -> API : Upload image along with token
+  activate API
+  API -> Captcha : Validate token
+  activate Captcha
+  return OK
+end
+
+|||
+
+API -> Storage : Upload image
+activate Storage
+return Return Storage URL
+
+|||
+
+group 2.1: Thumbnail
+  API -> API: Render thumbnail
+  API -> Storage : Upload thumbnail
+end
+
+|||
+
+group 2.2: LQIP
+  API -> API: Render LQIP
+  API -> Storage : Upload LQIP
+end
+
+|||
+
+group 2.3: Labeling
+  API -> Vision : Request labels
+  activate Vision
+  Vision -> Storage : Download image
+  Vision -> Vision : Detect labels
+  return Return labels
+  API -> Storage : Update image metadata with labels
+end
+
+|||
+
+return Return image metadata
+@enduml

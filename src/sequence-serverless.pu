@@ -1,0 +1,68 @@
+@startuml
+actor Client
+database "Cloud Storage" as Storage
+participant "reCAPTCHA API" as Captcha
+
+group 1: Authentication
+  Client -> Captcha : Solve CAPTCHA challenge
+  activate Captcha
+  return Return token
+
+  create participant "<b>λ</b> Authenticator" as authenticator
+  Client -> authenticator : Request signed URL, passing token
+  activate authenticator
+  authenticator -> Captcha : Validate token
+  activate Captcha
+  return OK
+  authenticator <-> Storage : Request signed URL
+  return Return signed URL
+  destroy authenticator
+end
+
+|||
+
+Client -> Storage : Upload image
+activate Storage
+return Return Storage URL
+
+|||
+
+group 2.1: Thumbnail
+  create participant "<b>λ</b> Thumbnail" as thumbnail
+  Storage o-> thumbnail: Upload event triggers
+  activate thumbnail
+  thumbnail -> Storage : Download image
+  thumbnail -> thumbnail : Render thumbnail
+  return Upload thumbnail
+  destroy thumbnail
+end
+
+|||
+
+group 2.2: LQIP
+  create participant "<b>λ</b> LQIP" as lqip
+  Storage o-> lqip: Upload event triggers
+  activate lqip
+  lqip -> Storage : Download image
+  lqip -> lqip : Render LQIP
+  return Upload LQIP
+  destroy lqip
+end
+
+|||
+
+group 2.3: Labeling
+  create participant "<b>λ</b> Labeler" as labeler
+  Storage o-> labeler : Upload event triggers
+  activate labeler
+  participant "Cloud Vision API" as Vision
+  labeler -> Vision : Request labels
+  activate Vision
+  Vision -> Storage : Download image
+  Vision -> Vision : Detect labels
+  return Return labels
+  return Update image metadata with labels
+  destroy labeler
+end
+
+@enduml
