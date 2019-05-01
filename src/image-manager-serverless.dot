@@ -12,7 +12,7 @@ digraph g {
   authorizer [shape="rect", label=< <b>λ</b> Authorizer<br/>>];
   thumbnailer [shape="rect", label=< <b>λ</b> Thumbnailer<br/>>];
   lqip [shape="rect", label=< <b>λ</b> LQIP<br/>>];
-  labeller [shape="rect", label=< <b>λ</b> Labeller<br/>>];
+  labeler [shape="rect", label=< <b>λ</b> labeler<br/>>];
 
   client -> authorizer;
   client -> "Key-value Store";
@@ -24,11 +24,11 @@ digraph g {
   thumbnailer -> "Object Storage";
   "Object Storage" -> lqip;
   lqip -> "Object Storage";
-  "Object Storage" -> labeller;
-  labeller -> "Object Storage";
-  labeller -> "Cloud Vision API";
+  "Object Storage" -> labeler;
+  labeler -> "Object Storage";
+  labeler -> "Cloud Vision API";
 
   lqip -> "Key-value Store";
-  labeller -> "Key-value Store";
+  labeler -> "Key-value Store";
   thumbnailer -> "Key-value Store";
 }

@@ -1,31 +1,43 @@
 \chapter{Migration process}
 
-This chapter describes the process of migrating a web application to serverless architecture. The goal of the migration is to explore the feasibility of the catalogued patterns by applying them on common problems in the domain of web application development. In cases where the patterns prove insufficient or unsuitable to the problem in hand, modifications or new patterns are proposed. As well as exploring the patterns we're also seeing how the distinct serverless features drive application design and trying to gain deeper understanding of the advantages and shortcomings of the paradigm.
+This chapter describes the process of migrating a web application to serverless architecture. The goal of the migration is to explore the feasibility of the catalogued patterns by applying them on common problems in the domain of web application development. In cases where the patterns prove insufficient or unsuitable to the problem in hand, modifications or new patterns are proposed. As well as exploring the patterns we're seeing how the distinct serverless features drive application design and try to gain deeper understanding of the advantages and shortcomings of the paradigm. Finally in chapter \ref{cha:evaluation} the migration outcome is evaluated against the pre-migration application in terms of quality and ease of development.
 
-The migrated application is a tool for managing image assets, adapted from a real-world work assignment. Similarly to SaaS offerings such as Cloudinary, the application takes user-uploaded images, does various forms of processing and then serves the processed images publicly to be consumed by other applications. In our case the processing needs are threefold: rendering a thumbnail, rendering a low quality image placeholder (LQIP), and automatic labelling using an external image analysis API. In addition the application does CAPTCHA-based authentication to protect the image upload endpoint from abuse.
+The migrated application, Image Manager, is a tool for managing image assets. The application is adapted from a real-world work assignment, slightly modified for the sake of illustration. Similarly to a SaaS offering such as Cloudinary, the application takes user-uploaded images, does various forms of processing and then hosts and serves the processed images to be consumed by other applications. In case of Image Manager the processing needs are threefold: rendering a thumbnail, rendering a low quality image placeholder (LQIP), and automatic label detection. The two CPU-intensive rendering tasks are performed locally whereas labeling is offloaded to an external image analysis service, Google Cloud Vision API.
 
-We can thus roughly divide the application into three parts: image hosting, image processing and authentication.
+% We can thus roughly divide the application into four parts: API, authentication, image processing and image hosting.
 
-already uses cloud services
-
-Figure \ref{fig:imageManager} presents the pre-migration serverful architecture. In this implementation all image processing logic as well as the various service clients are contained inside a single server application that is containerized and deployed on a VM. \ref{fig:serverlessImageManager} presents the migrated serverless architecture, where the same functionality is split into separate serverless functions and tied together in an event-driven flow. In both figures rectangular boxes represent the parts that are implemented by hand, whereas the rest are external services.
-
-TODO serverful app already uses cloud storage and analysis API
-
-Building both deployment artifacts from the same code base
+Figure \ref{fig:serverfulArchitecture} presents the pre-migration serverful architecture. This implementation consists of a single server application that connects to a number of external services. The server application publishes a single API endpoint for image uploads which is consumed by a browser client. The public-facing API is protected with CAPTCHA-based authentication to prevent spam. The application is containerized into a Docker image and deployed on a single VM on Google Cloud Platform. The server application connects to a number of Google Cloud Platform services: processed images are stored on the object storage service Cloud Storage, image labeling is handled with the Vision API service, and the reCAPTCHA service is used for authentication. Figure \ref{fig:serverfulArchitecture} illustrates the image upload sequence in detail, showing how the various services fit together.
 
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.65\textwidth]{image-manager.png}
-  \caption{Serverful Image Manager}
-  \label{fig:imageManager}
+  \caption{Serverful Image Manager architecture}
+  \label{fig:serverfulArchitecture}
 \end{figure}
 
 \begin{figure}[h]
   \centering
+  \includegraphics[width=0.85\textwidth]{sequence.png}
+  \caption{Serverful Image Manager upload sequence}
+  \label{fig:serverfulSequence}
+\end{figure}
+
+\ref{fig:serverlessArchitecture} presents the migrated serverless architecture, where the same functionality is split into separate serverless functions and tied together in an event-driven flow. In both figures rectangular boxes represent the parts that are implemented by hand, whereas the rest are external services. \ref{fig:serverlessSequence} illustrates the image upload sequence in our serverless implementation.
+
+% TODO Building both deployment artifacts from the same code base. describe migration process step-by-step? API, authentication, processing and upload?
+
+\begin{figure}[h]
+  \centering
   \includegraphics[width=\textwidth]{image-manager-serverless.png}
-  \caption{Serverless Image Manager}
-  \label{fig:serverlessImageManager}
+  \caption{Serverless Image Manager architecture}
+  \label{fig:serverlessArchitecture}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.85\textwidth]{sequence-serverless.png}
+  \caption{Serverless Image Manager upload sequence}
+  \label{fig:serverlessSequence}
 \end{figure}
 
 \section{New patterns} \label{sec:newPatterns}
@@ -33,6 +45,7 @@ Building both deployment artifacts from the same code base
 Here are some patterns to address problems I came across while sketching out the above serverless implementation:
 
 \subsection{Fetcher} \label{subsec:Fetcher}
+% or Local Threader?
 
 \textbf{Problem:} Scaling an IO-bound operation out to parallel function instances is inefficient since the instances compete of the same IO resources.
 
@@ -51,6 +64,8 @@ E.g. three parallel functions each making a network request, or three parallel f
 \textbf{Problem:} The client, after triggering an asynchronous task, has no way of tracking task progress or cancelling it.
 
 \textbf{Solution:} Make each function instance subscribe to a pub/sub channel in the beginning of its execution in order to listen to client commands.
+
+The former is one-way pub/sub, in Task Manager the function also subscribes.
 
 \subsection{Throttled Recursion} \label{subsec:throttledRecursion}
 
