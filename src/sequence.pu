@@ -19,12 +19,6 @@ end
 
 |||
 
-API -> Storage : Upload image
-activate Storage
-return Return Storage URL
-
-|||
-
 group 2.1: Thumbnail
   API -> API: Render thumbnail
   API -> Storage : Upload thumbnail
@@ -40,6 +34,9 @@ end
 |||
 
 group 2.3: Labeling
+  API -> Storage : Upload image
+  activate Storage
+  return Return Storage URL
   API -> Vision : Request labels
   activate Vision
   Vision -> Storage : Download image
