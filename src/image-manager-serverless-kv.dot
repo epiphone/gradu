@@ -5,6 +5,7 @@ digraph g {
 
   client [shape="plaintext", label=< <b>Client</b><br/>>];
   "Object Storage" [shape="cylinder"];
+  "Key-value Store" [shape="cylinder"];
   "reCAPTCHA API";
   "Cloud Vision API";
 
@@ -14,6 +15,7 @@ digraph g {
   labeler [shape="rect", label=< <b>λ</b> labeler<br/>>];
 
   client -> authorizer;
+  client -> "Key-value Store";
   authorizer -> "reCAPTCHA API";
   authorizer -> "Object Storage";
   client -> "Object Storage";
@@ -25,4 +27,8 @@ digraph g {
   "Object Storage" -> labeler;
   labeler -> "Object Storage";
   labeler -> "Cloud Vision API";
+
+  lqip -> "Key-value Store";
+  labeler -> "Key-value Store";
+  thumbnailer -> "Key-value Store";
 }
