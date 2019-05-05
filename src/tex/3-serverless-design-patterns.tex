@@ -113,7 +113,7 @@ A SOA pattern analogous to the State Machine is the Orchestrator, in which ``an 
 
 \subsection{Thick Client} \label{subsec:thickClient}
 
-\textbf{Problem:} Routing client-service requests through an intermediary FaaS layer causes extra costs and latency.
+\textbf{Problem:} Routing client-service requests through an intermediary server layer causes extra costs and latency.
 
 \begin{figure}[h]
   \centering
@@ -122,7 +122,7 @@ A SOA pattern analogous to the State Machine is the Orchestrator, in which ``an 
   \label{fig:patternThickClient}
 \end{figure}
 
-\textbf{Solution:} Create thicker, more powerful clients that directly access resources and orchestrate workflows.
+\textbf{Solution:} Create thicker, more powerful clients that directly access services and orchestrate workflows.
 
 Serverless applications, as described in chapter \ref{cha:serverless}, typically rely heavily on third-party cloud services (BaaS) interspersed with custom logic in form of FaaS functions. In a traditional three-tier web application architecture interaction with these external services would be handled by a server application that sits between client and service layers \parencite{robert2016serverlessarchitectures}. Following this model, the client can be limited in functionality whereas the server application plays a larger role. \textcite{sbarski2017serverless} point out that the model of the backend as a gatekeeper between client and services is in conflict with the serverless paradigm. First of all, using FaaS as a middle layer in front of cloud resources directly translates into extra costs: on top of paying for the cloud service call, one has to pay for function invocation and execution for the duration of the network call as well as data transfer between the service and the FaaS provider. Secondly, a middle layer of FaaS results in extra network hops which increases latency and reduces user experience. The authors thus advise against routing everything through a FaaS layer, and advocate building thick clients that communicate directly with cloud services and orchestrate workflows between them.
 
@@ -140,7 +140,7 @@ How to handle asynchronous workflows triggered by external events?
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.8\textwidth]{patterns/event-processor.png}
+  \includegraphics[width=0.65\textwidth]{patterns/event-processor.png}
   \caption{Event Processor}
   \label{fig:patternEventProcessor}
 \end{figure}
