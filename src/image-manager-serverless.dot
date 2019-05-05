@@ -11,7 +11,7 @@ digraph g {
   authorizer [shape="rect", label=< <b>λ</b> Authorizer<br/>>];
   thumbnailer [shape="rect", label=< <b>λ</b> Thumbnailer<br/>>];
   lqip [shape="rect", label=< <b>λ</b> LQIP<br/>>];
-  labeler [shape="rect", label=< <b>λ</b> labeler<br/>>];
+  labeler [shape="rect", label=< <b>λ</b> Labeler<br/>>];
 
   client -> authorizer;
   authorizer -> "reCAPTCHA API";
