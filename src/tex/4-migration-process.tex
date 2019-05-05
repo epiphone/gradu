@@ -17,16 +17,16 @@ The pre-migration serverful Image Manager consists of a single server applicatio
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.90\textwidth]{sequence.png}
+  \includegraphics[width=1\textwidth]{sequence.png}
   \caption{Serverful Image Manager upload sequence}
   \label{fig:serverfulSequence}
 \end{figure}
 
-Overall the image upload task is both CPU-intensive due to local rendering and IO-heavy due to cloud service requests and also since processing results are temporarily written on disk before cloud storage upload. Image Manager is written in TypeScript, transpiled into JavaScript and running on NodeJS v10. The server application is containerized into a Docker image and deployed on a single VM on Google Cloud Platform's \textit{us-east1} region. The VM exposes an IP address through which the application is accessed from public internet.
+Overall the image upload task is both CPU-intensive due to local rendering and IO-heavy due to cloud service requests and also since processing results are temporarily written on disk before cloud storage upload. Image Manager is written in TypeScript, transpiled into JavaScript and running on NodeJS v10. The server application is containerized into a Docker image and deployed on a single VM on Google Cloud Platform's us-east1 region. The VM exposes an IP address through which the application is accessed from public internet.
 
-The motivation to migrate Image Manager to serverless architecture arises from four main shortcomings in the current implementation: availability, scalability, cost-efficiency and isolation. First, the obvious drawback of the server application's single-VM deployment is poor availability as there is no failover instance to take over in case of VM failure. Likewise the application's capacity to serve traffic is limited by a single VM's computing resources as there is no scaling mechanism in play. Achieving this double goal of availability and scalability, i.e. ensuring a correct number of VMs to meet current demand at all times would require a considerable amount of infrastructure configuration involving load balancing, clusterization and scaling policies (TODO source?). This inelasticity also results in cost-inefficiency as the VM instance is constantly running and accumulating charges whether or not there's any traffic. Notably the cloud services connected to by the server application do not contribute to this cost-inefficiency as they follow a pay-per-use pricing model. Finally the current implementation suffers from a lack of isolation, primarily since all application logic including image processing tasks are bundled together into a single application. This causes resource contention, as for example high CPU usage in one of the rendering tasks can divert resources from the API and result in connection timeouts. This combined with processing tasks' highly asymmetrical performance profiles also further complicates scaling as we can only scale the whole application, not parts of it. Lack of isolation also presents itself in how all traffic is routed through the server application, which in case of image uploads means an extra network trip before reaching Cloud Storage.
+The motivation to migrate Image Manager to serverless architecture arises from four main shortcomings in the current implementation: availability, scalability, cost-efficiency and isolation. First, the obvious drawback of the server application's single-VM deployment is poor availability as there is no failover instance to take over in case of VM failure. Likewise the application's capacity to serve traffic is limited by a single VM's computing resources as there is no scaling mechanism in play. Achieving this double goal of availability and scalability, i.e. ensuring a correct number of VMs to meet current demand at all times would require a considerable amount of infrastructure configuration involving load balancing, clusterization and scaling policies \parencite{jonas19berkeleyView}. This inelasticity also results in cost-inefficiency as the VM instance is constantly running and accumulating charges whether or not there's any traffic. Notably the cloud services connected to by the server application do not contribute to this cost-inefficiency as they follow a pay-per-use pricing model. Finally the current implementation suffers from a lack of isolation, primarily since all application logic including image processing tasks are bundled together into a single application. This causes resource contention, as for example high CPU usage in one of the rendering tasks can divert resources from the API and result in connection timeouts. This combined with processing tasks' highly asymmetrical performance profiles also further complicates scaling as we can only scale the whole application, not parts of it. Lack of isolation also presents itself in how all traffic is routed through the server application, which in case of image uploads means an extra network trip before reaching Cloud Storage.
 
-\section{Serverless implementation}
+\section{Serverless Image Manager}
 
 keep using same services, only server application changes. used in different ways too
 
@@ -37,7 +37,11 @@ processing triggered as Event Processor, branches off to Fan-out/Fan-in
 processing tasks isolated, Bulkhead, can scale independently
 for which need was pattern X chosen?
 
+decoupling
+
 \ref{fig:serverlessArchitecture} presents the migrated serverless architecture, where the same functionality is split into separate serverless functions and tied together in an event-driven flow. In both figures rectangular boxes represent the parts that are implemented by hand, whereas the rest are external services. \ref{fig:serverlessSequence} illustrates the image upload sequence in our serverless implementation.
+
+serverless Image Manager doesn't expose any API apart from the authenticator; connect directly to Cloud Storage via their SDK/REST API.
 
 % TODO Building both deployment artifacts from the same code base. describe migration process step-by-step? API, authentication, processing and upload?
 
@@ -50,7 +54,7 @@ for which need was pattern X chosen?
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.90\textwidth]{sequence-serverless.png}
+  \includegraphics[width=1\textwidth]{sequence-serverless.png}
   \caption{Serverless Image Manager upload sequence}
   \label{fig:serverlessSequence}
 \end{figure}
@@ -67,6 +71,23 @@ Here are some patterns to address problems I came across while sketching out the
 \textbf{Solution:} Use local threading inside a single function instance to efficiently scale out operations like network requests.
 
 E.g. three parallel functions each making a network request, or three parallel functions invoked by cloud storage upload that start execution by downloading the image: is it more efficient to have one function download the image and then invoke/pass the image as argument to three processing functions?
+
+\begin{lstlisting}[language=JavaScript,caption=Image labeler function handler,captionpos=b,label=lst:labelerhandler,showstringspaces=false,belowskip=2em,frame=tb,aboveskip=2em]
+import { Storage } from '@google-cloud/storage'
+import { getBucketFileLabels } from '../label'
+
+const gcs = new Storage()
+
+export async function labeler(data) {
+  const labels = await getBucketFileLabels(data)
+
+  return gcs
+    .bucket(data.bucket)
+    .file(data.name)
+    .setMetadata({ metadata: { Labels: labels } })
+}
+\end{lstlisting}
+
 
 \subsection{Asynchronous Response} \label{subsec:AsyncResponse}
 

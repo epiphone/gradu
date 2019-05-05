@@ -10,6 +10,31 @@
 
 \usepackage{listings}
 
+% Javascript code listing setup:
+\usepackage{color}
+\definecolor{lightgray}{rgb}{.9,.9,.9}
+\definecolor{darkgray}{rgb}{.4,.4,.4}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+\lstdefinelanguage{JavaScript}{
+  keywords={do, if, in, for, let, new, try, var, case, else, enum, eval, null, this, true, void, with, await, break, catch, class, const, false, super, throw, while, yield, delete, export, import, public, return, static, switch, typeof, default, extends, finally, package, private, continue, debugger, function, arguments, interface, protected, implements, instanceof},
+  morecomment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]',
+  morestring=[b]",
+  ndkeywords={class, export, boolean, throw, implements, import, this},
+  sensitive=true
+}
+\lstset{
+   basicstyle=\footnotesize\ttfamily,
+   tabsize=2,
+   captionpos=b,
+   showstringspaces=false,
+   belowskip=2em,
+   frame=tb,
+   aboveskip=2em
+}
+% \renewcommand\thelstlisting{\arabic{lstlisting}}
+
 % NOTE: This must be the last \usepackage in the whole document!
 \usepackage[bookmarksopen,bookmarksnumbered,linktocpage]{hyperref}
 

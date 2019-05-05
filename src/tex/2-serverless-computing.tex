@@ -156,11 +156,7 @@ Being stateless and short-lived, serverless functions have fundamentally limited
 
 FaaS event sources can be divided into two categories of synchronous and asynchronous. The first category follows a typical request-response flow: a client issues a request and blocks while waiting for response. Synchronous event sources include HTTP and RPC calls which can be used to implement a REST API, a command line client or any other service requiring immediate feedback. Asynchronous event sources on the other hand result in non-blocking execution and are typically used to implement background workers, scheduled event handlers and queue workers. Asynchronous event sources include message queues, publish-subscribe systems, database or file storage change feeds and schedulers among others. The details and metadata of the triggering event are passed to the function as input parameters, with exact implementation varying per event type and provider. In case of an HTTP call, for example, the event object includes request path, headers, body and query parameters. A function instance is also supplied a context object which in turn contains runtime information and other general properties that span multiple function invocations: function name, version, memory limit and remaining execution time are examples of typical context variables. FaaS platforms also support user-defined environment variables which function instances can access through the context object -- useful for handling configuration parameters and secret keys. As for output, functions can directly return a value (in case of synchronous invocation) or either trigger the next execution phase in a workflow or simply log the result (in case of asynchronous invocation). An example function handler is presented in listing \ref{lst:handlerExample}. In addition to publishing and executing serverless functions, FaaS platforms provide auxiliary capabilities such as monitoring, versioning and logging. \parencite{cncf18serverlessWG}
 
-% TODO talk about serverless application repository and step functions/workflow engines here.
-
-\renewcommand\thelstlisting{\arabic{lstlisting}}
-\setcounter{lstlisting}{0}
-\begin{lstlisting}[language=Python,caption=Example FaaS handler,captionpos=b,label=lst:handlerExample,showstringspaces=false,belowskip=2em,frame=tb,aboveskip=2em]
+\begin{lstlisting}[language=Python,caption=Example FaaS handler in Python,label=lst:handlerExample]
   def main(event, context):
       return {"payload": "Hello, " + event.name}
 \end{lstlisting}
