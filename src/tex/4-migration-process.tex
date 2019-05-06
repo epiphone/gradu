@@ -9,23 +9,23 @@ This chapter describes the process of migrating a web application to serverless 
 
 The migrated application, Image Manager, is a tool for managing image assets. Image Manager is adapted from a real-world application, although modified in places for the sake of illustration. Similarly to a SaaS offering such as Cloudinary, the application takes user-uploaded images, performs various forms of processing and then hosts and serves the processed images to be consumed by other applications. In case of Image Manager the processing needs are threefold: rendering a thumbnail, rendering a low quality image placeholder (LQIP), and automatic label detection. Thus in short Image Manager can be split into three basic functional requirements: image upload, image processing and image hosting.
 
-The pre-migration serverful Image Manager consists of a single server application that connects to a number of BaaS-type cloud services, as depicted in component diagram \ref{fig:serverfulArchitecture}. The server application publishes a single HTTP API endpoint for image uploads which is consumed by a browser client. In place of access control this public-facing API uses a CAPTCHA: before image upload the client requests a challenge from Google reCAPTCHA API, solves it and sends the obtained token along with the image upload request. The server application then also connects to reCAPTCHA API to verify token validity before proceeding with the upload request. A CAPTCHA is used instead of full-blown authentication to allow for anonymous users while still providing some degree of protection against bots and other illicit usage. After CAPTCHA verification the application proceeds with image processing. The thumbnail and LQIP rendering tasks are performed locally whereas labeling is handled by a network call to an external image analysis service, Google Cloud Vision API. The three processing tasks are independent and performed concurrently. Finally both the original and processed images are uploaded to Google Cloud Storage where they can be fetched via publicly accessible URLs. Figure \ref{fig:serverfulSequence} illustrates the image upload sequence in detail, showing how the components fit together.
+The pre-migration serverful Image Manager consists of a single server application that connects to a number of BaaS-type cloud services. These components are depicted in figure \ref{fig:serverfulArchitecture}. The server application publishes an HTTP API endpoint for image uploads which is consumed by a browser client. In place of access control this public-facing API uses a CAPTCHA: before image upload the client requests a challenge from Google reCAPTCHA API, solves it and sends the obtained token along with the image upload request. The server application then also connects to reCAPTCHA API to verify token validity before proceeding with the upload request. A CAPTCHA is used instead of full-blown authentication to allow for anonymous users while still providing some degree of protection against bots and other illicit usage. After CAPTCHA verification the application proceeds with image processing. The thumbnail and LQIP rendering tasks are performed locally whereas labeling is handled by a network call to an external image analysis service, Google Cloud Vision API. The three processing tasks are independent and performed concurrently. Finally both the original and processed images are uploaded to Google Cloud Storage where they can be fetched via publicly accessible URLs. Figure \ref{fig:serverfulSequence} illustrates the image upload sequence in detail, showing how the components fit together.
 
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.65\textwidth]{image-manager.png}
-  \caption{Serverful Image Manager components}
+  \caption{Image Manager components}
   \label{fig:serverfulArchitecture}
 \end{figure}
 
 \begin{figure}[h]
   \centering
   \includegraphics[width=1\textwidth]{sequence.png}
-  \caption{Serverful Image Manager upload sequence}
+  \caption{Image Manager upload sequence}
   \label{fig:serverfulSequence}
 \end{figure}
 
-Overall the image upload task is both CPU-intensive due to local rendering and IO-heavy due to cloud service requests and also since processing results are temporarily written on disk before cloud storage upload. As for technical details, Image Manager is written in TypeScript, transpiled into JavaScript and running on NodeJS v10. The server application is containerized into a Docker image and deployed on a single VM on Google Cloud Platform's us-east1 region. The VM exposes an IP address through which the application is accessed from public internet.
+Overall the image upload task is both CPU-intensive due to rendering and IO-heavy due to cloud service requests and also since processing results are temporarily written on disk before cloud storage upload. As for technical details, Image Manager is written in TypeScript, transpiled into JavaScript and running on NodeJS v10. The server application is containerized into a Docker image and deployed on a single VM on Google Cloud Platform's us-east1 region. The VM exposes an IP address through which the application is accessed from public internet.
 
 Image Manager can even in its pre-migration state be considered ``cloud-ready'' in the sense that it was originally designed and developed to run specifically in a cloud environment \parencite{pozdniakova17cloudready}. This is reflected in the usage of container technology and the reliance on cloud platform services in favour of self-managed code. The degree of cloud-readiness should be kept in mind when considering the migration process as the practices and observations might not apply when starting off with a more conventional on-premise application architecture.
 
@@ -37,7 +37,7 @@ Rewriting an application in serverless architecture is clearly not a trivial tas
 
 Looking at Image Manager's components in figure \ref{fig:serverfulArchitecture}, it's notable that the system's non-functional deficiencies stem from the server application and not from the integrated cloud services. The services are fully provider-managed, scale to demand and follow a pay-per-use pricing model: they don't constitute an operational overhead nor limit the application's elasticity scaling- or pricing-wise. A serverless Image Manager can therefore retain these integrations while reimplementing the server application in FaaS. While the services themselves remain the same, what changes is the way they're interfaced with since a FaaS consumer can necessitate different communication patterns than a conventional one: publish-subscribe instead of request-response, for example. As for the server application, it has two main responsibilities: first, it acts as a glue component that binds together BaaS components. Second, it provides the kind of custom server-side functionality that we cannot or choose not to offload to external services, namely thumbnail and LQIP rendering. Seeing how these responsibilities match identically with the role of FaaS in serverless systems as discussed in section \ref{sec:faasbaas}, we can expect FaaS to provide a fitting serverless alternative and migration target for the server application.
 
-The simplest FaaS implementation of Image Manager involves wrapping the whole server application into a single function that is then invoked synchronously via HTTP. This arrangement is from the client's point of view identical to the container deployment since the function's exposed HTTP trigger acts just like the server application's HTTP API. It also already manages to shift a majority of operational concerns on to the provider. However in many cases this approach is limited by the platform's restrictions on function size and computing resources. A single monolithic function also does little to improve isolation and maintainability. If allowed by platform limits the approach can nonetheless be a good starting point for a migration: akin to the Strangler pattern (\ref{subsec:strangler}) first migrate the application into a single function and then incrementally split it off into smaller units.
+The simplest FaaS implementation of Image Manager involves wrapping the whole server application into a single function that is then invoked synchronously via HTTP. This arrangement is from the client's point of view identical to the container deployment since the function's exposed HTTP trigger acts just like the server application's HTTP API. It also already manages to shift a majority of operational concerns on to the cloud provider. However in many cases this approach is limited by the platform's restrictions on function size and computing resources. A single monolithic function also does little to improve isolation and maintainability. If allowed by platform limits the approach can nonetheless be a good starting point for migration: akin to the Strangler pattern (\ref{subsec:strangler}) first migrate the application into a single function and then incrementally split it off into smaller units.
 
 \subsection{Pattern selection}
 
@@ -45,31 +45,7 @@ Taking full advantage of the FaaS platform's capabilities requires a more thorou
 
 First of all the requirement for cost-efficiency leads towards the Event Processor pattern (\ref{subsec:Eventprocessing}). The image processing tasks should be event-driven: executed on-demand whenever there are images to process and not consume any resources or amass charges otherwise. Technically this is implemented by splitting image processing into a new function that subscribes to Cloud Storage upload events so that each image upload triggers a function invocation. The pattern also improves scalability since a large number of uploads results in a similarly large number of function invocations.
 
-A further improvement on scalability is gained with the Fan-out/Fan-in pattern (\ref{subsec:FanoutFanin}) by splitting the three separate image processing tasks into their own functions. As each upload now triggers not one but three parallel functions, CPU-intensive rendering tasks can scale independently from the less intensive labeling task. We also observe a performance benefit as the overall task is completed faster.
-
-With the Event Processor there's no longer a need for an API layer that receives uploads and initiates processing. Instead we can apply the Thick Client pattern (\ref{subsec:thickClient}) and have clients connect directly to Cloud Storage. This connection is secured using the Valet Key pattern (\ref{fig:valetKey}) which involves signing temporary authorization tokens for service access. The Bulkhead pattern (\ref{subsec:Bulkhead}) is used in turn to implement the Valet Key: the authorizer code is split off into its own function to ensure access to Cloud Storage even when other parts of the system are under high load.
-
-% TODO Function Warmer for authorizer?
-
-Figure \ref{fig:serverlessArchitecture} presents the migrated serverless architecture. The old functionality is split into four different functions and tied together in an event-driven flow. Figure \ref{fig:serverlessSequence} illustrates the image upload sequence.
-
-serverless Image Manager doesn't expose any API apart from the authenticator; connect directly to Cloud Storage via their SDK/REST API.
-
-% TODO Building both deployment artifacts from the same code base. describe migration process step-by-step? API, authentication, processing and upload?
-
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=\textwidth]{image-manager-serverless.png}
-  \caption{Serverless Image Manager architecture}
-  \label{fig:serverlessArchitecture}
-\end{figure}
-
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=1\textwidth]{sequence-serverless.png}
-  \caption{Serverless Image Manager upload sequence}
-  \label{fig:serverlessSequence}
-\end{figure}
+A further improvement on scalability is gained with the Fan-out/Fan-in pattern (\ref{subsec:FanoutFanin}) by splitting the three separate image processing tasks into their own functions. As each upload now triggers not one but three parallel functions, CPU-intensive rendering tasks can scale independently from the less intensive labeling task. We also observe a performance benefit as the overall task is completed faster. The source code of the image labelling function is presented in listing \ref{lst:labelerhandler} to exemplify how a comparatively small amount of boilerplate code is required to instantiate a new function.
 
 \begin{lstlisting}[language=JavaScript,caption=Image labeler function handler,captionpos=b,label=lst:labelerhandler,showstringspaces=false,belowskip=2em,frame=tb,aboveskip=2em]
   import { Storage } from '@google-cloud/storage'
@@ -86,6 +62,28 @@ serverless Image Manager doesn't expose any API apart from the authenticator; co
       .setMetadata({ metadata: { Labels: labels } })
   }
 \end{lstlisting}
+
+The Thick Client pattern (\ref{subsec:thickClient}) is also selected with cost-efficiency in mind. Since the Event Processor breaks coupling between the API and image processing, it is now possible to omit the API layer and have the client orchestrate uploads instead. Retaining the API would mean paying for function execution for the duration of image upload; by uploading images from the client directly to Cloud Storage this expense as well as an extra network trip can be avoided.
+
+The Valet Key pattern (\ref{subsec:valetKey}) is chosen to authorize requests between the client and Cloud Storage and thus facilitate the client-driven workflow. This involves extending the CAPTCHA validation behaviour so that a temporary access token to Cloud Storage is returned in case of a valid CAPTCHA. Applying the Bulkhead pattern (\ref{subsec:Bulkhead}), the Valet Key implementation is split off into a separate authorizer function to ensure its availability when the rest of the system is under high load. The Function Warmer pattern (\ref{subsec:FunctionWarmer}) could optionally be used to further improve the authorizer's availability by keeping a warm function instance ready to serve requests at all times. In case of Image Manager there are no strict response time requirements so this pattern is omitted.
+
+The design process results in the proposed design of the serverless Image Manager. This outcome is presented in figure \ref{fig:serverlessArchitecture}. In the serverless Image Manager the server application is replaced by four different FaaS functions: one for each image processing task plus an authorizer function. Out of these functions only the authorizer exposes an HTTP API whereas the others are event-driven. The new image upload sequence, as illustrated in figure \ref{fig:serverlessSequence}, is also more event-driven as opposed to being orchestrated by the server application.
+
+% TODO Building both deployment artifacts from the same code base. describe migration process step-by-step? API, authentication, processing and upload?
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{image-manager-serverless.png}
+  \caption{Serverless Image Manager components}
+  \label{fig:serverlessArchitecture}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=1\textwidth]{sequence-serverless.png}
+  \caption{Serverless Image Manager upload sequence (steps 2.1-2.3 run in parallel)}
+  \label{fig:serverlessSequence}
+\end{figure}
 
 \section{New patterns} \label{sec:newPatterns}
 
