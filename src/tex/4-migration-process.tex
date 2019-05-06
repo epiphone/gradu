@@ -1,9 +1,6 @@
-\chapter{Migration process}
+\chapter{Migration process} \label{cha:migration}
 
-This chapter describes the process of migrating a web application to serverless architecture. The goal of the migration is to explore the feasibility of the catalogued patterns by applying them on common problems in the domain of web application development. In cases where the patterns prove insufficient or unsuitable to the problem in hand, modifications or new patterns are proposed. As well as exploring the patterns we're seeing how the distinct serverless features drive application design and trying to gain deeper understanding of the advantages and shortcomings of the paradigm. Finally in chapter \ref{cha:evaluation} the migration outcome is evaluated against the pre-migration application in terms of quality and ease of development.
-
-% define migration as retaining functionality while improving quality?
-% TODO better describe chapter contents: identifying problems in old implementation, picking patterns to address them
+This chapter describes the process of migrating a web application to serverless architecture. The goal of the process is to explore the catalogued patterns' feasibility by applying them on common problems in the domain of web application development. As well as exploring the patterns we're seeing how the distinct serverless features drive application design and trying to gain deeper understanding of the advantages and shortcomings of the paradigm. The chapter begins with the description of the migrated application along with its functional and non-functional requirements. We then identify the ways in which the current implementation fails to meet these requirements and thus set a target for the serverless implementation. Lastly a new serverless design is proposed using the pattern catalogue of chapter \ref{cha:patterns}, and in cases where the patterns prove insufficient or unsuitable to the problem in hand, modifications or new patterns are proposed.
 
 \section{Image Manager}
 
@@ -11,14 +8,14 @@ The migrated application, Image Manager, is a tool for managing image assets. Im
 
 The pre-migration serverful Image Manager consists of a single server application that connects to a number of BaaS-type cloud services. These components are depicted in figure \ref{fig:serverfulArchitecture}. The server application publishes an HTTP API endpoint for image uploads which is consumed by a browser client. In place of access control this public-facing API uses a CAPTCHA: before image upload the client requests a challenge from Google reCAPTCHA API, solves it and sends the obtained token along with the image upload request. The server application then also connects to reCAPTCHA API to verify token validity before proceeding with the upload request. A CAPTCHA is used instead of full-blown authentication to allow for anonymous users while still providing some degree of protection against bots and other illicit usage. After CAPTCHA verification the application proceeds with image processing. The thumbnail and LQIP rendering tasks are performed locally whereas labeling is handled by a network call to an external image analysis service, Google Cloud Vision API. The three processing tasks are independent and performed concurrently. Finally both the original and processed images are uploaded to Google Cloud Storage where they can be fetched via publicly accessible URLs. Figure \ref{fig:serverfulSequence} illustrates the image upload sequence in detail, showing how the components fit together.
 
-\begin{figure}[h]
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.65\textwidth]{image-manager.png}
   \caption{Image Manager components}
   \label{fig:serverfulArchitecture}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
   \centering
   \includegraphics[width=1\textwidth]{sequence.png}
   \caption{Image Manager upload sequence}
@@ -67,18 +64,16 @@ The Thick Client pattern (\ref{subsec:thickClient}) is also selected with cost-e
 
 The Valet Key pattern (\ref{subsec:valetKey}) is chosen to authorize requests between the client and Cloud Storage and thus facilitate the client-driven workflow. This involves extending the CAPTCHA validation behaviour so that a temporary access token to Cloud Storage is returned in case of a valid CAPTCHA. Applying the Bulkhead pattern (\ref{subsec:Bulkhead}), the Valet Key implementation is split off into a separate authorizer function to ensure its availability when the rest of the system is under high load. The Function Warmer pattern (\ref{subsec:FunctionWarmer}) could optionally be used to further improve the authorizer's availability by keeping a warm function instance ready to serve requests at all times. In case of Image Manager there are no strict response time requirements so this pattern is omitted.
 
-The design process results in the proposed design of the serverless Image Manager. This outcome is presented in figure \ref{fig:serverlessArchitecture}. In the serverless Image Manager the server application is replaced by four different FaaS functions: one for each image processing task plus an authorizer function. Out of these functions only the authorizer exposes an HTTP API whereas the others are event-driven. The new image upload sequence, as illustrated in figure \ref{fig:serverlessSequence}, is also more event-driven as opposed to being orchestrated by the server application.
+The design process results in the proposed design of the serverless Image Manager. This outcome is presented in figure \ref{fig:serverlessArchitecture} where rectangular blocks with a $\lambda$ prefix signify a FaaS function. In the serverless Image Manager the server application is replaced by four different functions: one for each image processing task plus an authorizer function. Out of these functions only the authorizer exposes an HTTP API whereas the others are event-driven. The new image upload sequence, as illustrated in figure \ref{fig:serverlessSequence}, is also more event-driven as opposed to being orchestrated by the server application.
 
-% TODO Building both deployment artifacts from the same code base. describe migration process step-by-step? API, authentication, processing and upload?
-
-\begin{figure}[h]
+\begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{image-manager-serverless.png}
   \caption{Serverless Image Manager components}
   \label{fig:serverlessArchitecture}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
   \centering
   \includegraphics[width=1\textwidth]{sequence-serverless.png}
   \caption{Serverless Image Manager upload sequence (steps 2.1-2.3 run in parallel)}
@@ -87,34 +82,53 @@ The design process results in the proposed design of the serverless Image Manage
 
 \section{New patterns} \label{sec:newPatterns}
 
-% TODO move to the end of Evaluation chapter?
-Here are some patterns to address problems I came across while sketching out the above serverless implementation:
+This section lists five new patterns extracted from migration process. The patterns present solutions to problems in Image Manager's serverless design e.g. in places where the serverless implementation performs worse than the original one or fails to provide the same behaviour. In addition we're introducing patterns that could be used to extend the serverless design to further improve its quality or add functionality beyond the original requirements.
 
-\subsection{Fetcher} \label{subsec:Fetcher}
-% or Local Threader?
+\subsection{Async Response} \label{subsec:AsyncResponse}
+
+\textbf{Problem:} Client doesn't get any feedback from the asynchronous tasks it triggers.
+
+% TODO visualise!
+
+\textbf{Solution:} Use a pub/sub channel to notify the client before function termination.
+
+
+\subsection{Task Controller} \label{subsec:taskManager}
+
+\textbf{Problem:} Client has no way of tracking or cancelling an asynchronous task after triggering it.
+
+% TODO visualize
+
+\textbf{Solution:} Make each function instance open a messaging channel to the client in the beginning of its execution in order to listen to client commands.
+
+The former is one-way pub/sub, in Task Manager the function also subscribes.
+
+\subsection{Local Threads} \label{subsec:LocalThreads}
 
 \textbf{Problem:} Scaling an IO-bound operation out to parallel function instances is inefficient since the instances compete of the same IO resources.
+
+% TODO visualize
 
 \textbf{Solution:} Use local threading inside a single function instance to efficiently scale out operations like network requests.
 
 E.g. three parallel functions each making a network request, or three parallel functions invoked by cloud storage upload that start execution by downloading the image: is it more efficient to have one function download the image and then invoke/pass the image as argument to three processing functions?
 
-\subsection{Asynchronous Response} \label{subsec:AsyncResponse}
+\subsection{Fetcher} \label{subsec:Fetcher}
 
-\textbf{Problem:} The client doesn't get any feedback from the asynchronous tasks it triggers.
+\textbf{Problem:} Each parallel instance in a fanned-out task performs a duplicate network request at the beginning of execution.
 
-\textbf{Solution:} Use a pub/sub channel to send a message to the client at the end of the task.
+% TODO visualize
 
-\subsection{Task Manager} \label{subsec:taskManager}
+\textbf{Solution:}
 
-\textbf{Problem:} The client, after triggering an asynchronous task, has no way of tracking task progress or cancelling it.
-
-\textbf{Solution:} Make each function instance subscribe to a pub/sub channel in the beginning of its execution in order to listen to client commands.
-
-The former is one-way pub/sub, in Task Manager the function also subscribes.
+e.g. three parallel functions invoked by cloud storage upload that start execution by downloading the image: is it more efficient to have one function download the image and then invoke/pass the image as argument to three processing functions?
 
 \subsection{Throttled Recursion} \label{subsec:throttledRecursion}
 
 \textbf{Problem:} Recursive serverless functions can overwhelm downstream resources by scaling out quickly or result in an infinite loop.
+
+control rate of execution for recursive tasks.
+in case of image manager could be a recursive divide and conquer image processing task.
+just using concurrency limit means number of image operations or recursion depth is limited.
 
 \textbf{Solution:} Pass recursive invocations through a message queue in order to control recursion speed.
