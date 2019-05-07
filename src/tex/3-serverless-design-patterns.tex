@@ -24,7 +24,7 @@ How to compose and orchestrate serverless functions together into more expansive
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.4\textwidth]{patterns/routing-function.png}
+  \includegraphics[width=0.3\textwidth]{patterns/routing-function.png}
   \caption{Routing Function}
   \label{fig:patternRoutingFunction}
 \end{figure}
@@ -140,7 +140,7 @@ How to handle asynchronous workflows triggered by external events?
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.65\textwidth]{patterns/event-processor.png}
+  \includegraphics[width=0.5\textwidth]{patterns/event-processor.png}
   \caption{Event Processor}
   \label{fig:patternEventProcessor}
 \end{figure}
@@ -163,7 +163,7 @@ Another point to keep in mind when implementing the Event Processor pattern is t
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.37\textwidth]{patterns/periodic-invocation.png}
+  \includegraphics[width=0.35\textwidth]{patterns/periodic-invocation.png}
   \caption{Periodic Invoker}
   \label{fig:patternPeriodicInvocation}
 \end{figure}
@@ -178,7 +178,7 @@ The Periodic Invoker represents an arrangement where a serverless function is in
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.5\textwidth]{patterns/polling-event-processor.png}
+  \includegraphics[width=0.55\textwidth]{patterns/polling-event-processor.png}
   \caption{Polling Event Processor}
   \label{fig:PollingEventProcessor}
 \end{figure}
@@ -195,7 +195,7 @@ The Polling Event Processor is equivalent to the EIP pattern of Polling Consumer
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.7\textwidth]{patterns/event-broadcast.png}
+  \includegraphics[width=0.55\textwidth]{patterns/event-broadcast.png}
   \caption{Event Broadcast}
   \label{fig:eventBroadcast}
 \end{figure}
@@ -223,7 +223,7 @@ How to integrate to external -- including legacy -- systems?
 
 \textbf{Solution:} Aggregate multiple API requests under a single serverless function.
 
-Service clients often need to deal with operations that involve performing several API calls, either in parallel or sequentially, and then filtering or combining the results. The operation might utilize multiple different services or just different endpoints of a single service. \textcite{baldini17currentTrends} use the example of combining geo-location, weather and language translation APIs to render a localized weather forecast. Another example concerns a sequential multi-step API call of first fetching an API key, then resource location, and finally performing the actual operation. Composing operations out of multiple cross-service calls is a natural outcome of service oriented architectures, but incurs the penalty of extra resource usage and network latency in clients. The problem is further magnified in microservice and serverless architectures due to the fine service granularity. \parencite{microsoft18cloudPatterns}
+Service clients often need to deal with operations that involve performing several API calls, either in parallel or sequentially, and then filtering or combining the results. The operation might utilize multiple different services or just different endpoints of a single service. \textcite{baldini17currentTrends} use the example of combining geolocation, weather and language translation APIs to render a localized weather forecast. Another example concerns a sequential multi-step API call of first fetching an API key, then resource location, and finally performing the actual operation. Composing operations out of multiple cross-service calls is a natural outcome of service oriented architectures, but incurs the penalty of extra resource usage and network latency in clients. The problem is further magnified in microservice and serverless architectures due to the fine service granularity. \parencite{microsoft18cloudPatterns}
 
 The Aggregator pattern consists of wrapping the required API calls into a single serverless function which is then exposed as a singular endpoint to clients. The Aggregator calls each target API and combines the results so that the client is left with a single network call, reducing the risk of network failure. Client resource usage is also reduced since any filtering or aggregation logic is offloaded to the Aggregator. Also ideally the Aggregator function is located near backend services to minimize network latency, and individual API responses are cached whenever possible. \parencite{baldini17currentTrends}
 
@@ -252,7 +252,7 @@ The serverless Proxy pattern essentially ``makes legacy services easier to consu
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.75\textwidth]{patterns/strangler.png}
+  \includegraphics[width=0.8\textwidth]{patterns/strangler.png}
   \caption{Strangler}
   \label{fig:strangler}
 \end{figure}
@@ -352,7 +352,7 @@ While the VM-level resource contention is only addressable by platform providers
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.6\textwidth]{patterns/throttler.png}
+  \includegraphics[width=0.65\textwidth]{patterns/throttler.png}
   \caption{Throttler}
   \label{fig:throttler}
 \end{figure}
@@ -373,7 +373,7 @@ The Throttler represents a more sophisticated approach, based on buffering the b
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.7\textwidth]{patterns/circuit-breaker.png}
+  \includegraphics[width=0.73\textwidth]{patterns/circuit-breaker.png}
   \caption{Circuit Breaker}
   \label{fig:circuitBreaker}
 \end{figure}

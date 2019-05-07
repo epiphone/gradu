@@ -42,25 +42,9 @@ Taking full advantage of the FaaS platform's capabilities requires a more thorou
 
 First of all the requirement for cost-efficiency leads towards the Event Processor pattern (\ref{subsec:Eventprocessing}). The image processing tasks should be event-driven: executed on-demand whenever there are images to process and not consume any resources or amass charges otherwise. Technically this is implemented by splitting image processing into a new function that subscribes to Cloud Storage upload events so that each image upload triggers a function invocation. The pattern also improves scalability since a large number of uploads results in a similarly large number of function invocations.
 
-A further improvement on scalability is gained with the Fan-out/Fan-in pattern (\ref{subsec:FanoutFanin}) by splitting the three separate image processing tasks into their own functions. As each upload now triggers not one but three parallel functions, CPU-intensive rendering tasks can scale independently from the less intensive labeling task. We also observe a performance benefit as the overall task is completed faster. The source code of the image labeling function is presented in listing \ref{lst:labelerhandler} to exemplify how a comparatively small amount of boilerplate code is required to instantiate a new function.
+The requirement for scalability leads towards the Fan-out/Fan-in pattern (\ref{subsec:FanoutFanin}). In our case the pattern consists of splitting the three image processing tasks into their own functions: a simple decision to make with the tasks already being essentially independent. As each upload now triggers not one but three parallel functions, CPU-intensive rendering tasks can scale independently from the less intensive labeling task. We can also expect a performance benefit as the overall task is completed faster.
 
-\begin{lstlisting}[language=JavaScript,caption=Image labeler function handler,captionpos=b,label=lst:labelerhandler,showstringspaces=false,belowskip=2em,frame=tb,aboveskip=2em]
-  import { Storage } from '@google-cloud/storage'
-  import { getBucketFileLabels } from '../label'
-
-  const gcs = new Storage()
-
-  export async function labeler(data) {
-    const labels = await getBucketFileLabels(data)
-
-    return gcs
-      .bucket(data.bucket)
-      .file(data.name)
-      .setMetadata({ metadata: { Labels: labels } })
-  }
-\end{lstlisting}
-
-The Thick Client pattern (\ref{subsec:thickClient}) is also selected with cost-efficiency in mind. Since the Event Processor breaks coupling between the API and image processing, it is now possible to omit the API layer and have the client orchestrate uploads instead. Retaining the API would mean paying for function execution for the duration of image upload; by uploading images from the client directly to Cloud Storage this expense as well as an extra network trip can be avoided.
+The Thick Client pattern (\ref{subsec:thickClient}) is selected with cost-efficiency in mind. Since the Event Processor breaks coupling between the API and image processing, it is now possible to omit the API layer and have the client orchestrate uploads instead. Retaining the API would mean paying for function execution for the duration of image upload; by uploading images from the client directly to Cloud Storage this expense as well as an extra network trip can be avoided.
 
 The Valet Key pattern (\ref{subsec:valetKey}) is chosen to authorize requests between the client and Cloud Storage and thus facilitate the client-driven workflow. This involves extending the CAPTCHA validation behaviour so that a temporary access token to Cloud Storage is returned in case of a valid CAPTCHA. Applying the Bulkhead pattern (\ref{subsec:Bulkhead}), the Valet Key implementation is split off into a separate authorizer function to ensure its availability when the rest of the system is under high load. The Function Warmer pattern (\ref{subsec:FunctionWarmer}) could optionally be used to further improve the authorizer's availability by keeping a warm function instance ready to serve requests at all times. In case of Image Manager there are no strict response time requirements so this pattern is omitted.
 
@@ -88,7 +72,12 @@ This section lists five new patterns extracted from migration process. The patte
 
 \textbf{Problem:} Client doesn't get any feedback from the asynchronous tasks it triggers.
 
-% TODO visualise!
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.65\textwidth]{patterns/async-response.png}
+  \caption{Async Response}
+  \label{fig:asyncResponse}
+\end{figure}
 
 \textbf{Solution:} Use a pub/sub channel to notify the client before function termination.
 
@@ -122,9 +111,9 @@ The Task Controller provides a general way for clients to issue commands to func
 
 Serverless Image Manager's labeling function is heavily I/O bound since the majority of its execution duration is spent waiting for network requests: first for the labeling request to Cloud Vision API and then for the metadata update request to Cloud Storage (see the sequence diagram in figure \ref{fig:serverlessSequence}). Scaling this function is therefore inefficient since a larger amount of reserved computing resources doesn't make network requests finish any faster. In addition as shown in section \ref{sec:providers}, on some FaaS platforms parallel function instances could end up being allocated on the same physical machine where they share and contest for the same network resources. In fact scaling out instances just to wait for network requests can lead to runaway costs since a waiting function is billed just the same as a processing one; this was discussed in section \ref{sec:economics} on the economics of serverless.
 
-The Local Threading pattern circumvents the problem by performing I/O-bound operations concurrently inside a single function instance instead of allocating a new instance for each operation. In case of the labeling task, Local Threading could involve batching image upload events and then sending multiple Cloud Vision API requests concurrently inside a single function instance. The pattern takes advantage of the fact that serverless functions, while limited in computing resources and lifespan, are still essentially full-fledged container instances with access to OS threads and processes. For example an AWS Lambda instance can use up to 1024 threads \parencite{awslambda0218}.
+The Local Threading pattern circumvents the problem by performing I/O-bound operations concurrently inside a single function instance instead of allocating a new instance for each operation. For example in Image Manager's labeling task, Local Threading can be applied to batch image upload events and then send multiple Cloud Vision API requests concurrently inside a single function instance. The pattern takes advantage of the fact that serverless functions, while limited in computing resources and lifespan, are still essentially full-fledged container instances with access to OS threads and processes. For example an AWS Lambda instance can use up to 1024 threads \parencite{awslambda0218}.
 
-The potential cost savings depend largely on the nature of the I/O-bound operation, number of concurrent operations and the way the FaaS platform handles I/O. While an interesting area for future work, optimizing and benchmarking this is outside of the scope of the thesis.
+The potential cost savings depend largely on the nature of the I/O-bound operation, number of concurrent operations and the way the FaaS platform handles I/O. While an interesting area for future work, optimizing and benchmarking this is outside the scope of the thesis.
 
 \subsection{Prefetcher} \label{subsec:prefetcher}
 
