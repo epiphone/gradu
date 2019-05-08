@@ -8,9 +8,7 @@ Evaluation the outcome of migration process. Estimate the effects on performance
 
 \section{Developer perspective}
 
-development ease, operations, maintainability
-
-From a development point of view the process of rewriting server application code into FaaS function handlers was found relatively simple. The same runtime environment (NodeJS v10) was used in both versions of the application and the deployment artifacts for both were built from the same codebase. The server application's code also benefited from being modularized so that the server-specific request handling implementation was separated from image processing logic, for example. These factors together enabled a high degree of code reuse when implementing FaaS functions. The source code of the image labeling function is presented in listing \ref{lst:labelerhandler} to exemplify how a comparatively small amount of boilerplate code is required to instantiate a new function: in this function the labeling logic is imported from a \textit{label} module which is also used as-is by the server application.
+From a development point of view the process of rewriting server application code into FaaS function handlers was found relatively simple. The same runtime environment (NodeJS v10) was used in both versions of the application and the deployment artifacts for both were built from the same codebase. The server application's code also benefited from being modularized so that the server-specific request handling implementation was separated from image processing logic, for example. These factors together enabled a high degree of code reuse when implementing FaaS functions. The source code of the image labeling function is presented in listing \ref{lst:labelerhandler} to exemplify how a comparatively small amount of boilerplate code is required to instantiate a new function: in this function the actual labeling logic is imported from a \textit{label} module which shared with the server application.
 
 \begin{lstlisting}[language=JavaScript,caption=Image labeler function handler,captionpos=b,label=lst:labelerhandler,showstringspaces=false,belowskip=2em,frame=tb,aboveskip=2em]
   import { Storage } from '@google-cloud/storage'
@@ -28,19 +26,19 @@ From a development point of view the process of rewriting server application cod
   }
 \end{lstlisting}
 
-Developing and testing the functions locally was found more challenging, depending on function type. In case of the authorizer function local development was simple since the function exposes a synchronous HTTP API, behaving the same as a conventional server application. In that case a local development server could be used to mimic a deployed function without any mocking or test harnesses required. Developing the other functions locally was more difficult due to their event-driven invocation style, which meant that the triggering cloud events would have to be replicated locally. Without any tooling in place to mock cloud events, for these functions it was found easier to deploy them to the cloud and develop against the actual deployed functions. While the deployment process was relatively fast, this did incur a degree of overhead in the development cycle.
+Developing and testing the functions locally was found more challenging, depending on function type. In case of the authorizer function local development was simple since the function exposes a synchronous HTTP API, behaving the same as a conventional server application. In that case a local development server could be used to mimic a deployed function without any mocking or test harnesses required. Developing the other functions locally was more difficult due to their event-driven invocation style which meant that the triggering cloud events would have to be replicated locally. Without any tooling in place to mock cloud events, it was found easier to deploy these functions to the cloud and develop against the actual deployed functions. While the deployment process is relatively fast, this did incur a degree of overhead in the development cycle: in larger projects it can be worth the investment to set up tooling for mocking parts of the cloud environment in order to avoid this overhead in local development. In short, local development of conventional serverful web applications can be more straightforward than corresponding serverless ones, but the problem is not one of invoking FaaS functions but of replicating the cloud service dependencies.
 
+Image Manager's function deployment process consists of a four steps: building a deployment artifact from the shared codebase, compressing it into a zip file, uploading the zip to Cloud Storage and finally updating the function to use the new deployment artifact. All together the process takes about one minute. This is significantly faster than pre-migration deployment, which consisted of building a Docker image, uploading the image to an image repository and restarting the VM with the new image. The serverless Image Manager also has the advantage in easily deploying multiple co-existing versions of a single function, which is useful for testing or rolling out new features.
 
+Compared to the pre-migration application, the serverless Image Manager has clear advantage in isolation and modularization. Having split the monolithic server application into four distinct functions means that individual deployment units are smaller and have fewer dependencies and are thus more comprehensible and maintainable. The functions are decoupled from each other which makes extending the application painless: adding a new image processing task for example amounts to creating a new function and attaching it to the Cloud Storage image upload event -- no changes in other functions are required. This level of isolation also grants the ability to deploy features independently.
 
-qualitative vs quantitative
+From a service monitoring point of view, the two versions of Image Manager act similarly. Application logs are persisted in Google Cloud's logging service which can be used for searching and setting up monitoring alarms. Both versions offer insight into similar performance metrics through the cloud dashboard, with the serverless version benefiting from more granular per-function metrics. The serverful application has the advantage in that the image upload sequence is contained inside a single HTTP request, which makes tracing application behaviour easier. As the serverless application is by nature more distributed and event-driven the end-to-end flow of a particular task can be more difficult to follow. Distributed logging, i.e. adding a unifying correlation identifier to logs that originate from different services but belong to the same logical task, can be of use here and is provided as a service in some platforms, e.g. AWS X-Ray \parencite{awslambda0218}.
+
+and similar performance metrics are accessible through the dashboard.
+% monitoring?
 
 % check example at https://onlinelibrary.wiley.com/doi/epdf/10.1002/spe.2608
 How did the migration help in future extendability and maintenance of Image Manager?
-- development perspective
-  - less bundling/coupling
-- operational perspective
-  - ease of deployment
-  - monitoring
 - financial perspective
 - performance perspective
   - cold start averted by 1) optionally using function warmer, 2) only having one synchronous bottleneck, otherwise event-driven
@@ -54,6 +52,8 @@ Scalability. Scaling microservices is easier than scaling  monoliths.  Scaling  
 % got more or less cloud-ready? \parencite{pozdniakova17cloudready}
 
 \section{Performance perspective}
+
+granular scaling -> validates Bulkhead?
 
 \section{Economic perspective}
 
