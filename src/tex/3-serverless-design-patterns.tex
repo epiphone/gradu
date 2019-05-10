@@ -346,6 +346,8 @@ where the ``asymmetrical nature of the performance profile between the refresh a
 
 While the VM-level resource contention is only addressable by platform providers, the function-level one is mitigated by a finer function granularity. A serverless Bulkhead pattern then comes to mean splitting high-latency workflows from a single function into their own functions. In the customer data example above, for example, this required ``separating the request and refresh functionality into separate Lambdas to prevent high latency in one part of the system adversely affecting another'' \parencite{bardsley18optimizationStrategies}. As per \textcite{adzic2017serverless}, the serverless paradigm already does away with economic incentives for bundling applications together in larger deployment units; likewise AWS best practices guide towards ``smaller functions that perform scoped activities'' \parencite{aws18serverlessLens}. Maintaining a larger number of functions does still incur an operations overhead, however, and partitioning intra-function workflows might not be trivial.
 
+% TODO benefits of granular scaling
+
 \subsection{Throttler} \label{subsec:throttler}
 
 \textbf{Problem:} A rapidly scaling FaaS function overwhelms a non-scaling downstream service, resulting in function timeout.
