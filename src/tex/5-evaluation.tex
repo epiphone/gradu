@@ -63,7 +63,7 @@ Overall the two Image Manager implementations perform quite differently performa
 
 The serverless Image Manager's elasticity, while mostly beneficial, points towards the necessity of protecting any less elastic downstream services with something like the Throttler pattern in order not to overwhelm them. The results also demonstrate the efficiency of the Bulkhead pattern's granular deployment units as the LQIP rendering operation can scale independently without allocating redundant resources elsewhere to the system.
 
-As for the problem of cold starts, an initial delay in image processing was deemed acceptable and didn't thus necessitate implementing the Function Warmer pattern. The pattern can be useful in case of synchronously invoked functions such as the authorizer function where any delay leaks to the consumer and potentially blocks the user interface. Drawing from that, another workaround over the cold start problem is to design ``optimistic'' clients that immediately update the user interface after function invocation instead of waiting for a response.
+As for the problem of cold starts, an initial delay in image processing was deemed acceptable and didn't thus necessitate the Function Warmer pattern. The pattern can be useful in case of synchronously invoked functions such as the authorizer function where any delay leaks to the consumer and potentially blocks the user interface. Drawing from that, another workaround over the cold start problem is to design ``optimistic'' clients that immediately update the user interface after function invocation instead of waiting for a response.
 
 % got more or less cloud-ready? \parencite{pozdniakova17cloudready}
 
@@ -93,3 +93,17 @@ As for the problem of cold starts, an initial delay in image processing was deem
 
 \section{Economic perspective}
 
+Omitting costs for Cloud Storage, Cloud Vision API and ReCaptcha since they are identical. Data transfer inside Google Cloud is mostly free.
+
+VM costs \$18.3 per month and reaches up to 3 requests per second. This means 7776000 images per month which is about 2225GB of data assuming a 300KB image.
+
+Omitting the authorization step, processing a single image means 3 function invocations and on average a total of 2 seconds of execution time, which with the 1024MB memory allocation adds up to \$0.0000342. Hence processing 3 images per second for a month costs \$265.9392.
+
+\$0.0000004 per invocation, \$0.000001650 per 100ms of execution with 1024MB of memory
+
+Could further optimize by adjusting function resource allocation. Functions only use on average of 90MB, 300MB and 500MB of memory per labeling, LQIP rendering and thumbnail rendering function respectively, even though they're allocated 1024MB. Of course CPU allocation decreases along with memory, so this could lead to longer execution times which makes experimentation necessary for optimal savings. For example, just switching the labeling function (that consumes the least memory and executes on average for 600ms) to the smallest function size would reduce the above monthly cost to \$193.5. Also the first 2 million invocations every month are free, but this only amounts to about 3 dollars.
+
+A single load balancer forwarding rule would cost \$0.025/hour = \$18/month. 2225GB of ingress traffic is charged at \$17.8 by the load balancer. Hence a setup that achieves minimal redundancy with two VMs behind a load balancer costs \$72.4.
+
+Again, a head-to-head comparison is hardly valid since...
+Price per CPU cycle is a lot cheaper for a VM than a serverless function. The above calculations assume a 100\% VM utilization rate.
