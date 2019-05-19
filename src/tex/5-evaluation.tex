@@ -34,58 +34,44 @@ From a service monitoring point of view, the two versions of Image Manager act s
 
 The two Image Manager implementations' performance characteristics were evaluated through a simple stress test. The goal of the test was to understand how the applications behave under heavy load and to identify the upper limits of both application's performance capacity. The test was carried out by sending a gradually increasing number of image processing requests to the target application in a simulation of a steadily increasing influx of user activity, using the Python-based load testing tool Locust. The authentication step was omitted from the test in order to focus on the resource-intensive parts of the application i.e. image processing. For comparability's sake both the serverful application's VM and each serverless function was allocated the same resources of a single CPU and 1024MB of memory. In order to minimize network delays and traffic costs the tests were ran on a separate VM deployed on the same Google Cloud region as both applications.
 
-The serverful application's stress test results are plotted in diagram \ref{fig:serverfulStressTest}. The diagram presents the number of all requests, number of error responses and the average response time during the 11-minute test period. Analyzing the results shows how response times initially stay below four seconds until at around 300 cumulative requests, after which they start climbing up to 14 seconds or more. Moreover the initial curve on the number of total requests evens out into linear growth which indicates that the server is unable to cope with the increasing request rate, maxing out at around 3 requests per second. Eventually after 600 cumulative requests we observe a sharp spike in error responses due to server resource exhaustion. At this point the server application becomes non-responsive as a majority of requests ends either in a server error or connection timeout. Figure \ref{fig:serverfulTrace} presents an example trace image to illustrate how a single request's lifetime is divided by the different operations and how the operations proceed either sequentially or concurrently: in a typical case the LQIP rendering and image labeling operations take up most of the time while thumbnail rendering and storage operations resolve quicker.
+The serverful application's stress test results are plotted in diagram \ref{fig:serverfulStressTest}. The diagram presents the number of all requests, number of error responses and the average response time during the 11-minute test period. Analyzing the results shows how response times initially stay below four seconds until at around 300 cumulative requests, after which they start climbing up to 14 seconds or more. Moreover the initial curve on the number of total requests evens out into linear growth which indicates that the server is unable to cope with the increasing request rate, maxing out at around 3 requests per second. Eventually after 600 cumulative requests we observe a sharp spike in error responses due to server resource exhaustion. At this point the server application becomes non-responsive as most requests resolve either in server error or connection timeout.
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.9\textwidth]{serverful-load-test.png}
+  \includegraphics[width=0.75\textwidth]{serverful-load-test.png}
   \caption{Serverful Image Manager stress test results}
   \label{fig:serverfulStressTest}
 \end{figure}
 
-% TODO better trace image!
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=0.8\textwidth]{image-manager-serverful-trace.png}
-  \caption{Serverful Image Manager request trace}
-  \label{fig:serverfulTrace}
-\end{figure}
-
 Running the same stress test against the serverless application yields differing results. Figure \ref{fig:serverlessStressTest} plots platform metrics captured during the test run, including the total function invocation rate per second, number of active instances per function and mean execution duration per function. First of all we observe the function invocation rate growing in tandem with the stress test's gradually increasing request rate. This is an expected outcome of the Event Processor pattern: as more images are uploaded to Cloud Storage, more processing tasks get triggered. The second chart illustrates the FaaS platform adapting to the growing invocation rate: an increasing number of function instances are spun up to handle invocations in parallel. While the sum of all of active instances peaks at around 100 we observe variance in scaling behaviour between the three functions, as the CPU-intensive LQIP rendering function scales up faster than the other two. Due to this scaling behaviour function execution durations stay constant while invocation rate grows from 0 to 60 per second, as plotted in the third chart. Interestingly the chart indicates slightly higher execution durations in the beginning of the test, which could be an indication of either function cold starts or the FaaS platform's underlying scaling strategy. With no sign of any performance degradation the test was aborted after 10 minutes.
 
-% TODO establish the term "serverful"
-
-Overall the two Image Manager implementations perform quite differently performance-wise, as expected. The serverful application's response times stay in the range of a few seconds until service resources are exhausted and rise sharply after that along with the error rate. The serverless application on the other hand adapts to increasing load with constant execution durations, presumably until the platform's concurrency limit is reached. While server response times and function execution durations are not directly comparable (the latter lacks image upload and event propagation latencies) they do manage to convey the drastic difference in elasticity.
-
-The serverless Image Manager's elasticity, while mostly beneficial, points towards the necessity of protecting any less elastic downstream services with something like the Throttler pattern in order not to overwhelm them. The results also demonstrate the efficiency of the Bulkhead pattern's granular deployment units as the LQIP rendering operation can scale independently without allocating redundant resources elsewhere to the system.
-
-As for the problem of cold starts, an initial delay in image processing was deemed acceptable and didn't thus necessitate the Function Warmer pattern. The pattern can be useful in case of synchronously invoked functions such as the authorizer function where any delay leaks to the consumer and potentially blocks the user interface. Drawing from that, another workaround over the cold start problem is to design ``optimistic'' clients that immediately update the user interface after function invocation instead of waiting for a response.
-
-% got more or less cloud-ready? \parencite{pozdniakova17cloudready}
-
-% TODO use mean or average?
-
-\begin{figure}
+\begin{figure}[h]
   \centering
-  \begin{subfigure}[b]{0.9\textwidth}
+  \begin{subfigure}[b]{0.75\textwidth}
       \includegraphics[width=\textwidth]{cloud-functions-invocations-per-second.png}
       \caption{Invocations per second, sum of all functions}
       \label{fig:tiger}
   \end{subfigure}
 
-  \begin{subfigure}[b]{0.9\textwidth}
+  \begin{subfigure}[b]{0.75\textwidth}
       \includegraphics[width=\textwidth]{cloud-function-active-instances.png}
       \caption{Active instances per function}
       \label{fig:gull}
   \end{subfigure}
 
-  \begin{subfigure}[b]{0.9\textwidth}
+  \begin{subfigure}[b]{0.75\textwidth}
       \includegraphics[width=\textwidth]{cloud-function-execution-times-mean.png}
       \caption{Mean execution times per function}
       \label{fig:mouse}
   \end{subfigure}
   \caption{Serverless Image Manager stress test results}\label{fig:serverlessStressTest}
 \end{figure}
+
+Overall the two Image Manager implementations perform quite differently performance-wise, as expected. The serverful application's response times stay in the range of a few seconds until service resources are exhausted and rise sharply after that along with the error rate. The serverless application on the other hand adapts to increasing load with constant execution durations, presumably until the platform's concurrency limit is reached. While server response times and function execution durations are not directly comparable (the latter lacks image upload and event propagation latencies) they do manage to convey the drastic difference in elasticity.
+
+The serverless Image Manager's elasticity, while mostly beneficial, points towards the necessity of protecting any less elastic downstream services with something like the Throttler pattern in order not to overwhelm them. The results also demonstrate the efficiency of the Bulkhead pattern's granular deployment units as the LQIP rendering operation can scale independently without allocating redundant resources elsewhere to the system.
+
+As for the problem of cold starts, an initial delay in image processing was deemed acceptable and didn't thus necessitate the Function Warmer pattern. The pattern can be useful in case of synchronously invoked functions such as the authorizer function where any delay leaks to the consumer and potentially blocks the user interface. Drawing from that, another workaround over the cold start problem is to design ``optimistic'' clients that immediately update the user interface after function invocation instead of waiting for a response.
 
 \section{Economic perspective}
 
