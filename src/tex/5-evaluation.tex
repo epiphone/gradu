@@ -2,6 +2,8 @@
 
 This chapter evaluates the outcome of the migration process. The pre-migration Image Manager is compared to the new serverless version from three different perspectives: a developmental perspective on the ease of local development, testing and deployment, a performance perspective on application performance, elasticity and robustness, and finally an economic perspective on the differences in hosting and operational cost. The latter two are approximated through a simple stress test and cloud provider pricing information, whereas the former is by nature less measurable and thus approached through a more qualitative and subjective assessment.
 
+Serverless Image Manager's source code and stress test data can be found at \url{https://github.com/epiphone/image-manager}.
+
 \section{Developer perspective}
 
 From a development point of view the process of rewriting server application code into FaaS function handlers was found relatively simple. The same runtime environment (NodeJS v10) was used in both versions of the application and the deployment artifacts for both were built from the same codebase. The server application's code benefited from being modularized so that e.g. the server-specific request handling implementation was separated from image processing logic. These factors together enabled a high degree of code reuse when implementing FaaS functions. The source code of the image labeling function is presented in listing \ref{lst:labelerhandler} to exemplify how a comparatively small amount of boilerplate code is required to instantiate a new function: in this function the actual labeling logic is imported from a \textit{label} module which is shared with the server application.

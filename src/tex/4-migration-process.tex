@@ -101,7 +101,7 @@ Possible future use cases for Image Manager would be to track processing task pr
 
 The Task Controller provides a general way for clients to issue commands to function instances mid-execution. The pattern extends the Async Response pattern by turning one-way function-to-client messaging into a two-way channel: instead of just publishing messages at the end of their lifespan, functions also start listening for messages right after initialization.
 
-\subsection{Local Threading} \label{subsec:LocalThreads}
+\subsection{Local Threader} \label{subsec:LocalThreads}
 
 \textbf{Problem:} Scaling an I/O bound operation out to parallel function instances is inefficient since the instances compete of the same I/O resources.
 
@@ -111,7 +111,7 @@ The Task Controller provides a general way for clients to issue commands to func
 
 Serverless Image Manager's labeling function is heavily I/O bound since the majority of its execution duration is spent waiting for network requests: first for the labeling request to Cloud Vision API and then for the metadata update request to Cloud Storage (see the sequence diagram in figure \ref{fig:serverlessSequence}). Scaling this function is therefore inefficient since a larger amount of reserved computing resources doesn't make network requests finish any faster. In addition as shown in section \ref{sec:providers}, on some FaaS platforms parallel function instances could end up being allocated on the same physical machine where they share and contest for the same network resources. In fact scaling out instances just to wait for network requests can lead to runaway costs since a waiting function is billed just the same as a processing one; this was discussed in section \ref{sec:economics} on the economics of serverless.
 
-The Local Threading pattern circumvents the problem by performing I/O-bound operations concurrently inside a single function instance instead of allocating a new instance for each operation. For example in Image Manager's labeling task, Local Threading can be applied to batch image upload events and then send multiple Cloud Vision API requests concurrently inside a single function instance. The pattern takes advantage of the fact that serverless functions, while limited in computing resources and lifespan, are still essentially full-fledged container instances with access to OS threads and processes. For example an AWS Lambda instance can use up to 1024 threads \parencite{awslambda0218}.
+The Local Threader pattern circumvents the problem by performing I/O-bound operations concurrently inside a single function instance instead of allocating a new instance for each operation. For example in Image Manager's labeling task, Local Threading can be applied to batch image upload events and then send multiple Cloud Vision API requests concurrently inside a single function instance. The pattern takes advantage of the fact that serverless functions, while limited in computing resources and lifespan, are still essentially full-fledged container instances with access to OS threads and processes. For example an AWS Lambda instance can use up to 1024 threads \parencite{awslambda0218}.
 
 The potential cost savings depend largely on the nature of the I/O-bound operation, number of concurrent operations and the way the FaaS platform handles I/O. While an interesting area for future work, optimizing and benchmarking this is outside the scope of the thesis.
 
