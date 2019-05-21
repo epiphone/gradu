@@ -1,10 +1,6 @@
 # Migrating a web application to FaaS
 
-> **Abstract:** Serverless computing is a novel cloud computing model based on ephemeral resources that scale up and down automatically and are billed for actual usage at a millisecond granularity. As an attractive economic proposition serverless has gained significant interest in the industry but literature on how the model's unique characteristics drive application design is still scarce.
-
-> This thesis aims to fill the gap by first defining the paradigm along with its origins and surveying for applicable design patterns. The patterns are then applied in an experimental migration process through which 5 new patterns are discovered. Finally the migration outcome is evaluated in terms of development ease, performance and costs.
-
-> In conclusion the serverless model is found to deliver on its promises of elasticity and reduced operational overhead; cost benefit however depends largely on expected traffic shape.
+> **Abstract:** Serverless computing is a novel cloud computing model based on auto-scaling,ephemeral resources billed at a millisecond granularity.   Serverless has gained interest in the industry but literature on how the model’s characteristics drive application design is still scarce.  This thesis aims to fill the gap by first defining the paradigm along with its origins and surveying for applicable design patterns. The patterns are then applied in an experimental migration process through which 5 new patterns are introduced.  Finally the migration outcome is evaluated in terms of development ease, performance and costs.  The serverless model is found to deliver on its promises of elasticity and reduced operational overhead; cost benefit however depends largely on expected traffic shape
 
 ## Motivation
 
