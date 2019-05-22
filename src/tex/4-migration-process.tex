@@ -74,7 +74,7 @@ This section lists five new patterns extracted from migration process. The patte
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.65\textwidth]{patterns/async-response.png}
+  \includegraphics[width=0.7\textwidth]{patterns/async-response.png}
   \caption{Async Response}
   \label{fig:asyncResponse}
 \end{figure}
@@ -93,7 +93,12 @@ The Async Response can be implemented with any technology that enables publish-s
 
 \textbf{Problem:} Client has no way of controlling or cancelling an asynchronous task after triggering it.
 
-% TODO visualize
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.65\textwidth]{patterns/task-controller.png}
+  \caption{Task Controller}
+  \label{fig:taskController}
+\end{figure}
 
 \textbf{Solution:} Make each function instance open a messaging channel to the client in the beginning of its execution in order to listen to client commands.
 

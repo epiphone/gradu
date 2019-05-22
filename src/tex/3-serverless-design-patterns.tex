@@ -98,7 +98,7 @@ The Externalized State pattern is a fundamental pattern that consists of storing
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.6\textwidth]{patterns/state-machine.png}
+  \includegraphics[width=0.55\textwidth]{patterns/state-machine.png}
   \caption{State Machine}
   \label{fig:patternStateMachine}
 \end{figure}
@@ -140,7 +140,7 @@ How to handle asynchronous workflows triggered by external events?
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.5\textwidth]{patterns/event-processor.png}
+  \includegraphics[width=0.45\textwidth]{patterns/event-processor.png}
   \caption{Event Processor}
   \label{fig:patternEventProcessor}
 \end{figure}
@@ -178,7 +178,7 @@ The Periodic Invoker represents an arrangement where a serverless function is in
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.55\textwidth]{patterns/polling-event-processor.png}
+  \includegraphics[width=0.5\textwidth]{patterns/polling-event-processor.png}
   \caption{Polling Event Processor}
   \label{fig:PollingEventProcessor}
 \end{figure}
@@ -252,7 +252,7 @@ The serverless Proxy pattern essentially ``makes legacy services easier to consu
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.8\textwidth]{patterns/strangler.png}
+  \includegraphics[width=0.7\textwidth]{patterns/strangler.png}
   \caption{Strangler}
   \label{fig:strangler}
 \end{figure}
@@ -294,7 +294,7 @@ How to guarantee availability in serverless systems and deal with the platform's
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.7\textwidth]{patterns/function-warmer.png}
+  \includegraphics[width=0.6\textwidth]{patterns/function-warmer.png}
   \caption{Function Warmer}
   \label{fig:functionWarmer}
 \end{figure}
@@ -339,14 +339,12 @@ The way containers are reused by FaaS platforms enables us to mitigate the probl
 
 \textbf{Solution:} Isolate high-latency code into separate functions to avoid resource contention.
 
-A \textit{bulkhead} refers to a sectioned partition in a ship's hull designed to prevent the whole ship from filling with water and sinking in case of an accident. Similarly in cloud computing context the Bulkhead pattern refers to isolating ``elements of an application into pools so that if one fails, the others will continue to function'' \parencite{microsoft18cloudPatterns}. The idea is to prevent a situation where a single service, when facing resource exhaustion due to a load peak or some sort of an application error, brings down all of its consumers with it causing a cascading failure and large-scale service interruption. The way this is achieved is by partitioning resources into self-contained blocks divided along lines of expected load and availability requirements: a separate service instance for each consumer, for example, or conversely a separate set of consumer resources (such as threads) for each consumed service \parencite{nygard07releaseIt}. Now even with one service unavailable the system as a whole can still deliver some level of functionality.
+A \textit{bulkhead} refers to a sectioned partition in a ship's hull designed to prevent the whole ship from filling with water and sinking in case of an accident. Similarly in cloud computing context the Bulkhead pattern refers to isolating ``elements of an application into pools so that if one fails, the others will continue to function'' \parencite{microsoft18cloudPatterns}. The idea is to prevent a situation where a single service, when facing resource exhaustion due to a load peak or application error, brings down all of its consumers with it causing a cascading failure and large-scale service interruption. The way this is achieved is by partitioning resources into self-contained blocks divided along lines of expected load and availability requirements: a separate service instance for each consumer, for example, or conversely a separate set of consumer resources (such as threads) for each consumed service \parencite{nygard07releaseIt}. Now even with one service unavailable the system as a whole can deliver some level of functionality.
 
-What are the serverless implications of this inter-service resource contention problem? It seems that FaaS platforms already ensure resource isolation as each function instance runs in its own resource-constrained container. Declaring the problem solved might be premature, however, namely for two reasons: first of all as shown by \textcite{wang18peekingbehindcurtains}, function instances, albeit isolated on a container-level, do suffer from resource contention on a VM level -- a byproduct of some platforms' scheduling strategy of scaling a single function in the same VM. Secondly, a single function can contain multiple execution paths with varying latencies, which can lead to intra-service resource contention. \textcite{bardsley18optimizationStrategies} for example demonstrate customer data function with endpoints for both refreshing a token and simply requesting it: a case
+What are the serverless implications of this inter-service resource contention problem? It seems that FaaS platforms already ensure resource isolation as each function instance runs in its own container. Declaring the problem solved might be premature, however, namely for two reasons: first of all as shown by \textcite{wang18peekingbehindcurtains}, function instances, albeit isolated on a container-level, do suffer from resource contention on a VM level -- a byproduct of some platforms' scheduling strategy of scaling a single function in the same VM. Secondly, a single function can contain multiple execution paths with varying latencies, which can lead to intra-service resource contention. \textcite{bardsley18optimizationStrategies} for example demonstrate customer data function with endpoints for both refreshing a token and simply requesting it: a case
 where the ``asymmetrical nature of the performance profile between the refresh and request calls, with the refresh operation suffering significantly higher latency than the request call, could cause refresh calls to unnecessarily divert requests to cold Lambdas''. Put another way, resource contention can occur inside a single FaaS function when an infrequently invoked high-latency workload degrades the performance of a more frequently invoked low-latency one.
 
-While the VM-level resource contention is only addressable by platform providers, the function-level one is mitigated by a finer function granularity. A serverless Bulkhead pattern then comes to mean splitting high-latency workflows from a single function into their own functions. In the customer data example above, for example, this required ``separating the request and refresh functionality into separate Lambdas to prevent high latency in one part of the system adversely affecting another'' \parencite{bardsley18optimizationStrategies}. As per \textcite{adzic2017serverless}, the serverless paradigm already does away with economic incentives for bundling applications together in larger deployment units; likewise AWS best practices guide towards ``smaller functions that perform scoped activities'' \parencite{aws18serverlessLens}. Maintaining a larger number of functions does still incur an operations overhead, however, and partitioning intra-function workflows might not be trivial.
-
-% TODO benefits of granular scaling
+While the VM-level resource contention is only addressable by platform providers, the function-level one is mitigated with finer function granularity. A serverless Bulkhead pattern then comes to mean splitting high-latency workflows from a single function into their own functions. In the customer data example above, for example, this required ``separating the request and refresh functionality into separate Lambdas to prevent high latency in one part of the system adversely affecting another'' \parencite{bardsley18optimizationStrategies}. As per \textcite{adzic2017serverless}, the serverless paradigm already does away with economic incentives for bundling applications together in larger deployment units; likewise AWS best practices guide towards ``smaller functions that perform scoped activities'' \parencite{aws18serverlessLens}. As well as helping to avoid resource contention, the Bulkhead enables workflows to scale independently. Maintaining a larger number of functions does still incur an operations overhead, however, and partitioning workflows might not be trivial.
 
 \subsection{Throttler} \label{subsec:throttler}
 
