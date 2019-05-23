@@ -74,20 +74,20 @@ This section lists five new patterns extracted from migration process. The patte
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.7\textwidth]{patterns/async-response.png}
+  \includegraphics[width=0.7\textwidth]{patterns/async-response.pdf}
   \caption{Async Response}
   \label{fig:asyncResponse}
 \end{figure}
 
 \textbf{Solution:} Use a pub/sub channel to notify the client before function termination.
 
-In the pre-migration Image Manager all processing happens in the span of the single upload request. The request blocks and the client won't receive a response before all processing and storage uploads are finished. On the other hand the serverless Image Manager client only receives an acknowledgment of receipt of the original image since image processing is continued asynchronously after the initial Cloud Storage upload. This means the serverless client has no way of notifying the user of a finished processing task. Solving this problem requires a way for the image processing functions to notify the client after they finished with execution.
+In the pre-migration Image Manager all processing happens in the span of the single upload request. The request blocks and the client won't receive a response before all processing and storage uploads are finished. The serverless Image Manager client on the other hand only receives an acknowledgment of receipt of the original image since image processing is continued asynchronously after the initial Cloud Storage upload. This means the serverless client has no way of notifying the user of a finished processing task. Solving this problem requires a way for the image processing functions to notify the client after they finished with execution.
 
 In more general terms the problem is one of an asynchronously invoked function instance re-establishing communication with the original task initiator, i.e. turning fire-and-forget into something more resembling of request-and-response semantics. As additional complexity, the initiator might not be the actual function invoker but further down the call stack, as in the case of Image Manager where client first activates Cloud Storage which then invokes processing functions.
 
-The Async Response pattern tackles the problem using publish-subscribe messaging. The client, after initiating the task, subscribes to a message channel and waits for notification of the task completion. Conversely the last function responsible for task execution publishes a message to the same channel before terminating. After receiving acknowledgment of task completion the client can dismantle the message channel and proceed to update the the user interface, for example. Instead of a single completion message we could also send status messages during execution for the client to keep track of task progress.
+The Async Response pattern tackles the problem using publish-subscribe messaging. The client, after initiating the task, subscribes to a message channel and waits for notification of the task completion. Conversely the last function responsible for task execution publishes a message to the same channel before terminating. After receiving acknowledgment of task completion the client can dismantle the message channel and proceed to update the the user interface. Instead of a single completion message we could also send status messages during execution for the client to keep track of task progress.
 
-The Async Response can be implemented with any technology that enables publish-subscribe messaging between the client and function: Firebase Realtime Database on Google Cloud or API Gateway Websockets on AWS, for example. One implementation challenge concerns identifying the completion message: how should the message be sent so that it ends up at the right client? One approach is to wrap task initialization in another function that first creates a message channel with an unique identifier and then passes the identifier to both the client and the processing function. This however incurs the overhead of having to pass the channel identifier along each processing step. Another approach is to compute the channel identifier from task payload: in case of Image Manager the client could for example listen to messages on a channel named after the uploaded file's name.
+The Async Response can be implemented with any technology that enables publish-subscribe messaging between the client and function: Firebase Realtime Database on Google Cloud or API Gateway Websockets on AWS, for example. One implementation challenge concerns identifying the completion message: how should the message be sent so that it ends up at the right client? One approach is to wrap task initialization in another function that first creates a message channel with an unique identifier and then passes the identifier to both the client and the processing function. This however incurs the overhead of having to pass the channel identifier along each processing step. Another approach is to compute the channel identifier from task payload: in case of Image Manager the channel could be named for example after the uploaded file's name.
 
 \subsection{Task Controller} \label{subsec:taskManager}
 
@@ -95,7 +95,7 @@ The Async Response can be implemented with any technology that enables publish-s
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.65\textwidth]{patterns/task-controller.png}
+  \includegraphics[width=0.65\textwidth]{patterns/task-controller.pdf}
   \caption{Task Controller}
   \label{fig:taskController}
 \end{figure}
@@ -110,7 +110,12 @@ The Task Controller provides a general way for clients to issue commands to func
 
 \textbf{Problem:} Scaling an I/O bound operation out to parallel function instances is inefficient since the instances compete of the same I/O resources.
 
-% TODO visualize
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.55\textwidth]{patterns/local-threader.pdf}
+  \caption{Local Threader}
+  \label{fig:localThreader}
+\end{figure}
 
 \textbf{Solution:} Use local OS threads inside a single function instance to efficiently scale out operations like network requests.
 
@@ -124,7 +129,12 @@ The potential cost savings depend largely on the nature of the I/O-bound operati
 
 \textbf{Problem:} Each event handler triggered in response to a single event starts execution by fetching the identical event metadata, resulting in redundant network traffic.
 
-% TODO visualize
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.75\textwidth]{patterns/prefetcher.pdf}
+  \caption{Prefetcher}
+  \label{fig:prefetcher}
+\end{figure}
 
 \textbf{Solution:} Trigger a single event handling function that fetches event metadata once and then triggers the other event handlers, passing metadata as function payload.
 
@@ -138,10 +148,15 @@ As before with the Local Threading pattern, Prefetcher's efficiency gains are hi
 
 \textbf{Problem:} A spike of recursive function invocations can exceed the platform's maximum concurrency limit.
 
-% TODO visualize!
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.75\textwidth]{patterns/throttled-recursion.pdf}
+  \caption{Throttled Recursion}
+  \label{fig:throttledRecursion}
+\end{figure}
 
 \textbf{Solution:} Pass recursive invocations through a message queue in order to throttle their execution.
 
 Another potential future use case for Image Manager is to transform extremely large images or even video material recursively. Using a divide-and-conquer algorithm, a function can split its payload into two or more subtasks and invoke itself recursively until the subtasks become simple enough to solve. The problem with recursion in FaaS however is that the number of concurrent instances can quickly grow out of hand and exceed the platform limit, placing a constraint on recursion depth. We might additionally want to control the rate of recursive branching in order not to overwhelm any potential external services used in subtask solving. A throttled rate of execution can also be desirable to serve as a safety mechanism against infinite loops.
 
-The Throttled Recursion pattern consists of a supplementing the recursive function with a message queue through which each subtask invocation is passed. Instead of directly invoking itself, the recursive function sends its subtasks into the message queue. On the other hand the message queue also invokes the recursive function with queued messages. The pattern is similar to the Throttler pattern (\ref{subsec:throttler}) with the exception that here the single function acts both as a producer and as a consumer on the same queue. By adjusting the queue's consumption rate we can control the recursive execution speed. Also now the spikes are not limited anymore by FaaS concurrency limits but instead by maximum queued messages count which is typically far greater.
+The Throttled Recursion pattern consists of a supplementing the recursive function with a message queue through which each subtask invocation is passed. Instead of directly invoking itself, the recursive function sends its subtasks into the queue and at the same time subscribes to incoming message events. The pattern is similar to the Throttler pattern (\ref{subsec:throttler}) with the exception that here the single function acts both as a producer and as a consumer on the same queue. By adjusting the queue's consumption rate we can control the recursive execution speed. Also now recursion depth is not limited anymore by FaaS concurrency limit but instead by maximum queued messages count which is typically far greater.
