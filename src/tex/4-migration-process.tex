@@ -142,7 +142,7 @@ Image Manager's two rendering functions follow largely the same behaviour: trigg
 
 The Prefetcher is an optimization pattern for avoiding expensive duplicate event metadata requests. It's implementation involves adding a new function between the event and its handler functions. Upon event occurrence, the prefetcher function first fetches the metadata and then invokes the actual event handlers, passing the fetched metadata as invocation payload. As a result the event handlers now don't need to separately fetch the extended event metadata. The Event Broadcast pattern (\ref{subsec:EventBroadcast}) can be utilized to avoid coupling the original event handlers with the prefetcher function.
 
-As before with the Local Threading pattern, Prefetcher's efficiency gains are highly dependent on the nature of the metadata request, the number of event handlers as well as on how the FaaS platform handles networking. The pattern is also limited by the maximum function payload size which for AWS Lambda is 6MB for synchronous and 256KB for asynchronous invocations \parencite{awslambda0218}.
+As before with the Local Threading pattern, Prefetcher's efficiency gains are highly dependent on the nature of the metadata request, the number of event handlers as well as on how the FaaS platform handles networking. The pattern is also limited by the maximum function payload size which in AWS Lambda is 6MB for synchronous and 256KB for asynchronous invocations \parencite{awslambda0218}, and in Google Cloud Functions 10MB for both invocation types \parencite{google18cloudFunctions}.
 
 \subsection{Throttled Recursion} \label{subsec:throttledRecursion}
 
