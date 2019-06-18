@@ -75,7 +75,7 @@ Overall the two Image Manager implementations perform quite differently performa
 
 The serverless Image Manager's elasticity, while mostly beneficial, points towards the necessity of protecting any less elastic downstream services with something like the Throttler pattern in order not to overwhelm them. The results also demonstrate the efficiency of the Bulkhead pattern's granular deployment units as the LQIP rendering operation can scale independently without allocating redundant resources elsewhere to the system.
 
-As for the problem of cold starts, an initial delay in image processing was deemed acceptable and didn't thus necessitate the Function Warmer pattern. The pattern can be useful in case of synchronously invoked functions such as the authorizer function where any delay leaks to the consumer and potentially blocks the user interface. Drawing from that, another workaround over the cold start problem is to design ``optimistic'' clients that immediately update the user interface after function invocation instead of waiting for a response.
+As for the problem of cold starts, an initial delay in image processing was deemed acceptable and did not thus necessitate the Function Warmer pattern. The pattern can be useful in case of synchronously invoked functions such as the authorizer function where any delay leaks to the consumer and potentially blocks the user interface. Drawing from that, another workaround over the cold start problem is to design ``optimistic'' clients that immediately update the user interface after function invocation instead of waiting for a response.
 
 \section{Economic perspective}
 
