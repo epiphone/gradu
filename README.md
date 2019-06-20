@@ -39,6 +39,12 @@ The last question consists of comparing the migrated portions of the app to the 
 - Theory of system migration or refactoring in general (although I'll probably have to make some references to the topic)
 - Inner workings of serverless runtimes (again, might have to mention briefly)
 
+## Latex dependencies
+
+```bash
+sudo apt install texlive-latex-extra
+```
+
 ## Rendering diagrams
 
 Rendering `.dot` diagrams:
